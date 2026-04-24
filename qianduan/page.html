@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大学生职业规划助手</title>
+    <!-- Tailwind CSS v3 CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 配置Tailwind自定义颜色 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#f3f4f6',
+                        dark: '#1e293b',
+                    },
+                },
+            }
+        }
+    </script>
+    <style>
+        /* 全局样式 */
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .content-auto {
+            content-visibility: auto;
+        }
+        
+        /* 消息气泡样式 */
+        .message-user {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border-radius: 18px;
+            border-bottom-right-radius: 4px;
+            padding: 12px 16px;
+            max-width: 75%;
+            margin-left: auto;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+            transition: all 0.2s ease;
+            line-height: 1.4;
+        }
+        
+        .message-user:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+        }
+        
+        .message-ai {
+            background: white;
+            color: #1e293b;
+            border-radius: 18px;
+            border-bottom-left-radius: 4px;
+            padding: 12px 16px;
+            max-width: 75%;
+            margin-right: auto;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+            line-height: 1.4;
+        }
+        
+        .message-ai:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 历史对话项样式 */
+        .history-item {
+            transition: all 0.2s ease;
+            border-radius: 12px;
+        }
+        
+        .history-item:hover {
+            background-color: #f1f5f9;
+            transform: translateX(4px);
+        }
+        
+        .history-item.active {
+            background-color: #eff6ff;
+            border-left: 3px solid #3b82f6;
+        }
+        
+        /* 加载动画 */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            background-color: #3b82f6;
+            border-radius: 50%;
+            display: inline-block;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        
+        .typing-indicator span:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+        
+        .typing-indicator span:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+        
+        @keyframes bounce {
+            0%, 80%, 100% {
+                transform: scale(0.7);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        /* 快捷问题按钮样式 */
+        .quick-question {
+            transition: all 0.2s ease;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            line-height: 1.3;
+        }
+        
+        .quick-question:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            background-color: #eff6ff !important;
+        }
+        
+        /* 切换历史对话按钮 */
+        #toggle-history-button {
+            transition: all 0.2s ease;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #toggle-history-button:hover {
+            transform: scale(1.05);
+            background-color: #f1f5f9;
+        }
+        
+        /* 新对话按钮 */
+        #new-chat-button {
+            transition: all 0.2s ease;
+            border-radius: 8px;
+            padding: 4px 8px;
+        }
+        
+        #new-chat-button:hover {
+            background-color: #eff6ff;
+        }
+        
+        /* 发送按钮 */
+        #send-button {
+            transition: all 0.2s ease;
+            border-radius: 12px;
+        }
+        
+        #send-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+        
+        #send-button:disabled {
+            opacity: 0.6;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* 输入框 */
+        #message-input {
+            transition: all 0.2s ease;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        #message-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        /* 卡片样式 */
+        .bg-white {
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* 历史对话容器样式 */
+        #history-sidebar {
+            z-index: 10;
+            position: relative;
+            min-width: 0;
+        }
+        
+        /* 历史对话项样式 */
+        .history-item {
+            transition: all 0.2s ease;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        /* 历史对话标题样式 */
+        .history-item p:first-child {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* 头部样式 */
+        header {
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* 底部样式 */
+        footer {
+            box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .message-user,
+            .message-ai {
+                max-width: 85%;
+                padding: 10px 14px;
+            }
+            
+            .quick-question {
+                font-size: 0.8rem;
+                padding: 8px 12px;
+            }
+        }
+    </style>
+</head>
+<body class="flex flex-col">
+    <!-- 头部 -->
+    <header class="bg-white">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white shadow-sm">
+                    <i class="fa fa-graduation-cap"></i>
+                </div>
+                <h1 class="text-xl font-bold text-dark">大学生职业规划助手</h1>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容区域 -->
+    <main class="flex-1 flex flex-col md:flex-row container mx-auto px-4 py-6 gap-4">
+        <!-- 左侧历史对话 -->
+        <div class="w-full md:w-1/5 mb-4 md:mb-0 flex">
+            <!-- 历史对话侧边栏 -->
+            <div id="history-sidebar" class="flex-1">
+                <div class="bg-white h-[600px] flex flex-col">
+                    <!-- 历史对话头部 -->
+                    <div class="border-b border-gray-200 p-4 flex justify-between items-center">
+                        <h3 class="font-semibold text-dark text-sm md:text-base">历史对话</h3>
+                        <button id="new-chat-button" class="text-primary text-xs md:text-sm hover:underline">
+                            <i class="fa fa-plus-circle mr-1"></i>新对话
+                        </button>
+                    </div>
+                    
+                    <!-- 历史对话列表 -->
+                    <div id="history-container" class="flex-1 p-3 overflow-y-auto space-y-2">
+                        <!-- 历史对话将通过JS动态添加 -->
+                        <div class="history-item active p-3 cursor-pointer border-l-2 border-primary">
+                            <p class="text-sm font-medium truncate">新对话</p>
+                            <p class="text-xs text-gray-500">刚刚</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 切换历史对话按钮 -->
+            <button id="toggle-history-button" class="text-gray-500 hover:text-primary transition-colors p-2 self-start mt-4 ml-2">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="6" y="6" width="12" height="12" rx="2" stroke="currentColor" stroke-width="2"/>
+                    <path d="M12 6V18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+        
+        <!-- 中间对话区域 -->
+        <div class="w-full md:w-3/5 mb-4 md:mb-0">
+            <div class="bg-white h-[600px] flex flex-col">
+                <!-- 对话头部 -->
+                <div class="border-b border-gray-200 p-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white">
+                            <i class="fa fa-robot"></i>
+                        </div>
+                        <div>
+                            <h2 class="font-semibold text-dark">职业规划顾问</h2>
+                            <p class="text-xs text-gray-500">在线</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 对话内容 -->
+                <div id="chat-container" class="flex-1 p-4 overflow-y-auto space-y-4">
+                    <!-- 系统欢迎消息 -->
+                    <div class="flex">
+                        <div class="message-ai">
+                            <p>你好！我是你的职业规划顾问，有什么可以帮助你的吗？</p>
+                        </div>
+                    </div>
+                    <!-- 消息将通过JS动态添加 -->
+                </div>
+                
+                <!-- 输入区域 -->
+                <div class="border-t border-gray-200 p-4">
+                    <form id="message-form" class="flex space-x-3">
+                        <div class="flex-1 flex space-x-2">
+                            <input 
+                                type="text" 
+                                id="message-input" 
+                                placeholder="输入你的问题..." 
+                                class="flex-1 px-4 py-2 border border-gray-300 focus:outline-none"
+                            >
+                            <label for="file-upload" class="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50 cursor-pointer">
+                                <i class="fa fa-paperclip"></i>
+                                <input type="file" id="file-upload" class="hidden">
+                            </label>
+                        </div>
+                        <button 
+                            type="submit" 
+                            id="send-button" 
+                            class="bg-primary text-white px-4 py-2 hover:bg-blue-600 whitespace-nowrap"
+                            title="发送"
+                        >
+                            <i class="fa fa-paper-plane"></i>
+                        </button>
+                    </form>
+                    <div id="file-preview" class="mt-2 text-sm text-gray-500 hidden">
+                        <span id="file-name"></span>
+                        <button id="remove-file" class="ml-2 text-red-500 hover:underline">移除</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 右侧快捷问题 -->
+        <div class="w-full md:w-1/5">
+            <div class="bg-white p-4">
+                <h3 class="font-semibold text-dark mb-4 text-sm md:text-base">快捷提问</h3>
+                <div class="space-y-2">
+                    <button class="quick-question w-full text-left p-3 bg-secondary text-gray-700 hover:text-primary transition-colors">
+                        我适合什么职业？
+                    </button>
+                    <button class="quick-question w-full text-left p-3 bg-secondary text-gray-700 hover:text-primary transition-colors">
+                        我的专业就业方向
+                    </button>
+                    <button class="quick-question w-full text-left p-3 bg-secondary text-gray-700 hover:text-primary transition-colors">
+                        如何做大学四年规划？
+                    </button>
+                    <button class="quick-question w-full text-left p-3 bg-secondary text-gray-700 hover:text-primary transition-colors">
+                        考研还是就业？
+                    </button>
+                    <button class="quick-question w-full text-left p-3 bg-secondary text-gray-700 hover:text-primary transition-colors">
+                        如何提升简历竞争力？
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 底部 -->
+    <footer class="bg-white py-4">
+        <div class="container mx-auto px-4 text-center text-gray-500 text-sm">
+            <p>© 2026 大学生职业规划助手 | 版权所有</p>
+        </div>
+    </footer>
+
+    <!-- 专业和绩点输入模态窗口 -->
+    <div id="major-gpa-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full">
+            <h3 class="text-lg font-semibold text-dark mb-4">请填写你的信息</h3>
+            <div class="space-y-4">
+                <div>
+                    <label for="major-input" class="block text-sm font-medium text-gray-700 mb-1">你的专业</label>
+                    <input type="text" id="major-input" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" placeholder="例如：计算机科学与技术">
+                </div>
+                <div>
+                    <label for="gpa-input" class="block text-sm font-medium text-gray-700 mb-1">你的绩点</label>
+                    <input type="number" id="gpa-input" step="0.01" min="0" max="4" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" placeholder="例如：3.5">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">补充信息</label>
+                    <textarea id="major-gpa-additional-input" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" rows="3" placeholder="请输入补充信息，如你的就业倾向、兴趣爱好等"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">上传文件（可选）</label>
+                    <label for="major-gpa-file-input" class="flex items-center justify-center w-full px-4 py-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50 cursor-pointer">
+                        <i class="fa fa-paperclip mr-2"></i> 选择文件
+                        <input type="file" id="major-gpa-file-input" class="hidden">
+                    </label>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button id="cancel-modal" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">取消</button>
+                    <button id="submit-modal" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 专业输入模态窗口（仅询问专业） -->
+    <div id="major-only-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full">
+            <h3 class="text-lg font-semibold text-dark mb-4">请填写你的专业</h3>
+            <div class="space-y-4">
+                <div>
+                    <label for="major-only-input" class="block text-sm font-medium text-gray-700 mb-1">你的专业</label>
+                    <input type="text" id="major-only-input" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" placeholder="例如：计算机科学与技术">
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button id="cancel-major-only-modal" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">取消</button>
+                    <button id="submit-major-only-modal" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 考研还是就业模态窗口（包含补充信息） -->
+    <div id="exam-work-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full">
+            <h3 class="text-lg font-semibold text-dark mb-4">请填写你的信息</h3>
+            <div class="space-y-4">
+                <div>
+                    <label for="exam-work-major-input" class="block text-sm font-medium text-gray-700 mb-1">你的专业</label>
+                    <input type="text" id="exam-work-major-input" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" placeholder="例如：计算机科学与技术">
+                </div>
+                <div>
+                    <label for="exam-work-gpa-input" class="block text-sm font-medium text-gray-700 mb-1">你的绩点</label>
+                    <input type="number" id="exam-work-gpa-input" step="0.01" min="0" max="4" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" placeholder="例如：3.5">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">补充信息</label>
+                    <textarea id="exam-work-additional-input" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary" rows="3" placeholder="请输入补充信息，如你的职业规划、兴趣爱好等"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">上传文件（可选）</label>
+                    <label for="exam-work-file-input" class="flex items-center justify-center w-full px-4 py-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-50 cursor-pointer">
+                        <i class="fa fa-paperclip mr-2"></i> 选择文件
+                        <input type="file" id="exam-work-file-input" class="hidden">
+                    </label>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button id="cancel-exam-work-modal" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">取消</button>
+                    <button id="submit-exam-work-modal" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM元素
+        const messageForm = document.getElementById('message-form');
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+        const chatContainer = document.getElementById('chat-container');
+        // 文件上传相关元素
+        const fileUpload = document.getElementById('file-upload');
+        const filePreview = document.getElementById('file-preview');
+        const fileName = document.getElementById('file-name');
+        const removeFile = document.getElementById('remove-file');
+        // 快捷问题按钮
+        const quickQuestionButtons = document.querySelectorAll('.quick-question');
+        // 历史对话侧边栏
+        const historySidebar = document.getElementById('history-sidebar');
+        // 历史对话容器
+        const historyContainer = document.getElementById('history-container');
+        // 新对话按钮
+        const newChatButton = document.getElementById('new-chat-button');
+        // 切换历史对话按钮
+        const toggleHistoryButton = document.getElementById('toggle-history-button');
+        // 专业和绩点输入模态窗口相关元素
+        const majorGpaModal = document.getElementById('major-gpa-modal');
+        const majorInput = document.getElementById('major-input');
+        const gpaInput = document.getElementById('gpa-input');
+        const majorGpaAdditionalInput = document.getElementById('major-gpa-additional-input');
+        const majorGpaFileInput = document.getElementById('major-gpa-file-input');
+        const cancelModal = document.getElementById('cancel-modal');
+        const submitModal = document.getElementById('submit-modal');
+        // 专业输入模态窗口相关元素
+        const majorOnlyModal = document.getElementById('major-only-modal');
+        const majorOnlyInput = document.getElementById('major-only-input');
+        const cancelMajorOnlyModal = document.getElementById('cancel-major-only-modal');
+        const submitMajorOnlyModal = document.getElementById('submit-major-only-modal');
+        // 考研还是就业模态窗口相关元素
+        const examWorkModal = document.getElementById('exam-work-modal');
+        const examWorkMajorInput = document.getElementById('exam-work-major-input');
+        const examWorkGpaInput = document.getElementById('exam-work-gpa-input');
+        const examWorkAdditionalInput = document.getElementById('exam-work-additional-input');
+        const examWorkFileInput = document.getElementById('exam-work-file-input');
+        const cancelExamWorkModal = document.getElementById('cancel-exam-work-modal');
+        const submitExamWorkModal = document.getElementById('submit-exam-work-modal');
+        
+        // 历史对话显示状态
+        let historyVisible = true;
+        
+        // 当前选中的文件
+        let selectedFile = null;
+        
+        // 对话历史数据
+        let chatHistory = [
+            {
+                id: '1',
+                title: '新对话',
+                messages: [
+                    {
+                        role: 'ai',
+                        content: '你好！我是你的职业规划顾问，有什么可以帮助你的吗？'
+                    }
+                ],
+                timestamp: new Date().toISOString()
+            }
+        ];
+        
+        // 当前对话
+        let currentChat = chatHistory[0];
+
+        // 滚动到底部
+        function scrollToBottom() {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // 添加用户消息
+        function addUserMessage(message) {
+            const messageElement = document.createElement('div');
+            messageElement.className = 'flex justify-end';
+            messageElement.innerHTML = `
+                <div class="message-user">
+                    <p>${message}</p>
+                </div>
+            `;
+            chatContainer.appendChild(messageElement);
+            scrollToBottom();
+        }
+
+        // 添加AI消息
+        function addAIMessage(message) {
+            const messageElement = document.createElement('div');
+            messageElement.className = 'flex';
+            messageElement.innerHTML = `
+                <div class="message-ai">
+                    <p>${message}</p>
+                </div>
+            `;
+            chatContainer.appendChild(messageElement);
+            scrollToBottom();
+        }
+
+        // 显示加载动画
+        function showLoadingIndicator() {
+            const loadingElement = document.createElement('div');
+            loadingElement.id = 'loading-indicator';
+            loadingElement.className = 'flex';
+            loadingElement.innerHTML = `
+                <div class="message-ai">
+                    <div class="typing-indicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            `;
+            chatContainer.appendChild(loadingElement);
+            scrollToBottom();
+        }
+
+        // 隐藏加载动画
+        function hideLoadingIndicator() {
+            const loadingElement = document.getElementById('loading-indicator');
+            if (loadingElement) {
+                loadingElement.remove();
+            }
+        }
+
+        // 保存消息到历史记录
+        function saveMessageToHistory(role, content) {
+            currentChat.messages.push({ role, content });
+            currentChat.timestamp = new Date().toISOString();
+            
+            // 更新对话标题（使用第一条用户消息作为标题）
+            if (role === 'user' && currentChat.title === '新对话') {
+                currentChat.title = content.substring(0, 20) + (content.length > 20 ? '...' : '');
+                renderHistory();
+            }
+        }
+
+        // 发送消息到AI（预留接口）
+        async function sendMessageToAI(message) {
+            // 这里将预留对接后端API的代码
+            // 目前模拟一个延迟回复
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve('这是AI的回复，实际应用中会调用后端API获取真实回复。');
+                }, 1000);
+            });
+        }
+
+        // 处理发送消息
+        async function handleSendMessage(message, file = null) {
+            if (!message.trim() && !file) return;
+
+            // 构建完整消息
+            let fullMessage = message;
+            if (file) {
+                fullMessage += ` [附件: ${file.name}]`;
+            }
+
+            // 添加用户消息
+            addUserMessage(fullMessage);
+            // 保存用户消息到历史记录
+            saveMessageToHistory('user', fullMessage);
+            // 清空输入框
+            messageInput.value = '';
+            // 重置文件选择
+            if (file) {
+                selectedFile = null;
+                fileUpload.value = '';
+                filePreview.classList.add('hidden');
+            }
+            // 显示加载动画
+            showLoadingIndicator();
+            // 禁用发送按钮
+            sendButton.disabled = true;
+
+            try {
+                // 发送消息到AI（如果有文件，这里可以处理文件上传逻辑）
+                const response = await sendMessageToAI(fullMessage);
+                // 隐藏加载动画
+                hideLoadingIndicator();
+                // 添加AI消息
+                addAIMessage(response);
+                // 保存AI消息到历史记录
+                saveMessageToHistory('ai', response);
+                // 启用发送按钮
+                sendButton.disabled = false;
+            } catch (error) {
+                console.error('发送消息失败:', error);
+                hideLoadingIndicator();
+                addAIMessage('抱歉，发送消息失败，请重试。');
+                sendButton.disabled = false;
+            }
+        }
+
+        // 渲染历史对话
+        function renderHistory() {
+            historyContainer.innerHTML = '';
+            chatHistory.forEach(chat => {
+                const historyItem = document.createElement('div');
+                historyItem.className = `history-item p-3 rounded-lg cursor-pointer hover:bg-gray-50 border-l-2 ${chat.id === currentChat.id ? 'border-primary active' : 'border-transparent'}`;
+                historyItem.innerHTML = `
+                    <p class="text-sm font-medium truncate">${chat.title}</p>
+                    <p class="text-xs text-gray-500">刚刚</p>
+                `;
+                historyItem.addEventListener('click', () => {
+                    loadChat(chat.id);
+                });
+                
+                historyContainer.appendChild(historyItem);
+            });
+        }
+
+        // 加载对话
+        function loadChat(chatId) {
+            const chat = chatHistory.find(c => c.id === chatId);
+            if (chat) {
+                currentChat = chat;
+                // 清空对话容器
+                chatContainer.innerHTML = '';
+                // 重新渲染对话内容
+                chat.messages.forEach(msg => {
+                    if (msg.role === 'user') {
+                        addUserMessage(msg.content);
+                    } else {
+                        addAIMessage(msg.content);
+                    }
+                });
+                // 重新渲染历史对话
+                renderHistory();
+            }
+        }
+
+        // 创建新对话
+        function createNewChat() {
+            const newChat = {
+                id: Date.now().toString(),
+                title: '新对话',
+                messages: [
+                    {
+                        role: 'ai',
+                        content: '你好！我是你的职业规划顾问，有什么可以帮助你的吗？'
+                    }
+                ],
+                timestamp: new Date().toISOString()
+            };
+            chatHistory.unshift(newChat);
+            loadChat(newChat.id);
+        }
+
+        // 快捷问题点击事件
+        quickQuestionButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const question = button.textContent.trim();
+                if (question === '我适合什么职业？') {
+                    // 显示模态窗口
+                    majorGpaModal.classList.remove('hidden');
+                } else if (question === '我的专业就业方向') {
+                    // 显示专业输入模态窗口
+                    majorOnlyModal.classList.remove('hidden');
+                } else if (question === '考研还是就业？') {
+                    // 显示考研还是就业模态窗口
+                    examWorkModal.classList.remove('hidden');
+                } else {
+                    handleSendMessage(question);
+                }
+            });
+        });
+
+        // 取消按钮点击事件
+        cancelModal.addEventListener('click', () => {
+            majorGpaModal.classList.add('hidden');
+            // 清空输入
+            majorInput.value = '';
+            gpaInput.value = '';
+            majorGpaAdditionalInput.value = '';
+            majorGpaFileInput.value = '';
+        });
+
+        // 提交按钮点击事件
+        submitModal.addEventListener('click', () => {
+            const major = majorInput.value.trim();
+            const gpa = gpaInput.value.trim();
+            const additional = majorGpaAdditionalInput.value.trim();
+            const file = majorGpaFileInput.files[0];
+            
+            if (major && gpa) {
+                // 构建完整问题
+                let question = `我适合什么职业？我是${major}专业的学生，绩点是${gpa}。`;
+                if (additional) {
+                    question += ` 补充信息：${additional}`;
+                }
+                // 关闭模态窗口
+                majorGpaModal.classList.add('hidden');
+                // 清空输入
+                majorInput.value = '';
+                gpaInput.value = '';
+                majorGpaAdditionalInput.value = '';
+                majorGpaFileInput.value = '';
+                // 发送消息
+                handleSendMessage(question, file);
+            } else {
+                // 提示用户填写完整信息
+                alert('请填写完整的专业和绩点信息');
+            }
+        });
+
+        // 专业输入模态窗口取消按钮点击事件
+        cancelMajorOnlyModal.addEventListener('click', () => {
+            majorOnlyModal.classList.add('hidden');
+            // 清空输入
+            majorOnlyInput.value = '';
+        });
+
+        // 专业输入模态窗口提交按钮点击事件
+        submitMajorOnlyModal.addEventListener('click', () => {
+            const major = majorOnlyInput.value.trim();
+            
+            if (major) {
+                // 构建完整问题
+                const question = `我的专业就业方向？我是${major}专业的学生。`;
+                // 关闭模态窗口
+                majorOnlyModal.classList.add('hidden');
+                // 清空输入
+                majorOnlyInput.value = '';
+                // 发送消息
+                handleSendMessage(question);
+            } else {
+                // 提示用户填写完整信息
+                alert('请填写你的专业信息');
+            }
+        });
+
+        // 考研还是就业模态窗口取消按钮点击事件
+        cancelExamWorkModal.addEventListener('click', () => {
+            examWorkModal.classList.add('hidden');
+            // 清空输入
+            examWorkMajorInput.value = '';
+            examWorkGpaInput.value = '';
+            examWorkAdditionalInput.value = '';
+            examWorkFileInput.value = '';
+        });
+
+        // 考研还是就业模态窗口提交按钮点击事件
+        submitExamWorkModal.addEventListener('click', () => {
+            const major = examWorkMajorInput.value.trim();
+            const gpa = examWorkGpaInput.value.trim();
+            const additional = examWorkAdditionalInput.value.trim();
+            
+            if (major && gpa) {
+                // 构建完整问题
+                let question = `考研还是就业？我是${major}专业的学生，绩点是${gpa}。`;
+                if (additional) {
+                    question += ` 补充信息：${additional}`;
+                }
+                // 关闭模态窗口
+                examWorkModal.classList.add('hidden');
+                // 清空输入
+                examWorkMajorInput.value = '';
+                examWorkGpaInput.value = '';
+                examWorkAdditionalInput.value = '';
+                examWorkFileInput.value = '';
+                // 发送消息
+                handleSendMessage(question);
+            } else {
+                // 提示用户填写完整信息
+                alert('请填写完整的专业和绩点信息');
+            }
+        });
+
+        // 表单提交事件
+        messageForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const message = messageInput.value;
+            handleSendMessage(message, selectedFile);
+        });
+
+        // 新对话按钮点击事件
+        newChatButton.addEventListener('click', createNewChat);
+
+        // 切换历史对话按钮点击事件
+        toggleHistoryButton.addEventListener('click', toggleHistory);
+
+        // 切换历史对话显示/隐藏
+        function toggleHistory() {
+            historyVisible = !historyVisible;
+            const mainContainer = document.querySelector('main');
+            const chatArea = mainContainer.children[1]; // 中间对话区域
+            const historyContainer = document.querySelector('main > div'); // 历史对话容器
+            if (historyVisible) {
+                historySidebar.style.display = 'block';
+                historyContainer.className = 'w-full md:w-1/5 mb-4 md:mb-0 flex';
+                chatArea.className = 'w-full md:w-3/5 mb-4 md:mb-0';
+                toggleHistoryButton.innerHTML = `
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="6" y="6" width="12" height="12" rx="2" stroke="currentColor" stroke-width="2"/>
+                        <path d="M12 6V18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                `;
+                toggleHistoryButton.style.zIndex = '1';
+            } else {
+                historySidebar.style.display = 'none';
+                historyContainer.className = 'w-0 md:w-0 mb-4 md:mb-0 flex';
+                chatArea.className = 'w-full md:w-full mb-4 md:mb-0';
+                toggleHistoryButton.innerHTML = `
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="6" y="6" width="12" height="12" rx="2" stroke="currentColor" stroke-width="2"/>
+                        <path d="M12 6V18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                `;
+                toggleHistoryButton.style.zIndex = '10';
+                toggleHistoryButton.style.position = 'relative';
+            }
+        }
+
+        // 文件上传事件处理
+        fileUpload.addEventListener('change', (e) => {
+            selectedFile = e.target.files[0];
+            if (selectedFile) {
+                fileName.textContent = selectedFile.name;
+                filePreview.classList.remove('hidden');
+            }
+        });
+
+        // 移除文件事件处理
+        removeFile.addEventListener('click', () => {
+            selectedFile = null;
+            fileUpload.value = '';
+            filePreview.classList.add('hidden');
+        });
+
+        // 初始化渲染历史对话
+        renderHistory();
+    </script>
+</body>
+</html>
