@@ -1,0 +1,15 @@
+.cache/
+.vscode/
+
+/models/
+/learning/
+/model_download/
+
+project/__pycache__/
+test_model/__pycache__/
+project/data/test_tmp/
+*.db-journal
+
+/logs
+
+project/data/*.db
