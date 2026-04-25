@@ -27,7 +27,7 @@ class CareerOrchestrator:
         self,
         text_model_path: str = './models/DeepSeek-R1-Distill-Qwen-1___5B',
         image_model_path: str = './models/Qwen3-VL-2B-Instruct',
-        db_path: str = './project/data/session_memory.db',
+        db_path: str = './data/session_memory.db',
     ):
         self.settings = get_settings()
         self.memory = SessionMemory(db_path=db_path)

@@ -17,7 +17,7 @@ class KnowledgeItem:
 
 
 class CareerKnowledgeBase:
-    def __init__(self, kb_path: str = "./dataset/career_knowledge_base.json"):
+    def __init__(self, kb_path: str = "../dataset/career_knowledge_base.json"):
         self.kb_path = Path(kb_path)
         self.items = self._load_items()
 
