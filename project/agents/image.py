@@ -1,4 +1,4 @@
-﻿# image_processor.py
+# image_processor.py
 import torch
 from transformers import Qwen3VLForConditionalGeneration, Qwen3VLProcessor
 
@@ -8,9 +8,9 @@ except Exception:
     process_vision_info = None
 
 try:
-    from .memory_manager import get_vram_manager
+    from ..core.memory_manager import get_vram_manager
 except ImportError:
-    from memory_manager import get_vram_manager
+    from project.core.memory_manager import get_vram_manager
 
 
 class ImageProcessor:

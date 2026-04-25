@@ -8,7 +8,7 @@ import httpx
 try:
     from .settings import get_settings
 except ImportError:
-    from project.settings import get_settings
+    from project.core.settings import get_settings
 
 
 class BrainClient:

@@ -8,10 +8,10 @@ from fastapi.responses import JSONResponse
 from sse_starlette.sse import EventSourceResponse
 
 try:
-    from .assistant_schemas import CareerPlanResponse, FeedbackRequest, TaskRequest
-    from .orchestrator import CareerOrchestrator
+    from ..core.schemas import CareerPlanResponse, FeedbackRequest, TaskRequest
+    from ..orchestrator import CareerOrchestrator
 except ImportError:
-    from project.assistant_schemas import CareerPlanResponse, FeedbackRequest, TaskRequest
+    from project.core.schemas import CareerPlanResponse, FeedbackRequest, TaskRequest
     from project.orchestrator import CareerOrchestrator
 
 

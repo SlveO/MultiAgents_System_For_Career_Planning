@@ -1,13 +1,13 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import argparse
 import json
 
 try:
-    from .assistant_schemas import TaskRequest, UserConstraints
+    from .core.schemas import TaskRequest, UserConstraints
     from .orchestrator import CareerOrchestrator
 except ImportError:
-    from project.assistant_schemas import TaskRequest, UserConstraints
+    from project.core.schemas import TaskRequest, UserConstraints
     from project.orchestrator import CareerOrchestrator
 
 

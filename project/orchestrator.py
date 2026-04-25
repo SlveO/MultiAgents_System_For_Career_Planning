@@ -1,25 +1,25 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import json
 import time
 from typing import Any, Dict, Generator, List, Tuple
 
 try:
-    from .assistant_schemas import CareerPlanResponse, Milestone, PerceptionResult, TaskRequest, UserProfile
-    from .brain_client import DeepSeekBrainClient, LocalBrainFallbackClient
-    from .career_knowledge import CareerKnowledgeBase
-    from .perception_agents import AudioPerceptionAgent, DocumentPerceptionAgent, ImagePerceptionAgent, TextPerceptionAgent
-    from .session_memory import SessionMemory
-    from .settings import get_settings
-    from .text import TextProcessor
+    from .core.schemas import CareerPlanResponse, Milestone, PerceptionResult, TaskRequest, UserProfile
+    from .core.brain_client import DeepSeekBrainClient, LocalBrainFallbackClient
+    from .core.career_knowledge import CareerKnowledgeBase
+    from .agents.perception import AudioPerceptionAgent, DocumentPerceptionAgent, ImagePerceptionAgent, TextPerceptionAgent
+    from .core.session_memory import SessionMemory
+    from .core.settings import get_settings
+    from .agents.text import TextProcessor
 except ImportError:
-    from project.assistant_schemas import CareerPlanResponse, Milestone, PerceptionResult, TaskRequest, UserProfile
-    from project.brain_client import DeepSeekBrainClient, LocalBrainFallbackClient
-    from project.career_knowledge import CareerKnowledgeBase
-    from project.perception_agents import AudioPerceptionAgent, DocumentPerceptionAgent, ImagePerceptionAgent, TextPerceptionAgent
-    from project.session_memory import SessionMemory
-    from project.settings import get_settings
-    from project.text import TextProcessor
+    from project.core.schemas import CareerPlanResponse, Milestone, PerceptionResult, TaskRequest, UserProfile
+    from project.core.brain_client import DeepSeekBrainClient, LocalBrainFallbackClient
+    from project.core.career_knowledge import CareerKnowledgeBase
+    from project.agents.perception import AudioPerceptionAgent, DocumentPerceptionAgent, ImagePerceptionAgent, TextPerceptionAgent
+    from project.core.session_memory import SessionMemory
+    from project.core.settings import get_settings
+    from project.agents.text import TextProcessor
 
 
 class CareerOrchestrator:

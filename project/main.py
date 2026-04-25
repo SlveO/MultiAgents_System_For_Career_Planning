@@ -2,10 +2,10 @@
 #!/usr/bin/env python3
 import sys
 import argparse
-from memory_manager import get_vram_manager, cleanup_all
-from route import InputClassifier
-from text import TextProcessor
-from image import ImageProcessor
+from .core.memory_manager import get_vram_manager, cleanup_all
+from .classifier.classifier import InputClassifier
+from .agents.text import TextProcessor
+from .agents.image import ImageProcessor
 
 
 class MultimodalAssistant:

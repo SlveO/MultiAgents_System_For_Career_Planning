@@ -1,12 +1,12 @@
-﻿# text_processor.py
+# text_processor.py
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer, TextIteratorStreamer
 from threading import Thread
 
 try:
-    from .memory_manager import get_vram_manager
+    from ..core.memory_manager import get_vram_manager
 except ImportError:
-    from memory_manager import get_vram_manager
+    from project.core.memory_manager import get_vram_manager
 
 
 class TextProcessor:
