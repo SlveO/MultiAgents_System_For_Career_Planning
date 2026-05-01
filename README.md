@@ -1,7 +1,7 @@
 # MultiAgents System For Career Planning
 
 基于多智能体的多模态职业规划助手：
-- 本地小模型负责多模态感知（文本/图像/文档/音频/视频 → 文本描述）
+- 本地小模型负责多模态感知（图像/文档/音频/视频 → 文本描述）
 - 云端 DeepSeek API 负责规划推理大脑
 - 支持 CLI、REST API（含 SSE 流式）、Web 前端
 
