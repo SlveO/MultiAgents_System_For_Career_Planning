@@ -2,9 +2,9 @@ import unittest
 import uuid
 from pathlib import Path
 
-from project.assistant_schemas import TaskRequest
-from project.career_knowledge import CareerKnowledgeBase
-from project.session_memory import SessionMemory
+from project.core.schemas import TaskRequest
+from project.core.career_knowledge import CareerKnowledgeBase
+from project.core.session_memory import SessionMemory
 
 
 class TestMVPComponents(unittest.TestCase):

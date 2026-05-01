@@ -95,26 +95,8 @@ class DeepSeekBrainClient(BrainClient):
                     if not choices:
                         continue
                     delta = choices[0].get("delta", {})
-                    token = delta.get("content", "")
+                    token = delta.get("content") or delta.get("reasoning_content") or ""
                     if token:
                         yield token
 
 
-class LocalBrainFallbackClient(BrainClient):
-    def __init__(self, text_processor):
-        self.text_processor = text_processor
-
-    @property
-    def model_name(self) -> str:
-        return "local-text-fallback"
-
-    def plan(self, prompt: str, model: Optional[str] = None) -> str:
-        return self.text_processor.generate(prompt, stream=False)["response"]
-
-    def plan_stream(self, prompt: str, model: Optional[str] = None) -> Iterable[str]:
-        chunks = self.text_processor.generate(prompt, stream=True)
-        for chunk in chunks:
-            if chunk.get("type") in {"thinking", "thinking_complete", "response"}:
-                token = chunk.get("token", "")
-                if token:
-                    yield token

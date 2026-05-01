@@ -98,5 +98,374 @@
       "后端开发 -> 测试开发"
     ],
     "salary_hint": "一线城市应届约10k-20k/月"
+  },
+  {
+    "role": "光学设计工程师",
+    "skills": [
+      "Zemax",
+      "CodeV",
+      "几何光学",
+      "像差理论",
+      "MATLAB",
+      "光学系统设计",
+      "公差分析",
+      "光机结构配合"
+    ],
+    "resources": [
+      "Zemax官方手册",
+      "光学系统设计 (Robert Fischer)",
+      "Lens Design Fundamentals",
+      "光电设计竞赛"
+    ],
+    "transition_paths": [
+      "光电信息专业 -> 光学设计",
+      "物理光学 -> 光学设计"
+    ],
+    "salary_hint": "一线城市应届约15k-28k/月"
+  },
+  {
+    "role": "激光算法工程师",
+    "skills": [
+      "信号处理",
+      "光束控制",
+      "噪声抑制",
+      "MATLAB",
+      "Python",
+      "光电检测",
+      "激光雷达"
+    ],
+    "resources": [
+      "激光原理 (周炳琨)",
+      "激光雷达技术",
+      "自动驾驶感知"
+    ],
+    "transition_paths": [
+      "光电专业 -> 激光算法",
+      "信号处理 -> 激光雷达"
+    ],
+    "salary_hint": "一线城市应届约18k-35k/月"
+  },
+  {
+    "role": "光电工艺工程师",
+    "skills": [
+      "半导体工艺",
+      "光电器件封装",
+      "良率分析",
+      "设备操作",
+      "SPC",
+      "失效分析"
+    ],
+    "resources": [
+      "半导体工艺手册",
+      "光电制造工程",
+      "六西格玛"
+    ],
+    "transition_paths": [
+      "材料专业 -> 光电工艺",
+      "机械专业 -> 光电器件制造"
+    ],
+    "salary_hint": "一线城市应届约12k-22k/月"
+  },
+  {
+    "role": "模拟IC设计工程师",
+    "skills": [
+      "Cadence Virtuoso",
+      "模拟电路设计",
+      "运放设计",
+      "版图设计",
+      "Spectre仿真",
+      "工艺角分析",
+      "半导体物理"
+    ],
+    "resources": [
+      "Razavi模拟CMOS集成电路设计",
+      "Allen模拟集成电路设计",
+      "Cadence官方培训"
+    ],
+    "transition_paths": [
+      "微电子专业 -> 模拟IC设计",
+      "集成电路专业 -> 模拟IC设计"
+    ],
+    "salary_hint": "一线城市应届约20k-40k/月（IC行业偏高）"
+  },
+  {
+    "role": "嵌入式系统工程师",
+    "skills": [
+      "C/C++",
+      "RTOS",
+      "ARM架构",
+      "驱动开发",
+      "FreeRTOS",
+      "Linux内核",
+      "硬件调试",
+      "通信协议"
+    ],
+    "resources": [
+      "STM32官方文档",
+      "Linux Device Drivers",
+      "ARM嵌入式系统开发",
+      "嵌入式项目实战"
+    ],
+    "transition_paths": [
+      "电子信息专业 -> 嵌入式",
+      "自动化专业 -> 嵌入式",
+      "物联网专业 -> 嵌入式"
+    ],
+    "salary_hint": "一线城市应届约12k-25k/月"
+  },
+  {
+    "role": "射频工程师",
+    "skills": [
+      "HFSS",
+      "ADS",
+      "射频电路设计",
+      "微波理论",
+      "天线设计",
+      "S参数",
+      "EMC/EMI",
+      "矢量网络分析仪"
+    ],
+    "resources": [
+      "Pozar微波工程",
+      "Antenna Theory (Balanis)",
+      "ADS官方教程",
+      "射频电路设计实战"
+    ],
+    "transition_paths": [
+      "电磁场专业 -> 射频工程师",
+      "通信工程 -> 射频工程师"
+    ],
+    "salary_hint": "一线城市应届约18k-35k/月"
+  },
+  {
+    "role": "医学影像算法工程师",
+    "skills": [
+      "Python",
+      "图像处理",
+      "深度学习",
+      "医学影像分析",
+      "DICOM标准",
+      "OpenCV",
+      "PyTorch",
+      "CT/MRI原理"
+    ],
+    "resources": [
+      "医学影像处理与分析",
+      "Deep Learning for Medical Image Analysis",
+      "MONAI框架"
+    ],
+    "transition_paths": [
+      "生物医学工程 -> 医学影像算法",
+      "计算机视觉 -> 医学影像"
+    ],
+    "salary_hint": "一线城市应届约18k-30k/月"
+  },
+  {
+    "role": "计算机视觉算法工程师",
+    "skills": [
+      "Python",
+      "PyTorch/TensorFlow",
+      "目标检测",
+      "图像分割",
+      "OpenCV",
+      "模型部署",
+      "Transformer",
+      "特征提取"
+    ],
+    "resources": [
+      "CS231n课程",
+      "深度学习计算机视觉",
+      "PapersWithCode",
+      "Kaggle竞赛"
+    ],
+    "transition_paths": [
+      "计算机科学 -> CV算法",
+      "数学/统计 -> 计算机视觉"
+    ],
+    "salary_hint": "一线城市应届约20k-40k/月（竞争激烈）"
+  },
+  {
+    "role": "封装设计工程师",
+    "skills": [
+      "Ansys",
+      "热仿真",
+      "应力分析",
+      "SIP封装",
+      "FCBGA",
+      "基板设计",
+      "可靠性测试",
+      "Cadence APD"
+    ],
+    "resources": [
+      "电子封装技术",
+      "Ansys Icepak教程",
+      "先进封装技术综述"
+    ],
+    "transition_paths": [
+      "电子封装专业 -> 封装设计",
+      "机械工程 -> 热力仿真封装"
+    ],
+    "salary_hint": "一线城市应届约15k-28k/月"
+  },
+  {
+    "role": "通信算法工程师",
+    "skills": [
+      "MATLAB",
+      "C/C++",
+      "数字信号处理",
+      "OFDM",
+      "MIMO",
+      "信道编解码",
+      "FPGA基础",
+      "5G NR协议"
+    ],
+    "resources": [
+      "Proakis数字通信",
+      "Oppenheim信号与系统",
+      "5G NR标准",
+      "GNU Radio"
+    ],
+    "transition_paths": [
+      "通信工程 -> 通信算法",
+      "信号处理 -> 通信算法"
+    ],
+    "salary_hint": "一线城市应届约18k-35k/月"
+  },
+  {
+    "role": "嵌入式软件开发工程师",
+    "skills": [
+      "C语言",
+      "ARM Cortex-M",
+      "STM32",
+      "RTOS",
+      "I2C/SPI/UART",
+      "低功耗设计",
+      "调试工具",
+      "Git"
+    ],
+    "resources": [
+      "STM32CubeIDE教程",
+      "嵌入式C语言编程",
+      "ARM Cortex-M权威指南"
+    ],
+    "transition_paths": [
+      "电子信息 -> 嵌入式软件",
+      "计算机科学 -> 嵌入式开发"
+    ],
+    "salary_hint": "一线城市应届约12k-24k/月"
+  },
+  {
+    "role": "DSP算法工程师",
+    "skills": [
+      "MATLAB",
+      "C/C++",
+      "数字信号处理",
+      "FFT实现",
+      "滤波器设计",
+      "定点/浮点运算",
+      "DSP芯片",
+      "音频/图像处理"
+    ],
+    "resources": [
+      "离散时间信号处理 (Oppenheim)",
+      "DSP应用与实战",
+      "TI DSP文档"
+    ],
+    "transition_paths": [
+      "信号处理专业 -> DSP算法",
+      "通信工程 -> DSP"
+    ],
+    "salary_hint": "一线城市应届约16k-30k/月"
+  },
+  {
+    "role": "物联网系统工程师",
+    "skills": [
+      "Python",
+      "C/C++",
+      "MQTT/CoAP",
+      "传感器技术",
+      "低功耗通信",
+      "云平台对接",
+      "边缘计算",
+      "嵌入式Linux"
+    ],
+    "resources": [
+      "IoT开发实战",
+      "阿里云IoT文档",
+      "ESP32开发指南"
+    ],
+    "transition_paths": [
+      "电子信息 -> 物联网",
+      "计算机科学 -> IoT系统"
+    ],
+    "salary_hint": "一线城市应届约12k-23k/月"
+  },
+  {
+    "role": "FAE现场应用工程师",
+    "skills": [
+      "技术沟通",
+      "客户支持",
+      "芯片规格理解",
+      "电路调试",
+      "方案设计",
+      "英语能力",
+      "PPT演示",
+      "出差承受力"
+    ],
+    "resources": [
+      "原厂培训体系",
+      "客户沟通技巧",
+      "芯片行业白皮书"
+    ],
+    "transition_paths": [
+      "电子信息 -> FAE",
+      "研发工程师 -> FAE"
+    ],
+    "salary_hint": "一线城市应届约10k-18k/月+绩效"
+  },
+  {
+    "role": "软硬件协同设计工程师",
+    "skills": [
+      "C/C++",
+      "Verilog/VHDL",
+      "FPGA开发",
+      "软硬件划分",
+      "嵌入式系统",
+      "高层次综合",
+      "性能分析"
+    ],
+    "resources": [
+      "FPGA开发指南",
+      "软硬件协同设计 (Patrick Schaumont)",
+      "Zynq平台文档"
+    ],
+    "transition_paths": [
+      "电子信息 -> 软硬件协同",
+      "计算机体系结构 -> 协同设计"
+    ],
+    "salary_hint": "一线城市应届约18k-32k/月"
+  },
+  {
+    "role": "云计算工程师",
+    "skills": [
+      "Linux",
+      "Docker/K8s",
+      "Python/Go",
+      "网络基础",
+      "虚拟化技术",
+      "CI/CD",
+      "基础设施即代码",
+      "监控告警"
+    ],
+    "resources": [
+      "AWS/GCP/Azure认证",
+      "Kubernetes实战",
+      "云原生架构"
+    ],
+    "transition_paths": [
+      "运维 -> 云计算",
+      "后端开发 -> 云平台"
+    ],
+    "salary_hint": "一线城市应届约15k-30k/月"
   }
 ]

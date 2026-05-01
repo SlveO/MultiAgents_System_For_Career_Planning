@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 
 
 IntentType = Literal["qa", "diagnosis", "planning", "review"]
-ModalityType = Literal["text", "image", "document", "audio"]
+ModalityType = Literal["text", "image", "document", "audio", "video"]
 
 
 class UserConstraints(BaseModel):
@@ -24,6 +24,7 @@ class TaskRequest(BaseModel):
     image_paths: List[str] = Field(default_factory=list)
     document_paths: List[str] = Field(default_factory=list)
     audio_paths: List[str] = Field(default_factory=list)
+    video_paths: List[str] = Field(default_factory=list)
     brain_model: Optional[str] = None
     stream: bool = False
     debug_trace: bool = False

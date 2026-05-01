@@ -13,3 +13,6 @@ project/data/test_tmp/
 /logs
 
 project/data/*.db
+
+# Environment
+.env

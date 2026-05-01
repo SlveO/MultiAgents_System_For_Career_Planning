@@ -1,274 +1,308 @@
-# main.py
 #!/usr/bin/env python3
-import sys
+from __future__ import annotations
+
 import argparse
-from .core.memory_manager import get_vram_manager, cleanup_all
-from .classifier.classifier import InputClassifier
-from .agents.text import TextProcessor
-from .agents.image import ImageProcessor
+import sys
+from typing import Any, Dict, List
+
+from .core.input_router import DataRouter
+from .core.memory_manager import cleanup_all, get_vram_manager
 
 
 class MultimodalAssistant:
-    def __init__(self, 
-                 text_model_path='./models/DeepSeek-R1-Distill-Qwen-1.5B',
-                 image_model_path='./models/Qwen3-VL-2B-Instruct'):
-        
-        print("🚀 初始化多模态AI助手...")
+    def __init__(
+        self,
+        image_model_path: str = "./models/Qwen3-VL-2B-Instruct",
+    ) -> None:
+        print("Initializing multimodal assistant...")
         print("=" * 60)
-        
-        self.classifier = InputClassifier()
+
+        self.router = DataRouter()
         self.vram_manager = get_vram_manager()
-        
-        self.text_processor = TextProcessor(model_path=text_model_path)
-        self.image_processor = ImageProcessor(model_path=image_model_path)
-        
-        print("=" * 60)
-        print("✅ 系统就绪 | 显存管理: 启用")
-        print("💡 支持格式: 文本 | 图片路径 | 图文混合")
-        print("   图片模式: 仅使用Vision模型直接输出")
-        print("-" * 60)
-    
-    def process(self, user_input: str, stream: bool = False):
-        print(f"\n🔍 分析输入...")
-        
-        classification = self.classifier.classify(user_input)
-        mode = classification['mode']
-        
-        print(f"📋 检测模式: {self._mode_name(mode)}")
-        print(f"   文本长度: {len(classification['text_content'])} 字符")
-        print(f"   图片数量: {len(classification['image_paths'])} 张")
-        
-        valid, msg = self.classifier.validate(classification)
-        if not valid:
-            print(f"❌ 验证失败: {msg}")
-            return {'success': False, 'error': msg}
-        
+
         try:
-            if mode == 'text':
-                return self._handle_text_only(classification, stream)
-            elif mode == 'image':
-                return self._handle_image_only(classification)
-            else:
-                return self._handle_multimodal(classification)
-                
+            from .agents.image import ImageProcessor
         except Exception as e:
-            print(f"❌ 处理出错: {str(e)}")
-            import traceback
-            traceback.print_exc()
-            return {'success': False, 'error': str(e)}
-        
-        finally:
-            print(f"\n💾 {self.vram_manager.get_status()}")
-    
-    def _mode_name(self, mode: str) -> str:
-        return {'text': '纯文本', 'image': '纯图片', 'multimodal': '图文混合'}.get(mode, '未知')
-    
-    def _handle_text_only(self, classification, stream):
-        """纯文本模式 - 使用Text模型"""
-        query = classification['text_content']
-        print(f"\n💬 处理文本查询...")
-        
-        if stream:
-            return self._stream_text_output(query)
-        else:
-            result = self.text_processor.generate(query, stream=False)
-            self._print_text_result(result)
-            return {
-                'success': True,
-                'mode': 'text',
-                'response': result['response'],
-                'thinking': result['thinking']
-            }
-    
-    def _handle_image_only(self, classification):
-        """纯图片模式 - 仅使用Vision模型直接输出"""
-        images = classification['image_details']
-        valid_images = [img for img in images if img['exists']]
-        
-        print(f"\n🖼️ 分析图片（Vision模型直接输出）...")
-        
-        results = []
-        for img_info in valid_images:
-            print(f"   🖼️  分析: {img_info['path']}")
-            
-            # 直接调用vision模型，不经过text模型
-            desc = self.image_processor.analyze(img_info['path'])
-            
-            results.append({
-                'path': img_info['path'],
-                'description': desc
-            })
-            print(f"   ✅ 完成: {img_info['path']}")
-        
-        # 输出结果
-        print("\n" + "=" * 60)
-        print("📝 Vision模型分析结果:")
+            raise RuntimeError(
+                "Failed to import model processors. "
+                "Please check transformers/huggingface-hub compatibility."
+            ) from e
+
+        self.image_processor = ImageProcessor(model_path=image_model_path)
+
+        # Cloud brain client for text generation (lazy init)
+        self._brain_client = None
+
+        # Delegate document/audio processing to the shared pipeline
+        self._pipeline = None
+
         print("=" * 60)
-        
-        for i, result in enumerate(results, 1):
-            if len(results) > 1:
-                print(f"\n【图片 {i}】{result['path']}")
-                print("-" * 40)
-            print(result['description'])
-        
-        print("=" * 60)
-        
-        # 处理完成后卸载vision模型释放显存
-        self.image_processor.unload()
-        
-        return {
-            'success': True,
-            'mode': 'image',
-            'results': results
-        }
-    
-    def _handle_multimodal(self, classification):
-        """图文混合模式 - 仅使用Vision模型直接输出"""
-        text_query = classification['text_content']
-        images = [img for img in classification['image_details'] if img['exists']]
-        
-        print(f"\n🖼️ 分析图文（Vision模型直接输出）...")
-        print(f"   用户问题: {text_query}")
-        
-        results = []
-        for img_info in images:
-            print(f"   🖼️  分析: {img_info['path']}")
-            
-            # 将用户问题作为上下文传递给vision模型
-            desc = self.image_processor.analyze(
-                img_info['path'],
-                question=text_query  # 直接将用户问题作为问题输入
-            )
-            
-            results.append({
-                'path': img_info['path'],
-                'description': desc
-            })
-            print(f"   ✅ 完成: {img_info['path']}")
-        
-        # 输出结果
-        print("\n" + "=" * 60)
-        print("📝 Vision模型分析结果:")
-        print("=" * 60)
-        
-        for i, result in enumerate(results, 1):
-            if len(results) > 1:
-                print(f"\n【图片 {i}】{result['path']}")
-                print("-" * 40)
-            print(result['description'])
-        
-        print("=" * 60)
-        
-        # 处理完成后卸载vision模型释放显存
-        self.image_processor.unload()
-        
-        return {
-            'success': True,
-            'mode': 'multimodal',
-            'query': text_query,
-            'results': results
-        }
-    
-    def _stream_text_output(self, query):
-        """流式文本输出"""
-        print("\n" + "=" * 60)
-        print("🤔 思考中...")
+        print("System ready | VRAM manager: enabled")
+        print("Supported modes: text | image | multimodal | file | audio_video")
+        print("Text mode uses cloud DeepSeek API (streaming)")
         print("-" * 60)
-        
+
+    def _get_brain_client(self):
+        if self._brain_client is None:
+            from .core.brain_client import DeepSeekBrainClient
+
+            self._brain_client = DeepSeekBrainClient()
+        return self._brain_client
+
+    def _get_pipeline(self):
+        if self._pipeline is None:
+            from .core.multimodal_pipeline import MultimodalChatPipeline
+
+            self._pipeline = MultimodalChatPipeline(
+                image_model_path="./models/Qwen3-VL-2B-Instruct",
+            )
+        return self._pipeline
+
+    def process(self, user_input: str, stream: bool = False) -> Dict[str, Any]:
+        print("\nAnalyzing input...")
+        routed = self.router.route(user_input)
+
+        if routed.get("error"):
+            return {"success": False, "error": routed["error"]}
+
+        mode = routed["route"]
+        metadata = routed["metadata"]
+
+        print(f"Detected mode: {mode}")
+        print(f"Text length: {len(metadata.get('text_content', ''))}")
+        print(f"Image count: {len(metadata.get('image_paths', []))}")
+        print(f"File count: {len(metadata.get('file_paths', []))}")
+        print(f"Audio/Video count: {len(metadata.get('audio_video_paths', []))}")
+        print(f"Target agent: {routed['target_agent']}")
+
+        valid, msg = self.router.classifier.validate(metadata)
+        if not valid:
+            print(f"Validation failed: {msg}")
+            return {"success": False, "mode": mode, "error": msg}
+
+        try:
+            if mode == "text":
+                return self._handle_text_only(metadata, stream)
+            if mode == "image":
+                return self._handle_image_only(metadata)
+            if mode == "multimodal":
+                return self._handle_multimodal(metadata)
+            if mode == "file":
+                return self._handle_file(metadata, stream)
+            if mode == "audio_video":
+                return self._handle_audio_video(metadata, stream)
+            return {"success": False, "mode": mode, "error": f"unknown mode: {mode}"}
+        except Exception as e:
+            print(f"Processing error: {e}")
+            return {"success": False, "mode": mode, "error": str(e)}
+        finally:
+            print(f"\n{self.vram_manager.get_status()}")
+
+    def _handle_text_only(self, classification: Dict[str, Any], stream: bool) -> Dict[str, Any]:
+        query = classification["text_content"]
+        print("\nHandling text query with cloud DeepSeek API...")
+
+        if stream:
+            return self._stream_cloud_output(query)
+
+        brain = self._get_brain_client()
+        response = brain.plan(query)
+        print("\n" + "=" * 60)
+        print(response)
+        print("=" * 60)
+        return {
+            "success": True,
+            "mode": "text",
+            "response": response,
+            "model": brain.model_name,
+        }
+
+    def _handle_image_only(self, classification: Dict[str, Any]) -> Dict[str, Any]:
+        images = classification["image_details"]
+        valid_images = [img for img in images if img["exists"]]
+        print("\nHandling image input with Qwen-VL...")
+
+        results: List[Dict[str, str]] = []
+        for img_info in valid_images:
+            print(f"  analyzing: {img_info['path']}")
+            desc = self.image_processor.analyze(img_info["path"])
+            results.append({"path": img_info["path"], "description": desc})
+            print(f"  done: {img_info['path']}")
+
+        print("\n" + "=" * 60)
+        print("Qwen-VL results:")
+        print("=" * 60)
+        for i, result in enumerate(results, 1):
+            if len(results) > 1:
+                print(f"\n[Image {i}] {result['path']}")
+                print("-" * 40)
+            print(result["description"])
+        print("=" * 60)
+
+        self.image_processor.unload()
+        return {
+            "success": True,
+            "mode": "image",
+            "results": results,
+            "model": "Qwen-VL",
+        }
+
+    def _handle_multimodal(self, classification: Dict[str, Any]) -> Dict[str, Any]:
+        text_query = classification["text_content"]
+        images = [img for img in classification["image_details"] if img["exists"]]
+
+        print("\nHandling multimodal input with Qwen-VL...")
+        print(f"Question: {text_query}")
+
+        results: List[Dict[str, str]] = []
+        for img_info in images:
+            print(f"  analyzing: {img_info['path']}")
+            desc = self.image_processor.analyze(img_info["path"], question=text_query)
+            results.append({"path": img_info["path"], "description": desc})
+            print(f"  done: {img_info['path']}")
+
+        print("\n" + "=" * 60)
+        print("Qwen-VL results:")
+        print("=" * 60)
+        for i, result in enumerate(results, 1):
+            if len(results) > 1:
+                print(f"\n[Image {i}] {result['path']}")
+                print("-" * 40)
+            print(result["description"])
+        print("=" * 60)
+
+        self.image_processor.unload()
+        return {
+            "success": True,
+            "mode": "multimodal",
+            "query": text_query,
+            "results": results,
+            "model": "Qwen-VL",
+        }
+
+    def _handle_file(self, classification: Dict[str, Any], stream: bool) -> Dict[str, Any]:
+        file_paths = classification["file_paths"]
+        text_context = classification.get("text_content", "")
+        print(f"\nHandling document(s): {file_paths}")
+
+        pipeline = self._get_pipeline()
+        content = pipeline._understand_documents(file_paths, text_context)
+        print(f"\nDocument extraction complete ({len(content)} chars)")
+        print("-" * 60)
+        print(content[:2000] if len(content) > 2000 else content)
+        print("-" * 60)
+
+        if text_context and stream:
+            query = f"Based on the following document content, {text_context}\n\nDocument:\n{content}"
+            return self._stream_cloud_output(query)
+
+        return {
+            "success": True,
+            "mode": "file",
+            "file_paths": file_paths,
+            "extracted_content": content,
+            "model": "DocumentParser",
+        }
+
+    def _handle_audio_video(self, classification: Dict[str, Any], stream: bool) -> Dict[str, Any]:
+        media_paths = classification["audio_video_paths"]
+        text_context = classification.get("text_content", "")
+        print(f"\nHandling audio/video: {media_paths}")
+
+        pipeline = self._get_pipeline()
+        content = pipeline._understand_audio_video(media_paths, text_context)
+        print(f"\nAudio/video extraction complete ({len(content)} chars)")
+        print("-" * 60)
+        print(content[:2000] if len(content) > 2000 else content)
+        print("-" * 60)
+
+        if text_context and stream:
+            query = f"Based on the following audio/video content, {text_context}\n\nContent:\n{content}"
+            return self._stream_cloud_output(query)
+
+        return {
+            "success": True,
+            "mode": "audio_video",
+            "media_paths": media_paths,
+            "extracted_content": content,
+            "model": "AudioProcessor",
+        }
+
+    def _stream_cloud_output(self, query: str) -> Dict[str, Any]:
+        print("\n" + "=" * 60)
+        print("Cloud DeepSeek streaming...")
+        print("-" * 60)
+
+        brain = self._get_brain_client()
         full_response = ""
-        thinking = ""
-        
-        for chunk in self.text_processor.generate(query, stream=True):
-            if chunk['type'] == 'thinking':
-                print(chunk['token'], end='', flush=True)
-            elif chunk['type'] == 'thinking_complete':
-                print("\n" + "-" * 60)
-                print("💡 回答:")
-                print(chunk['token'], end='', flush=True)
-                thinking = chunk['thinking']
-                full_response = chunk['token']
-            elif chunk['type'] == 'response':
-                print(chunk['token'], end='', flush=True)
-                full_response += chunk['token']
-            elif chunk['type'] == 'complete':
-                thinking = chunk['thinking']
-                full_response = chunk['response']
-        
+        try:
+            for token in brain.plan_stream(query):
+                print(token, end="", flush=True)
+                full_response += token
+        except RuntimeError as e:
+            print(f"\nError: {e}")
+            return {"success": False, "mode": "text", "error": str(e)}
+
         print("\n" + "=" * 60)
         return {
-            'success': True,
-            'mode': 'text',
-            'response': full_response,
-            'thinking': thinking
+            "success": True,
+            "mode": "text",
+            "response": full_response,
+            "model": brain.model_name,
         }
-    
-    def _print_text_result(self, result):
-        """打印文本结果"""
-        print("\n" + "=" * 60)
-        if result.get('thinking'):
-            print("🤔 思考过程:")
-            print(result['thinking'][:300] + "..." if len(result['thinking']) > 300 else result['thinking'])
-            print("-" * 60)
-        print("💡 回答:")
-        print(result['response'])
-        print("=" * 60)
-    
-    def interactive_mode(self):
-        print("\n🎯 进入交互模式")
-        print("输入示例：")
-        print('  "什么是深度学习？"                    → 纯文本（Text模型）')
-        print('  "./photo.jpg"                         → 纯图片（Vision模型）')
-        print('  "分析这张图片 ./img.jpg 的内容"       → 图文混合（Vision模型）')
-        print('  "quit" 或 "exit"                     → 退出')
+
+    def interactive_mode(self) -> None:
+        print("\nInteractive mode")
+        print("Examples:")
+        print('  "What is machine learning?"               -> text (cloud DeepSeek)')
+        print('  "./photo.jpg"                             -> image (Qwen-VL)')
+        print('  "Analyze this image ./img.jpg"            -> multimodal (Qwen-VL)')
+        print('  "./report.pdf"                            -> file (document parser)')
+        print('  "Summarize ./report.pdf"                  -> file + text query')
+        print('  "./audio.mp3"                             -> audio (ASR)')
+        print('  "quit" or "exit"                          -> quit')
         print("-" * 60 + "\n")
-        
+
         while True:
             try:
-                user_input = input("👤 输入 > ").strip()
-                
+                user_input = input("input > ").strip()
                 if not user_input:
                     continue
-                
-                if user_input.lower() in ['quit', 'exit', 'q', '退出']:
-                    print("👋 正在清理资源并退出...")
+                if user_input.lower() in {"quit", "exit", "q"}:
+                    print("Cleaning resources and exiting...")
                     cleanup_all()
-                    print("✅ 已安全退出")
+                    print("Exited safely.")
                     break
-                
                 self.process(user_input, stream=True)
                 print()
-                
             except KeyboardInterrupt:
-                print("\n👋 再见！")
+                print("\nGoodbye.")
                 cleanup_all()
                 break
             except Exception as e:
-                print(f"❌ 错误: {e}")
+                print(f"Error: {e}")
                 continue
 
 
-def main():
-    parser = argparse.ArgumentParser(description='多模态AI助手 - 6GB显存优化版')
-    parser.add_argument('input', nargs='?', help='输入内容（支持图文混合）')
-    parser.add_argument('--text-model', default='./models/DeepSeek-R1-Distill-Qwen-1.5B')
-    parser.add_argument('--image-model', default='./models/Qwen3-VL-2B-Instruct')
-    
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Multimodal assistant entrypoint")
+    parser.add_argument("input", nargs="?", help="input content (supports text/image/multimodal/file/audio_video)")
+    parser.add_argument("--image-model", default="./models/Qwen3-VL-2B-Instruct")
     args = parser.parse_args()
-    
+
     assistant = MultimodalAssistant(
-        text_model_path=args.text_model,
-        image_model_path=args.image_model
+        image_model_path=args.image_model,
     )
-    
+
     if args.input:
         result = assistant.process(args.input, stream=True)
         cleanup_all()
-        sys.exit(0 if result.get('success') else 1)
-    else:
-        try:
-            assistant.interactive_mode()
-        finally:
-            cleanup_all()
+        sys.exit(0 if result.get("success") else 1)
+
+    try:
+        assistant.interactive_mode()
+    finally:
+        cleanup_all()
 
 
 if __name__ == "__main__":

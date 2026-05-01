@@ -8,60 +8,85 @@ try:
 except ImportError:
     from core.schemas import EvidenceItem, PerceptionResult
 
-from .base import _extract_facts_fallback
+from .base import _extract_facts_fallback, _safe_confidence
 
 
 class AudioPerceptionAgent:
-    def __init__(self):
+    def __init__(
+        self,
+        model_path: str = "./models/openai-mirror/whisper-small",
+        device: str = "auto",
+    ) -> None:
+        self.model_path = model_path
+        self.device = device
         self.asr_pipeline = None
+
+    def _resolve_device(self) -> str:
+        if self.device != "auto":
+            return self.device
+        try:
+            import torch
+            if torch.cuda.is_available():
+                return "cuda:0"
+        except Exception:
+            pass
+        return "cpu"
 
     def _lazy_load(self):
         if self.asr_pipeline is not None:
             return
         try:
-            from transformers import pipeline  # type: ignore
+            from transformers import pipeline
+            device = self._resolve_device()
             self.asr_pipeline = pipeline(
-                'automatic-speech-recognition',
-                model='openai/whisper-small',
-                device='cuda:0',
+                "automatic-speech-recognition",
+                model=self.model_path,
+                device=device if device != "cpu" else -1,
             )
         except Exception:
-            self.asr_pipeline = False
+            try:
+                self.asr_pipeline = pipeline(
+                    "automatic-speech-recognition",
+                    model=self.model_path,
+                    device=-1,
+                )
+            except Exception:
+                self.asr_pipeline = False
 
     def perceive(self, audio_path: str) -> PerceptionResult:
         p = Path(audio_path)
         if not p.exists():
             return PerceptionResult(
-                modality='audio',
-                summary=f'音频不存在: {audio_path}',
+                modality="audio",
+                summary=f"Audio not found: {audio_path}",
                 facts=[],
                 evidence=[],
                 confidence=0.0,
-                missing_info=['请检查音频路径'],
-                raw_output='',
+                missing_info=["Audio file path is incorrect"],
+                raw_output="",
             )
 
         self._lazy_load()
         if self.asr_pipeline is False:
             return PerceptionResult(
-                modality='audio',
-                summary='ASR 不可用',
+                modality="audio",
+                summary="ASR unavailable",
                 facts=[],
                 evidence=[],
                 confidence=0.0,
-                missing_info=['当前环境不可用 whisper，建议先安装模型依赖'],
-                raw_output='',
+                missing_info=["Whisper model not available, please install model dependencies"],
+                raw_output="",
             )
 
         result = self.asr_pipeline(str(p))
-        text = result['text'] if isinstance(result, dict) else str(result)
+        text = result["text"] if isinstance(result, dict) else str(result)
         facts = _extract_facts_fallback(text, limit=6)
         return PerceptionResult(
-            modality='audio',
-            summary=f'已完成音频转写 {p.name}',
+            modality="audio",
+            summary=f"Transcribed {p.name}",
             facts=facts,
             evidence=[EvidenceItem(source=audio_path, quote=text[:260])],
-            confidence=0.6,
+            confidence=_safe_confidence(0.6),
             missing_info=[],
             raw_output=text,
         )

@@ -1,0 +1,6 @@
+{
+  "session_id": "demo-session",
+  "user_input": "hello from user",
+  "llm_model": "deepseek-chat"
+}
+

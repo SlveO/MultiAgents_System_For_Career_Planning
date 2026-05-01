@@ -6,42 +6,38 @@ from typing import Any, Dict, Generator, List, Tuple
 
 try:
     from .core.schemas import CareerPlanResponse, Milestone, PerceptionResult, TaskRequest, UserProfile
-    from .core.brain_client import DeepSeekBrainClient, LocalBrainFallbackClient
+    from .core.brain_client import DeepSeekBrainClient
     from .core.career_knowledge import CareerKnowledgeBase
-    from .agents.perception import AudioPerceptionAgent, DocumentPerceptionAgent, ImagePerceptionAgent, TextPerceptionAgent
+    from .agents.perception import AudioPerceptionAgent, DocumentPerceptionAgent, ImagePerceptionAgent, TextPerceptionAgent, VideoPerceptionAgent
     from .core.session_memory import SessionMemory
     from .core.settings import get_settings
-    from .agents.text import TextProcessor
 except ImportError:
     from project.core.schemas import CareerPlanResponse, Milestone, PerceptionResult, TaskRequest, UserProfile
-    from project.core.brain_client import DeepSeekBrainClient, LocalBrainFallbackClient
+    from project.core.brain_client import DeepSeekBrainClient
     from project.core.career_knowledge import CareerKnowledgeBase
-    from project.agents.perception import AudioPerceptionAgent, DocumentPerceptionAgent, ImagePerceptionAgent, TextPerceptionAgent
+    from project.agents.perception import AudioPerceptionAgent, DocumentPerceptionAgent, ImagePerceptionAgent, TextPerceptionAgent, VideoPerceptionAgent
     from project.core.session_memory import SessionMemory
     from project.core.settings import get_settings
-    from project.agents.text import TextProcessor
+from project.utils.fusion import MultiModalFusion
 
 
 class CareerOrchestrator:
     def __init__(
         self,
-        text_model_path: str = './models/DeepSeek-R1-Distill-Qwen-1___5B',
         image_model_path: str = './models/Qwen3-VL-2B-Instruct',
         db_path: str = './data/session_memory.db',
     ):
         self.settings = get_settings()
         self.memory = SessionMemory(db_path=db_path)
         self.knowledge = CareerKnowledgeBase()
-        self.text_agent = TextPerceptionAgent(text_model_path)
+        self.text_agent = TextPerceptionAgent()
         self.image_agent = ImagePerceptionAgent(image_model_path)
         self.document_agent = DocumentPerceptionAgent()
         self.audio_agent = AudioPerceptionAgent()
+        self.video_agent = VideoPerceptionAgent(image_model_path=image_model_path)
 
-        self.local_planner = TextProcessor(model_path=text_model_path)
         self.cloud_brain = DeepSeekBrainClient()
-        self.local_brain = LocalBrainFallbackClient(self.local_planner)
 
-        self.text_model_path = text_model_path
         self.image_model_path = image_model_path
 
     @staticmethod
@@ -103,6 +99,8 @@ class CareerOrchestrator:
             results.append(self.audio_agent.perceive(path))
         for path in req.image_paths:
             results.append(self.image_agent.perceive(path, user_goal=req.user_goal, user_text=req.text_input))
+        for path in req.video_paths:
+            results.append(self.video_agent.perceive(path))
         return results
 
     def _build_profile(self, req: TaskRequest, perception_results: List[PerceptionResult]) -> UserProfile:
@@ -131,12 +129,7 @@ class CareerOrchestrator:
         perception_results: List[PerceptionResult],
         knowledge_hints: List[str],
     ) -> str:
-        perception_text = '\n'.join(
-            [
-                f"[{p.modality}] summary={p.summary}; facts={'; '.join(p.facts[:6])}; confidence={p.confidence}; missing={'; '.join(p.missing_info[:4])}"
-                for p in perception_results
-            ]
-        )
+        perception_text = MultiModalFusion.fuse(perception_results)
 
         return f"""
 你是职业规划总控代理。请只输出严格 JSON，不要输出其他文本。
@@ -230,9 +223,9 @@ JSON schema:
             perception_results=perception_results,
             knowledge_hits=knowledge_hints,
             model_trace=[
-                f'text-perception: {self.text_model_path}',
+                'text-perception: rule-based',
                 f'image-perception: {self.image_model_path}',
-                f'brain: {self.local_brain.model_name}',
+                'brain: local-fallback',
             ],
             served_by='local_fallback',
             retry_count=self.settings.brain_retry_times,
@@ -292,7 +285,7 @@ JSON schema:
             perception_results=perception_results,
             knowledge_hits=knowledge_hints,
             model_trace=[
-                f'text-perception: {self.text_model_path}',
+                'text-perception: rule-based',
                 f'image-perception: {self.image_model_path}',
                 f'brain: {model_name}',
             ],
@@ -355,7 +348,7 @@ JSON schema:
         intent = self.detect_intent(query)
         yield {'event': 'stage_end', 'data': {'stage': 'input_understanding', 'intent': intent}}
 
-        yield {'event': 'stage_start', 'data': {'stage': 'perception', 'model': self.text_model_path}}
+        yield {'event': 'stage_start', 'data': {'stage': 'perception', 'model': 'rule-based-text'}}
         perception_results = self._collect_perception(req)
         yield {'event': 'stage_end', 'data': {'stage': 'perception', 'count': len(perception_results)}}
 

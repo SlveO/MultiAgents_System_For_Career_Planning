@@ -7,11 +7,11 @@
 
 ## 核心模块
 - `project/orchestrator.py`：统一编排（感知 -> 大脑 -> 回退）
-- `project/perception_agents.py`：本地感知代理
-- `project/brain_client.py`：DeepSeek 大脑与本地回退大脑
-- `project/assistant_schemas.py`：统一结构化契约
-- `project/api.py`：FastAPI + SSE
-- `project/assistant_cli.py`：CLI（支持流式）
+- `project/agents/perception/`：本地感知代理（text/image/document/audio）
+- `project/core/brain_client.py`：DeepSeek 大脑与本地回退大脑
+- `project/core/schemas.py`：统一结构化契约
+- `project/api/api.py`：FastAPI + SSE
+- `project/main.py`：CLI 交互入口（支持流式）
 
 ## 依赖安装（agents 环境）
 ```bash
@@ -32,18 +32,18 @@ $env:BRAIN_RETRY_TIMES="2"
 ## CLI
 非流式：
 ```bash
-python -m project.assistant_cli --session-id demo-1 --goal "我想在6个月内转岗数据分析" --text "我会Python和SQL，但项目经验不足" --city 上海 --time-budget 10
+python -m project.main --session-id demo-1 --goal "我想在6个月内转岗数据分析" --text "我会Python和SQL，但项目经验不足" --city 上海 --time-budget 10
 ```
 
 流式：
 ```bash
-python -m project.assistant_cli --stream --session-id demo-1 --goal "我想在6个月内转岗数据分析" --text "我会Python和SQL，但项目经验不足" --city 上海 --time-budget 10
+python -m project.main --stream --session-id demo-1 --goal "我想在6个月内转岗数据分析" --text "我会Python和SQL，但项目经验不足" --city 上海 --time-budget 10
 ```
 
 ## API
 启动：
 ```bash
-python -m project.run_api
+python -m project.api.run_api
 ```
 
 PowerShell 中文调用建议：

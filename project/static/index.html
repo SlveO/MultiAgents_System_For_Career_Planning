@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Career Assistant</title>
+<style>
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --border: #2a2d3a;
+  --text: #e1e4ed;
+  --text-dim: #8b8fa3;
+  --accent: #6c8cef;
+  --accent-hover: #5b7adf;
+  --success: #4ade80;
+  --warn: #f59e0b;
+  --error: #ef4444;
+  --radius: 8px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+header h1 { font-size: 1.15rem; font-weight: 600; }
+header .user-bar { display: flex; gap: 10px; align-items: center; font-size: 0.85rem; }
+header .user-bar span { color: var(--text-dim); }
+.btn {
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background .15s;
+}
+.btn:hover { background: #252836; }
+.btn.accent { background: var(--accent); color: #fff; border-color: var(--accent); }
+.btn.accent:hover { background: var(--accent-hover); }
+.btn.small { padding: 5px 10px; font-size: 0.78rem; }
+main {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--surface);
+}
+.tab {
+  padding: 12px 20px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  border-bottom: 2px solid transparent;
+  transition: all .15s;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.tab:hover { color: var(--text); }
+.panel {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+.panel.active { display: flex; }
+.col-left {
+  width: 260px;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow-y: auto;
+}
+.col-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+}
+.output-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 24px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.9rem;
+}
+.output-area .token { color: var(--text); }
+.output-area .info { color: var(--text-dim); font-size: 0.82rem; }
+.output-area .error { color: var(--error); }
+.output-area .stage { color: var(--accent); font-weight: 600; }
+.input-bar {
+  border-top: 1px solid var(--border);
+  padding: 12px 16px;
+  display: flex;
+  gap: 8px;
+  background: var(--surface);
+  flex-shrink: 0;
+}
+.input-bar input, .input-bar textarea {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  color: var(--text);
+  font-size: 0.9rem;
+  resize: none;
+  font-family: inherit;
+}
+.input-bar input:focus, .input-bar textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.form-group {
+  padding: 10px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.form-group label {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+.form-group input, .form-group textarea {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  color: var(--text);
+  font-size: 0.85rem;
+  font-family: inherit;
+}
+.form-group textarea { min-height: 60px; resize: vertical; }
+.auth-box {
+  max-width: 400px;
+  margin: 60px auto 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.auth-box h2 { text-align: center; font-size: 1.1rem; }
+.history-item {
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: background .1s;
+}
+.history-item:hover { background: #252836; }
+.session-list { overflow-y: auto; flex: 1; }
+.section-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  padding: 8px 14px 4px;
+  letter-spacing: 0.5px;
+}
+.file-preview {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 4px 0;
+}
+.file-tag {
+  font-size: 0.72rem;
+  background: #252836;
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.file-tag button {
+  background: none;
+  border: none;
+  color: var(--error);
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0 2px;
+}
+@media (max-width: 768px) {
+  .col-left { display: none; }
+  main { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Career Assistant</h1>
+  <div class="user-bar" id="userBar">
+    <span id="usernameLabel">未登录</span>
+    <button class="btn small" id="authBtn" onclick="toggleAuth()">登录</button>
+  </div>
+</header>
+
+<!-- Auth Modal -->
+<div id="authModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:100; justify-content:center; align-items:center;">
+  <div class="auth-box" id="authBox">
+    <h2 id="authTitle">登录</h2>
+    <div class="form-group"><label>用户名</label><input id="authUsername" placeholder="输入用户名..."></div>
+    <div class="form-group"><label>密码</label><input id="authPassword" type="password" placeholder="输入密码..."></div>
+    <button class="btn accent" id="authSubmit">登录</button>
+    <button class="btn" id="authSwitch" style="font-size:0.82rem;">还没有账号？去注册</button>
+    <button class="btn" onclick="toggleAuth()" style="font-size:0.8rem;">取消</button>
+  </div>
+</div>
+
+<main>
+  <div class="col-left" id="sidebar">
+    <div class="section-label">导航</div>
+    <button class="tab active" onclick="switchPanel('planner')">职业规划</button>
+    <button class="tab" onclick="switchPanel('chat')">对话助手</button>
+    <div class="section-label">历史记录</div>
+    <div class="session-list" id="sessionList"></div>
+  </div>
+
+  <div class="col-right">
+    <!-- Planner Panel -->
+    <div class="panel active" id="panel-planner">
+      <div class="form-group"><label>目标</label><textarea id="plannerGoal" placeholder="例：我想转行做数据分析师..."></textarea></div>
+      <div class="form-group"><label>补充信息（可选）</label><textarea id="plannerText" placeholder="我的背景、技能、时间预算..."></textarea></div>
+      <div class="form-group"><label>约束 JSON（可选）</label><textarea id="plannerConstraints" placeholder='{"max_budget": 5000, "remote_only": true}'></textarea></div>
+      <div class="form-group"><label>上传文件</label><input type="file" id="plannerFiles" multiple></div>
+      <div class="file-preview" id="plannerFilePreview"></div>
+      <div style="padding:6px 16px; display:flex; gap:8px;">
+        <button class="btn accent" onclick="runPlanner()">开始规划</button>
+        <button class="btn" onclick="runPlannerStream()">流式规划 (SSE)</button>
+      </div>
+      <div class="output-area" id="plannerOutput">等待输入...</div>
+    </div>
+
+    <!-- Chat Panel -->
+    <div class="panel" id="panel-chat">
+      <div class="output-area" id="chatOutput">你好！我是职业规划助手。输入问题开始对话。</div>
+      <div class="input-bar">
+        <input id="chatInput" placeholder="输入消息..." onkeydown="if(event.key==='Enter') runChat()">
+        <button class="btn accent" onclick="runChat()">发送</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+// ---- State ----
+let token = localStorage.getItem('ca_token') || '';
+let username = localStorage.getItem('ca_username') || '';
+let authMode = 'login';
+let plannerFiles = [];
+let currentPanel = 'planner';
+
+// ---- Init ----
+updateAuthUI();
+loadSessions();
+
+// ---- SSE parser: produces {event, data} objects from raw stream text ----
+function parseSSEChunk(text) {
+  const results = [];
+  const lines = text.split('\n');
+  let sseEvent = '';
+  for (const line of lines) {
+    if (line.startsWith('event: ')) {
+      sseEvent = line.slice(7).trim();
+    } else if (line.startsWith('data: ')) {
+      try {
+        const data = JSON.parse(line.slice(6).trim());
+        results.push({ sseEvent, data });
+      } catch(e) { /* skip unparseable */ }
+      sseEvent = '';
+    }
+  }
+  return results;
+}
+
+// ---- Helpers ----
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function authHeader() {
+  return token ? { 'Authorization': 'Bearer ' + token } : {};
+}
+
+// ---- Auth ----
+function toggleAuth() {
+  const modal = document.getElementById('authModal');
+  modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+  if (modal.style.display === 'flex') document.getElementById('authUsername').focus();
+}
+
+function setAuthMode(mode) {
+  authMode = mode;
+  document.getElementById('authTitle').textContent = mode === 'login' ? '登录' : '注册';
+  document.getElementById('authSubmit').textContent = mode === 'login' ? '登录' : '注册';
+  document.getElementById('authSwitch').textContent = mode === 'login' ? '还没有账号？去注册' : '已有账号？去登录';
+}
+
+document.getElementById('authSwitch').onclick = () => setAuthMode(authMode === 'login' ? 'register' : 'login');
+document.getElementById('authSubmit').onclick = async () => {
+  const u = document.getElementById('authUsername').value.trim();
+  const p = document.getElementById('authPassword').value.trim();
+  if (!u || !p) return alert('请输入用户名和密码');
+
+  const endpoint = authMode === 'login' ? '/auth/login' : '/auth/register';
+  const resp = await fetch(endpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: u, password: p }),
+  });
+  const data = await resp.json();
+  if (!resp.ok) return alert('错误: ' + (data.detail || JSON.stringify(data)));
+
+  if (authMode === 'register') {
+    alert('注册成功！请登录。');
+    setAuthMode('login');
+    return;
+  }
+  token = data.access_token;
+  username = data.username || u;
+  localStorage.setItem('ca_token', token);
+  localStorage.setItem('ca_username', username);
+  updateAuthUI();
+  toggleAuth();
+};
+
+function updateAuthUI() {
+  document.getElementById('usernameLabel').textContent = username || '未登录';
+  document.getElementById('authBtn').textContent = token ? '切换' : '登录';
+}
+
+// ---- Navigation ----
+function switchPanel(name) {
+  currentPanel = name;
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  var t = document.querySelector('.tab[onclick*="'+name+'"]');
+  if (t) t.classList.add('active');
+}
+
+// ---- Sessions ----
+async function loadSessions() {
+  if (!token) { document.getElementById('sessionList').innerHTML = '<div class="history-item">登录后查看</div>'; return; }
+  try {
+    const resp = await fetch('/v1/session/default', { headers: authHeader() });
+    if (!resp.ok) return;
+    const data = await resp.json();
+    const div = document.getElementById('sessionList');
+    const items = (data.history || []).slice(-10).reverse();
+    div.innerHTML = items.length ? items.map((h, i) =>
+      '<div class="history-item">' + esc((h.user_goal || h.user_input || '会话').slice(0, 40)) + '</div>'
+    ).join('') : '<div class="history-item">暂无记录</div>';
+  } catch (e) { console.error(e); }
+}
+
+// ---- Planner (non-stream) ----
+async function runPlanner() {
+  const output = document.getElementById('plannerOutput');
+  output.innerHTML = '<span class="info">规划中...</span>';
+  try {
+    let constraints = {};
+    try { constraints = JSON.parse(document.getElementById('plannerConstraints').value.trim() || '{}'); } catch (e) {}
+
+    const body = {
+      session_id: 'default',
+      user_goal: document.getElementById('plannerGoal').value.trim(),
+      text_input: document.getElementById('plannerText').value.trim(),
+      constraints: constraints,
+      image_paths: plannerFiles.filter(f => f.type === 'image').map(f => f.path),
+      document_paths: plannerFiles.filter(f => f.type === 'document').map(f => f.path),
+      audio_paths: plannerFiles.filter(f => f.type === 'audio').map(f => f.path),
+      video_paths: plannerFiles.filter(f => f.type === 'video').map(f => f.path),
+    };
+    const resp = await fetch('/v1/assist', {
+      method: 'POST',
+      headers: { ...authHeader(), 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const data = await resp.json();
+    let banner = '';
+    if (data.served_by === 'local_fallback') {
+      banner = '<span class="error">[WARN] 云端API不可用，当前为本地模板回退结果。请设置 DEEPSEEK_API_KEY 环境变量。</span>\n\n';
+    }
+    output.innerHTML = banner + '<span class="stage">规划结果</span>\n' + JSON.stringify(data, null, 2);
+    loadSessions();
+  } catch (e) { output.innerHTML = '<span class="error">Error: ' + e.message + '</span>'; }
+}
+
+// ---- Planner (SSE stream) ----
+async function runPlannerStream() {
+  const output = document.getElementById('plannerOutput');
+  output.innerHTML = '<span class="info">流式规划中...</span>\n';
+  try {
+    let constraints = {};
+    try { constraints = JSON.parse(document.getElementById('plannerConstraints').value.trim() || '{}'); } catch (e) {}
+
+    const body = {
+      session_id: 'default',
+      user_goal: document.getElementById('plannerGoal').value.trim(),
+      text_input: document.getElementById('plannerText').value.trim(),
+      constraints: constraints,
+      image_paths: plannerFiles.filter(f => f.type === 'image').map(f => f.path),
+      document_paths: plannerFiles.filter(f => f.type === 'document').map(f => f.path),
+      audio_paths: plannerFiles.filter(f => f.type === 'audio').map(f => f.path),
+      video_paths: plannerFiles.filter(f => f.type === 'video').map(f => f.path),
+    };
+    const resp = await fetch('/v1/assist/stream', {
+      method: 'POST',
+      headers: { ...authHeader(), 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder();
+    let buf = '';
+    let stageCount = {};
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += decoder.decode(value, { stream: true });
+      const events = parseSSEChunk(buf);
+      // Keep only incomplete last line in buf
+      const rawLines = buf.split('\n');
+      buf = rawLines[rawLines.length - 1].startsWith('data: ') || rawLines[rawLines.length - 1].startsWith('event: ')
+        ? '' : (rawLines.pop() || '');
+      for (const evt of events) {
+        const d = evt.data;
+        if (evt.sseEvent === 'error') {
+          output.innerHTML += '<span class="error">[ERROR] ' + esc(d.message || JSON.stringify(d)) + '</span>\n';
+        } else if (d.stage === 'brain_planning' && d.token) {
+          output.innerHTML += '<span class="token">' + esc(d.token) + '</span>';
+        } else if (evt.sseEvent === 'final_result') {
+          if (d.served_by === 'local_fallback') {
+            output.innerHTML += '\n<span class="error">[WARN] 云端API不可用，当前为本地模板回退结果。请设置 DEEPSEEK_API_KEY 环境变量。</span>\n';
+          }
+          output.innerHTML += '\n<span class="stage">=== 规划完成 (served by: ' + esc(d.served_by || 'unknown') + ') ===</span>\n';
+        } else if (d.stage) {
+          stageCount[d.stage] = (stageCount[d.stage] || 0) + 1;
+          if (stageCount[d.stage] <= 1) {
+            output.innerHTML += '<span class="info">[stage: ' + esc(d.stage) + ']</span>\n';
+          }
+        }
+      }
+    }
+    loadSessions();
+  } catch (e) { output.innerHTML += '\n<span class="error">Error: ' + esc(e.message) + '</span>'; }
+}
+
+// ---- Chat (SSE stream) ----
+async function runChat() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  const output = document.getElementById('chatOutput');
+  output.innerHTML += '\n<span class="info">You: ' + esc(msg) + '</span>\n<span class="token">Assistant: ';
+
+  try {
+    const resp = await fetch('/v1/multimodal/chat/stream', {
+      method: 'POST',
+      headers: { ...authHeader(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: 'default', user_input: msg }),
+    });
+    if (!resp.ok) {
+      const errText = await resp.text();
+      output.innerHTML += '</span>\n<span class="error">[HTTP ' + resp.status + '] ' + esc(errText) + '</span>\n';
+      output.scrollTop = output.scrollHeight;
+      return;
+    }
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder();
+    let buf = '';
+    let hasContent = false;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += decoder.decode(value, { stream: true });
+      const events = parseSSEChunk(buf);
+      const rawLines = buf.split('\n');
+      buf = rawLines[rawLines.length - 1].startsWith('data: ') || rawLines[rawLines.length - 1].startsWith('event: ')
+        ? '' : (rawLines.pop() || '');
+      for (const evt of events) {
+        const d = evt.data;
+        if (evt.sseEvent === 'error') {
+          output.innerHTML += '</span>\n<span class="error">[ERROR] ' + esc(d.message || d.code || JSON.stringify(d)) + '</span>';
+          if (d.message && d.message.indexOf('DEEPSEEK_API_KEY') >= 0) {
+            output.innerHTML += '\n<span class="info">[HINT] 请在项目根目录创建 .env 文件并设置 DEEPSEEK_API_KEY=sk-xxxxxxxx</span>';
+          }
+          output.innerHTML += '\n';
+          output.scrollTop = output.scrollHeight;
+          return;
+        }
+        if (d.token) {
+          output.innerHTML += esc(d.token);
+          hasContent = true;
+        }
+        if (d.text && evt.sseEvent === 'final') {
+          if (!hasContent) {
+            output.innerHTML += esc(d.text);
+          }
+        }
+      }
+    }
+    output.innerHTML += '</span>\n';
+    output.scrollTop = output.scrollHeight;
+    loadSessions();
+  } catch (e) {
+    output.innerHTML += '</span>\n<span class="error">[ERROR] ' + esc(e.message) + '</span>\n';
+    output.scrollTop = output.scrollHeight;
+  }
+}
+
+// ---- File Upload ----
+document.getElementById('plannerFiles').onchange = async function() {
+  plannerFiles = [];
+  document.getElementById('plannerFilePreview').innerHTML = '';
+  for (const file of this.files) {
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const resp = await fetch('/v1/upload', { method: 'POST', headers: authHeader(), body: formData });
+      if (!resp.ok) { alert('上传失败: ' + (await resp.text())); continue; }
+      const data = await resp.json();
+      plannerFiles.push({ path: data.file_path, type: data.file_type, name: data.file_name });
+      document.getElementById('plannerFilePreview').innerHTML +=
+        '<span class="file-tag">' + esc(data.file_name) + ' (' + data.file_type + ')' +
+        '<button onclick="removeFile(\''+esc(data.file_path)+'\')">&times;</button></span>';
+    } catch (e) { alert('上传错误: ' + e.message); }
+  }
+};
+
+function removeFile(path) {
+  plannerFiles = plannerFiles.filter(f => f.path !== path);
+  document.getElementById('plannerFilePreview').innerHTML = plannerFiles.map(f =>
+    '<span class="file-tag">' + esc(f.name) + ' (' + f.type + ')</span>'
+  ).join('');
+}
+
+// ---- Sidebar tab switching ----
+document.querySelectorAll('.tab').forEach(function(el) {
+  el.addEventListener('click', function() {
+    var panel = this.textContent.indexOf('规划') >= 0 ? 'planner' : 'chat';
+    switchPanel(panel);
+  });
+});
+</script>
+</body>
+</html>

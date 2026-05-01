@@ -8,7 +8,7 @@ try:
 except ImportError:
     from core.schemas import EvidenceItem, PerceptionResult
 
-from .base import _extract_facts_fallback
+from .base import _extract_facts_fallback, _safe_confidence
 
 
 def _load_image_processor():
@@ -38,7 +38,7 @@ class ImagePerceptionAgent:
             summary=f'已解析图像 {Path(image_path).name}',
             facts=facts,
             evidence=[EvidenceItem(source=image_path, quote=raw[:250])],
-            confidence=0.65 if facts else 0.45,
+            confidence=_safe_confidence(0.65 if facts else 0.45),
             missing_info=[] if facts else ['图像信息不足，建议补充文本上下文'],
             raw_output=raw,
         )
