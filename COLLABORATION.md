@@ -181,9 +181,11 @@ project/
 
 **已完成（截至 2026-05-02）：**
 - 优先级 1-4 全部完成
-- 17/17 单元测试通过
+- 14/14 单元测试通过（含 input_router 5, main AST 2, multimodal_pipeline 5, multimodal_api_flow 2）
 - Web 前端核心功能可用：登录注册、职业规划（SSE 流式）、对话助手（SSE 流式）、文件上传
 - DeepSeek API 云端推理正常（需配置 DEEPSEEK_API_KEY）
+- CLI 文件路径检测修复：`.match()` → `.search()` 支持中文文本中嵌入路径（无空格分隔）
+- CLI 文件/音频模式始终送云端分析，即使无显式 text_context
 
 **待完善：**
 - 历史对话管理功能
@@ -197,6 +199,7 @@ project/
 4. **JWT 密钥默认值不安全**：生产环境需通过 JWT_SECRET_KEY 环境变量覆盖
 5. **前端无 XSS 防护**：单页 HTML 直接操作 innerHTML，仅用于开发/演示
 6. **DeepSeek API Key 必须配置**：不配置时对话助手不返回内容，职业规划退回固定模板
+7. **python-docx / openpyxl 为本地文档解析必需**：Docker 镜像已包含，本地 conda 环境需 `pip install python-docx openpyxl`
 
 ---
 > 最后更新：2026-05-02  by Agent (Claude Code)
