@@ -192,8 +192,11 @@ class MultimodalAssistant:
         print(content[:2000] if len(content) > 2000 else content)
         print("-" * 60)
 
-        if text_context and stream:
-            query = f"Based on the following document content, {text_context}\n\nDocument:\n{content}"
+        if stream:
+            if text_context:
+                query = f"Based on the following document content, {text_context}\n\nDocument:\n{content}"
+            else:
+                query = f"Please analyze the following document content and provide insights:\n\n{content}"
             return self._stream_cloud_output(query)
 
         return {
@@ -216,8 +219,11 @@ class MultimodalAssistant:
         print(content[:2000] if len(content) > 2000 else content)
         print("-" * 60)
 
-        if text_context and stream:
-            query = f"Based on the following audio/video content, {text_context}\n\nContent:\n{content}"
+        if stream:
+            if text_context:
+                query = f"Based on the following audio/video content, {text_context}\n\nContent:\n{content}"
+            else:
+                query = f"Please analyze the following audio/video transcript and provide insights:\n\n{content}"
             return self._stream_cloud_output(query)
 
         return {

@@ -177,7 +177,7 @@ class InputClassifier:
     def _looks_like_path(self, value: str) -> bool:
         if not value or "." not in value:
             return False
-        return any(pattern.match(value) for pattern in self.PATH_PATTERNS)
+        return any(pattern.search(value) for pattern in self.PATH_PATTERNS)
 
     def _categorize_path(self, path_str: str) -> Optional[str]:
         ext = Path(path_str).suffix.lower()
