@@ -1,75 +1,74 @@
-# 多模态职业规划助手（结题 MVP）
+# 多模态职业规划助手
 
-本仓库面向大学生创新项目结题演示，主流程为：文本或文档输入 → 8 个固定追问 → 结构化用户画像 → 职业知识检索 → DeepSeek 生成 30/90/180 天规划 → 三档反馈 → 脱敏 JSONL 日志。
+本项目研究职业规划场景中的模块化多智能体多模态系统：专用感知Agent负责图像、音频或文档信息提取，文本推理Agent负责职业规划。核心问题是这种协作系统能否达到或超过单体多模态模型，同时保持模块可替换、资源可控和结果可解释。
 
-默认配置固定为：
+当前结题MVP流程为：文本或文档输入 → 8个规则追问 → 用户画像 → 职业知识检索 → DeepSeek规划 → 三档反馈 → 脱敏JSONL日志。当前MVP的多模态感知是一次性的；推理Agent向感知Agent发起多轮澄清属于后续研究实验，不应视为已完成功能。
 
-- API：`https://api.deepseek.com`
-- 模型：`deepseek-v4-flash`
-- 模式：`thinking={"type":"disabled"}`
-- 密钥：环境变量 `DEEPSEEK_API_KEY`
+## 设备与依赖
 
-图片、音频、视频、向量检索、FastAPI、Web 和 GPU 模型均为可选功能，不影响文本与文档主流程。
+依赖文件是逐层包含关系：
 
-## 快速开始
+```text
+requirements.txt        核心MVP
+    ↓
+requirements-api.txt    核心MVP + FastAPI/Web API
+    ↓
+requirements-gpu.txt    API + 本地视觉/语音/向量实验
+```
 
-建议使用 Python 3.10 或 3.11：
+CPU/API机器：
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-pip install -r requirements-mvp.txt
-Copy-Item .env.example .env
+pip install -r requirements.txt
 ```
 
-在 `.env` 中填写 `DEEPSEEK_API_KEY`，然后运行唯一 CLI 入口：
+API/Web机器：
 
 ```powershell
-python -m project.assistant_cli --session-id demo-1 --goal "获得数据分析实习" --text "会 Python 和 SQL"
+pip install -r requirements-api.txt
+python -m project.api.run_api
 ```
 
-CLI 会依次询问 8 个问题，并在规划结束后要求选择“过短 / 合适 / 过于详细”。无 API Key 或请求失败时会回退到本地规则模板，便于离线演示。
-
-## 输入与输出
-
-文档明确支持：`.txt`、`.md`、`.csv`、`.tsv`、`.pdf`、`.docx`、`.xlsx`。例如：
+带独立显卡或实验室L20的机器：先按CUDA版本安装匹配的PyTorch，再执行：
 
 ```powershell
+pip install -r requirements-gpu.txt
+python scripts/models/download_qwen_vl.py
+```
+
+GPU profile同时包含MVP和API能力。模型权重只保存在本地 `models/`，不提交Git。
+
+## CLI演示
+
+配置 `.env` 中的 `DEEPSEEK_API_KEY` 后：
+
+```powershell
+python -m project.assistant_cli --session-id demo-1 --goal "六个月内转岗数据分析" --text "我会 Python 和 SQL"
 python -m project.assistant_cli --goal "六个月内转岗数据分析" --docs .\examples\sample_profile.txt
 ```
 
-可重复演示时，可跳过交互追问并传入 JSON：
+可用 `--answers-json` 传入固定答案以复现实验。没有API Key或API失败时，程序会使用明确标记的规则模板；模板结果不能计入真实模型实验。
 
-```powershell
-python -m project.assistant_cli --goal "获得数据分析实习" --answers-json '{"education":"本科大三","major":"统计学","skills":"Python、SQL","interests":"数据分析","target_role":"数据分析师","time_budget":"每周10小时","preference":"上海互联网","constraints":"项目经验不足"}'
-```
-
-反馈完成后，脱敏运行记录写入 `data/logs/runs.jsonl`。日志不保留原始文档路径、完整文档内容、姓名、手机号、邮箱、学号、身份证号或 Windows 用户名。
-
-## 实验
-
-以下命令离线运行四组对照实验，不调用真实 API：
-
-```powershell
-python -m project.experiments.run_completion_experiments --output-dir data/experiments
-```
-
-实验覆盖规则模板 vs DeepSeek、无检索 vs 有检索、仅文本 vs 文本加文档、无追问 vs 有追问，并生成 `results.json` 与 `results.csv`。指标包括完整性、个性化、可执行性、响应时间和反馈。
-
-需要生成真实 DeepSeek 对照结果时，在配置 API Key 后显式增加 `--live`；该模式会产生 API 调用与费用：
-
-```powershell
-python -m project.experiments.run_completion_experiments --output-dir data/experiments-live --live
-```
-
-## 测试
+## 测试与实验
 
 ```powershell
 python -m unittest discover -s project/tests -v
-python -m unittest test_model.test_mvp_components -v
+python -m project.experiments.run_completion_experiments --output-dir data/experiments
 ```
 
-前端为可选模块；需要验证时运行：
+研究实验包括单体多模态模型、单轮模块化系统和多轮感知协作系统的比较，以及知识库、用户追问、感知微调和反馈调整消融。实验设计与指标见 `docs/experiments.md`。
+
+## Docker与Web
+
+Docker使用 `requirements-api.txt`，默认模型为 `deepseek-v4-flash`：
+
+```powershell
+docker compose up --build
+```
+
+Web前端是可选模块：
 
 ```powershell
 cd web
@@ -77,12 +76,6 @@ npm install
 npm run build
 ```
 
-## 可选服务
+## Data Layout
 
-安装完整依赖后可启动 FastAPI：
-
-```powershell
-python -m project.api.run_api
-```
-
-打开 `http://localhost:8000`。部署时应显式设置强随机 `JWT_SECRET_KEY` 并检查 `CORS_ORIGINS`。
+`dataset/`保存应版本化的静态职业知识和匿名测试案例；`data/`保存本地数据库、上传文件、日志和实验输出，默认不进入Git。不得提交API Key、个人身份信息、原始上传文件或模型权重。

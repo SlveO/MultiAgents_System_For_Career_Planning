@@ -7,3 +7,6 @@ url = "https://api.githubcopilot.com/mcp/"
 # Replace with your real PAT (least-privilege scopes). Do NOT commit this.
 
 bearer_token_env_var = "CODEX_GITHUB_PERSONAL_ACCESS_TOKEN"
+
+[sandbox_workspace_write]
+network_access = true

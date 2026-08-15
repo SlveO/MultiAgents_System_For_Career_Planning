@@ -9,7 +9,7 @@ services:
     environment:
       - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY:-}
       - DEEPSEEK_BASE_URL=${DEEPSEEK_BASE_URL:-https://api.deepseek.com}
-      - BRAIN_DEFAULT_MODEL=${BRAIN_DEFAULT_MODEL:-deepseek-chat}
+      - BRAIN_DEFAULT_MODEL=${BRAIN_DEFAULT_MODEL:-deepseek-v4-flash}
       - CORS_ORIGINS=${CORS_ORIGINS:-*}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY:-change-me-in-production}
       - API_HOST=0.0.0.0

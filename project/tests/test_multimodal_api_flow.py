@@ -1,11 +1,15 @@
 from __future__ import annotations
 
-import json
 import unittest
 
-from fastapi.testclient import TestClient
-
-import project.api.api as api_mod
+try:
+    from fastapi.testclient import TestClient
+    import project.api.api as api_mod
+    API_TEST_DEPENDENCIES_AVAILABLE = True
+except ImportError:
+    TestClient = None
+    api_mod = None
+    API_TEST_DEPENDENCIES_AVAILABLE = False
 
 
 class FakePipeline:
@@ -37,6 +41,10 @@ class FakePipeline:
         self.history.pop(session_id, None)
 
 
+@unittest.skipUnless(
+    API_TEST_DEPENDENCIES_AVAILABLE,
+    "install requirements-api.txt to run FastAPI integration tests",
+)
 class TestMultimodalApiFlow(unittest.TestCase):
     def setUp(self):
         self._old_pipeline = api_mod.multimodal_pipeline

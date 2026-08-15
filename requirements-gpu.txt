@@ -1,0 +1,11 @@
+# GPU profile: includes API and MVP dependencies.
+# Install a PyTorch build matching the host CUDA version before this file.
+-r requirements-api.txt
+
+accelerate>=0.25,<2
+transformers>=4.51,<5
+qwen-vl-utils>=0.0.8,<1
+modelscope>=1.20,<2
+sentence-transformers>=3,<6
+chromadb>=0.4,<2
+opencv-python-headless>=4.8,<5

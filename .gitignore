@@ -29,8 +29,6 @@ venv/
 
 # Optional local models and downloaded material
 /models/
-/learning/
-/model_download/
 
 # Frontend build output
 /web/node_modules/
