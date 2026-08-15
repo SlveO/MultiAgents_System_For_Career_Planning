@@ -3,18 +3,18 @@
 ## Task 1: Freeze and Publish MVP
 
 - Owner: project lead
-- Status: baseline committed as `cd6c1b2` on `completion-mvp`; cleanup publication in progress
+- Status: completed; `main` and `completion-mvp` publish `3d0bfbc`
 - Deliverable: tested branch, then fast-forward `main`
 - Acceptance: no secrets or runtime data committed; tests and README smoke checks pass
-- Next action: push the cleaned branch, verify remote `main`, then fast-forward `main`
+- Next action: continue MVP work on `main`
 
 ## Task 2: Repository and Dependency Cleanup
 
 - Owner: project lead with member A review
-- Status: completed locally; publication pending
+- Status: completed and published
 - Deliverable: clear data/model/docs layout and layered requirement files
 - Acceptance: core/API/GPU install paths are documented and tested
-- Next action: keep `data/` and `models/` out of Git, and review changes on `main`
+- Next action: review future changes against the documented device profiles
 
 ## Task 3: Research and GPU Design
 
