@@ -17,6 +17,7 @@ try:
     from ..core.schemas import CareerPlanResponse, FeedbackRequest, TaskRequest
     from ..core.multimodal_pipeline import MultimodalChatPipeline, PipelineError
     from ..core.settings import get_settings
+    from ..core.session_memory import SessionMemory
     from ..core.auth import (
         get_current_user,
         get_current_user_optional,
@@ -28,6 +29,7 @@ except ImportError:
     from project.core.schemas import CareerPlanResponse, FeedbackRequest, TaskRequest
     from project.core.multimodal_pipeline import MultimodalChatPipeline, PipelineError
     from project.core.settings import get_settings
+    from project.core.session_memory import SessionMemory
     from project.core.auth import (
         get_current_user,
         get_current_user_optional,
@@ -49,7 +51,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-multimodal_pipeline = MultimodalChatPipeline()
+multimodal_pipeline = MultimodalChatPipeline(
+    memory=SessionMemory(db_path="./data/session_memory.db")
+)
 _orchestrator: CareerOrchestrator | None = None
 
 UPLOAD_DIR = Path(__file__).resolve().parent.parent.parent / "data" / "uploads"
@@ -187,8 +191,11 @@ def get_session(session_id: str, user_id: str = Depends(get_current_user)):
 
 @app.post("/v1/feedback")
 def post_feedback(req: FeedbackRequest, user_id: str = Depends(get_current_user)):
-    get_orchestrator().memory.append_feedback(req.session_id, req.feedback, req.rating)
-    return JSONResponse(content={"ok": True}, media_type="application/json; charset=utf-8")
+    logged = get_orchestrator().submit_feedback(req.session_id, req.feedback)
+    return JSONResponse(
+        content={"ok": True, "run_logged": logged},
+        media_type="application/json; charset=utf-8",
+    )
 
 
 # ---------------------------------------------------------------------------

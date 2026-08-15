@@ -1,18 +1,38 @@
-.cache/
-.vscode/
+# Local tooling and secrets
+/.cache/
+/.claude/
+/.codex/*.local.toml
+/.vscode/
+.env
+.env.*
+!.env.example
 
+# Python caches, environments, and reports
+__pycache__/
+*.py[cod]
+*.pyc.*
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Runtime data and temporary test directories
+/data/
+/logs/
+/request.json
+/project/data/test_tmp/
+/project/tests/router_case_*/
+/project/resources/image/
+*.db
+*.db-journal
+
+# Optional local models and downloaded material
 /models/
 /learning/
 /model_download/
 
-project/__pycache__/
-test_model/__pycache__/
-project/data/test_tmp/
-*.db-journal
-
-/logs
-
-project/data/*.db
-
-# Environment
-.env
+# Frontend build output
+/web/node_modules/
+/web/dist/
+/web/*.tsbuildinfo

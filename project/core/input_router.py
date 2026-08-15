@@ -40,13 +40,10 @@ class InputClassifier:
     }
     DOCUMENT_EXTENSIONS = {
         ".pdf",
-        ".doc",
         ".docx",
-        ".xls",
         ".xlsx",
         ".csv",
         ".tsv",
-        ".ods",
         ".txt",
         ".md",
     }
@@ -284,4 +281,3 @@ class DataRouter:
 
 def classify_input(input_str: str) -> Dict[str, Any]:
     return InputClassifier().classify(input_str)
-

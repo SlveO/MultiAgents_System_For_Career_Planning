@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field
 
 IntentType = Literal["qa", "diagnosis", "planning", "review"]
 ModalityType = Literal["text", "image", "document", "audio", "video"]
+FeedbackChoice = Literal["过短", "合适", "过于详细"]
 
 
 class UserConstraints(BaseModel):
@@ -29,6 +30,10 @@ class TaskRequest(BaseModel):
     stream: bool = False
     debug_trace: bool = False
     constraints: UserConstraints = Field(default_factory=UserConstraints)
+    follow_up_answers: Dict[str, str] = Field(default_factory=dict)
+    skip_follow_up: bool = False
+    planner_mode: Literal["deepseek", "template"] = "deepseek"
+    use_knowledge: bool = True
     metadata: Dict[str, str] = Field(default_factory=dict)
 
 
@@ -52,6 +57,12 @@ class UserProfile(BaseModel):
     weaknesses: List[str] = Field(default_factory=list)
     interests: List[str] = Field(default_factory=list)
     current_stage: str = ""
+    education_stage: str = ""
+    major: str = ""
+    skills: List[str] = Field(default_factory=list)
+    target_role: str = ""
+    preference: str = ""
+    main_constraints: List[str] = Field(default_factory=list)
     constraints: UserConstraints = Field(default_factory=UserConstraints)
 
 
@@ -77,6 +88,7 @@ class CareerPlanResponse(BaseModel):
     user_facing_advice: str = ""
     perception_results: List[PerceptionResult] = Field(default_factory=list)
     knowledge_hits: List[str] = Field(default_factory=list)
+    knowledge_hit_ids: List[str] = Field(default_factory=list)
     model_trace: List[str] = Field(default_factory=list)
     served_by: Literal["cloud_brain", "local_fallback"] = "local_fallback"
     retry_count: int = 0
@@ -85,5 +97,4 @@ class CareerPlanResponse(BaseModel):
 
 class FeedbackRequest(BaseModel):
     session_id: str
-    feedback: str = Field(..., min_length=1)
-    rating: Optional[int] = Field(default=None, ge=1, le=5)
+    feedback: FeedbackChoice

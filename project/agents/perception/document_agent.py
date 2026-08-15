@@ -79,7 +79,7 @@ class DocumentPerceptionAgent:
             text = self._read_pdf(path)
         elif suffix == ".docx":
             text = self._read_docx(path)
-        elif suffix in {".xlsx", ".xls"}:
+        elif suffix == ".xlsx":
             text = self._read_xlsx(path)
         else:
             return PerceptionResult(

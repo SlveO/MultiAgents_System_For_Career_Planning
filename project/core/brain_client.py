@@ -47,6 +47,7 @@ class DeepSeekBrainClient(BrainClient):
             "messages": [{"role": "user", "content": prompt}],
             "temperature": 0.3,
             "stream": stream,
+            "thinking": {"type": "disabled"},
         }
 
     def _url(self) -> str:

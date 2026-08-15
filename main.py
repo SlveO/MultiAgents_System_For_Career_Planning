@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from project.main import main
+from project.assistant_cli import main
 
 
 if __name__ == "__main__":

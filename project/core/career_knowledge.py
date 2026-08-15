@@ -9,6 +9,7 @@ from typing import Any, Dict, List, Optional, Sequence
 
 @dataclass
 class KnowledgeItem:
+    item_id: str
     role: str
     skills: List[str]
     resources: List[str]
@@ -32,6 +33,7 @@ class CareerKnowledgeBase:
         embedding_model_path: str | None = None,
         chroma_persist_dir: str | None = None,
         vector_weight: float = 0.7,
+        use_vector: bool = False,
     ) -> None:
         if kb_path is None:
             project_root = Path(__file__).resolve().parents[2]
@@ -45,6 +47,7 @@ class CareerKnowledgeBase:
         else:
             self.chroma_dir = chroma_persist_dir
         self.vector_weight = vector_weight
+        self.use_vector = use_vector
 
         self.items = self._load_items()
         self._embedder: Any = None
@@ -103,9 +106,10 @@ class CareerKnowledgeBase:
 
         raw = json.loads(self.kb_path.read_text(encoding="utf-8"))
         items: List[KnowledgeItem] = []
-        for obj in raw:
+        for index, obj in enumerate(raw, start=1):
             items.append(
                 KnowledgeItem(
+                    item_id=obj.get("id") or f"career-{index:03d}",
                     role=obj.get("role", ""),
                     skills=obj.get("skills", []),
                     resources=obj.get("resources", []),
@@ -119,6 +123,7 @@ class CareerKnowledgeBase:
         self.kb_path.parent.mkdir(parents=True, exist_ok=True)
         payload = [
             {
+                "id": item.item_id,
                 "role": item.role,
                 "skills": item.skills,
                 "resources": item.resources,
@@ -198,7 +203,7 @@ class CareerKnowledgeBase:
             }
             for item in self.items
         ]
-        ids = [f"item_{i}" for i in range(len(self.items))]
+        ids = [item.item_id for item in self.items]
         self._collection.add(embeddings=embeddings.tolist(), documents=texts, metadatas=metadatas, ids=ids)
 
     def rebuild_index(self) -> None:
@@ -219,15 +224,30 @@ class CareerKnowledgeBase:
         parts = re.split(r"[\s,，。；;、:/]+", text.lower())
         return [p for p in parts if p]
 
+    @staticmethod
+    def _chinese_bigrams(text: str) -> set[str]:
+        chinese = "".join(re.findall(r"[\u4e00-\u9fff]", text))
+        return {chinese[index:index + 2] for index in range(len(chinese) - 1)}
+
+    def _keyword_score(self, query: str, item: KnowledgeItem) -> int:
+        query_lower = query.lower()
+        item_text = " ".join([item.role] + item.skills + item.transition_paths).lower()
+        token_overlap = len(
+            set(self._tokenize(query_lower)).intersection(self._tokenize(item_text))
+        )
+        role_bigram_overlap = len(
+            self._chinese_bigrams(query).intersection(self._chinese_bigrams(item.role))
+        )
+        exact_role_bonus = 10 if item.role.lower() in query_lower else 0
+        skill_bonus = sum(2 for skill in item.skills if skill.lower() in query_lower)
+        return token_overlap * 2 + role_bigram_overlap * 3 + exact_role_bonus + skill_bonus
+
     def search(self, query: str, top_k: int = 3) -> List[KnowledgeItem]:
-        q_tokens = set(self._tokenize(query))
         scored = []
         for item in self.items:
-            text = " ".join([item.role] + item.skills + item.transition_paths).lower()
-            tokens = set(self._tokenize(text))
-            overlap = len(q_tokens.intersection(tokens))
-            if overlap > 0:
-                scored.append((overlap, item))
+            score = self._keyword_score(query, item)
+            if score > 0:
+                scored.append((score, item))
         scored.sort(key=lambda x: x[0], reverse=True)
         if not scored:
             return self.items[:top_k]
@@ -266,18 +286,14 @@ class CareerKnowledgeBase:
     # ------------------------------------------------------------------
 
     def retrieve(self, query: str, top_k: int = 4) -> List[Dict[str, str]]:
-        if not self.vector_available:
+        if not self.use_vector or not self.vector_available:
             return self._keyword_retrieve(query, top_k)
         return self._hybrid_retrieve(query, top_k)
 
     def _keyword_retrieve(self, query: str, top_k: int = 4) -> List[Dict[str, str]]:
-        q_tokens = set(self._tokenize(query))
         scored = []
         for item in self.items:
-            text = " ".join([item.role] + item.skills + item.transition_paths).lower()
-            tokens = set(self._tokenize(text))
-            overlap = len(q_tokens.intersection(tokens))
-            scored.append((overlap, item))
+            scored.append((self._keyword_score(query, item), item))
 
         scored.sort(key=lambda x: x[0], reverse=True)
         top = scored[:top_k] if scored else []
@@ -286,6 +302,7 @@ class CareerKnowledgeBase:
         for score, item in top:
             references.append(
                 {
+                    "item_id": item.item_id,
                     "role": item.role,
                     "skills": ", ".join(item.skills[:6]),
                     "resources": ", ".join(item.resources[:4]),
@@ -300,13 +317,10 @@ class CareerKnowledgeBase:
         kw_weight = 1.0 - self.vector_weight
 
         # Keyword results
-        q_tokens = set(self._tokenize(query))
         kw_scored: List[tuple[float, KnowledgeItem]] = []
         max_overlap = 1
         for item in self.items:
-            text = " ".join([item.role] + item.skills + item.transition_paths).lower()
-            tokens = set(self._tokenize(text))
-            overlap = len(q_tokens.intersection(tokens))
+            overlap = self._keyword_score(query, item)
             if overlap > max_overlap:
                 max_overlap = overlap
             kw_scored.append((float(overlap), item))
@@ -354,6 +368,7 @@ class CareerKnowledgeBase:
                 continue
             references.append(
                 {
+                    "item_id": item.item_id,
                     "role": item.role,
                     "skills": ", ".join(item.skills[:6]),
                     "resources": ", ".join(item.resources[:4]),
@@ -381,6 +396,7 @@ class CareerKnowledgeBase:
         for item in self.items:
             out.append(
                 {
+                    "item_id": item.item_id,
                     "role": item.role,
                     "skills": ", ".join(item.skills),
                     "resources": ", ".join(item.resources),
@@ -406,7 +422,7 @@ class CareerKnowledgeBase:
                     "transition_paths": ", ".join(item.transition_paths),
                     "salary_hint": item.salary_hint,
                 }],
-                ids=[f"item_{len(self.items) - 1}"],
+                ids=[item.item_id],
             )
 
     def add_items(self, items: Sequence[KnowledgeItem]) -> None:

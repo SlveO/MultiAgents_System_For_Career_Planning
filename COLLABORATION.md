@@ -1,5 +1,7 @@
 # 项目技术协作文档
 
+> **Codex 结题版状态（2026-08-14）**：本文后续内容保留 Claude 阶段的架构与前端历史，便于追溯，不再作为当前运行说明。当前结题 MVP 以 [README.md](README.md)、[AGENTS.md](AGENTS.md) 和 `docs/superpowers/plans/2026-08-14-completion-mvp.md` 为准。唯一 CLI 是 `python -m project.assistant_cli`；默认模型为 `deepseek-v4-flash` 且关闭思考模式；关键词知识库为 50 条；文本与受支持文档无需 GPU；图像、音频、视频、向量检索、API 与 Web 均为可选能力。当前新增流程包含 8 个固定追问、三档反馈、隐私脱敏 JSONL 日志及四组可重复实验。
+
 ## 项目概述
 基于 BeMyEyes 思路的多模态职业规划助手。本地小模型（Qwen3-VL / Whisper）负责将图片、文档、音频等非文本模态翻译为文本描述，云端 DeepSeek API 负责所有文本推理与规划生成，支持 CLI 与 API（含 SSE 流式）。
 
@@ -18,6 +20,17 @@
 - [x] 视频关键帧提取（cv2 + Qwen3-VL 帧描述）
 - [x] 多模态感知结果统一为 PerceptionResult 结构（含 MultiModalFusion 融合）
 - [x] Web 前端 + 用户认证（JWT）+ Docker 部署 + 文件上传
+- [x] Web 前端现代化重构（React 18 + Vite 5 + TypeScript 5 + Tailwind CSS 3）— 2026-05-02
+- [x] 前后端一键启动（Vite 插件自动 spawn 后端）— 2026-05-02
+- [x] SSE 流式超时保护（15s 连接 + 30s 流读取）+ 管道进度展示 — 2026-05-02
+- [x] 对话助手 / 职业规划功能区分 + 侧边栏折叠修复 — 2026-05-02
+- [x] 会话历史字段格式对齐（后端 {user,assistant} ↔ 前端 {role,content}）— 2026-05-02
+- [x] 文件上传代理绕过（multipart 直连后端）— 2026-05-02
+- [x] 会话切换本地数据保护（防止后端覆盖失败对话）— 2026-05-02
+- [x] 文件上传错误详情增强（HTTP 状态码 + 响应体解析）— 2026-05-02
+- [x] 文件路径检测修复（消息格式去除路径括号）— 2026-05-02
+- [x] 对话助手会话历史 SQLite 持久化（后端重启不丢失）— 2026-05-03
+- [x] JWT 密钥启动时自动生成（检测到默认值随机生成并警告）— 2026-05-03
 
 ## 当前阶段目标
 
@@ -54,6 +67,25 @@
 - [x] 4.4 Web 前端（单页 HTML：登录、职业规划 SSE 流式、对话 SSE 流式、文件上传）
 - [x] 4.5 文件上传端点（POST /v1/upload）+ StaticFiles 挂载
 - [x] 4.6 memory_manager.py GBK 编码修复（所有 emoji/中文 print 替换为 ASCII）
+
+**Web 前端现代化重构 — 2026-05-02：**
+- [x] 技术栈升级：原生 HTML/CSS/JS → React 18 + Vite 5 + TypeScript 5 + Tailwind CSS 3
+- [x] 后端自动启动：Vite 插件 `spawnBackend` 通过 `conda run` 一键启动前后端
+- [x] SSE 流式超时保护：15s 连接超时 + 30s 流读取超时 + 明确错误提示
+- [x] 管道进度展示：5 阶段进度提示（路由→分析→RAG→提示词→生成）
+- [x] SSE 解析器 \r\n 归一化修复（HTTP CRLF 事件边界兼容）
+- [x] 会话历史字段对齐：后端 `{user,assistant}` → 前端 `{role,content}` 转换
+- [x] 对话助手 / 职业规划功能区分：导航栏"对话助手"tab + 右侧"职业规划提问"面板
+- [x] 侧边栏折叠修复：组件始终渲染，折叠态显示展开按钮
+- [x] 待办持久化：localStorage（原版刷新丢失数据）
+- [x] 技术文档更新：技术文档.md V2.0（反映 React 架构）
+- [x] 旧文件清理：page1.html / style.css / script.js（替换为 38 个模块化源文件）
+- [x] 文件上传修复：multipart 直连后端绕过 Vite 代理（60s 超时 + JWT 手动注入）
+- [x] 文件上传错误详情：HTTP 状态码 + 响应体 `detail`/`message` 字段解析
+- [x] 文件路径检测修复：消息格式 `[附件: file]\npath` 确保后端正则 `^[A-Za-z]:` 可匹配
+- [x] 会话本地数据保护：已有用户消息的会话不被后端数据覆盖（保留失败对话记录）
+- [x] 会话历史 SQLite 持久化：MultimodalPipeline 注入 SessionMemory，对话历史写入 SQLite
+- [x] JWT 密钥安全启动：检测默认值自动生成 os.urandom(32) 随机密钥
 
 ## 正确的数据流
 ```
@@ -118,7 +150,7 @@ MultiModalFusion ──► 置信度加权+去重 ─────┘  (多模态
 ## 代码架构概览
 
 ```
-project/
+project/                       # 后端 Python 项目
 ├── main.py                  # CLI 入口（全部 5 种模态，文本走云端）
 ├── orchestrator.py          # 职业规划编排器（云端优先 + 规则回退）
 ├── core/
@@ -134,7 +166,7 @@ project/
 ├── agents/
 │   ├── image.py             # Qwen3-VL 图像处理器
 │   └── perception/          # 感知代理
-│       ├── base.py          # 公共工具函数
+│       ├── base.py
 │       ├── text_agent.py    # 规则文本分析（无模型）
 │       ├── image_agent.py   # 图像感知
 │       ├── document_agent.py # 文档感知（txt/md/csv/pdf/docx/xlsx）
@@ -146,12 +178,51 @@ project/
 ├── utils/
 │   └── fusion.py            # 多模态融合（MultiModalFusion）
 ├── static/
-│   └── index.html           # Web 前端（单页应用）
+│   └── index.html           # Web 前端（旧版，已被 web/ 取代）
 └── tests/
     ├── test_input_router.py
     ├── test_multimodal_pipeline.py
     ├── test_multimodal_api_flow.py
     └── test_main_entry_ast.py
+
+web/                           # 前端 React 项目（现代化重构）
+├── index.html               # Vite 入口 HTML
+├── package.json             # 依赖管理（react, vite, tailwindcss, lucide-react）
+├── vite.config.ts           # Vite 配置 + spawnBackend 插件 + 代理
+├── tailwind.config.ts       # Tailwind 自定义主题色
+├── tsconfig.json            # TypeScript 项目引用
+├── postcss.config.js        # PostCSS 配置
+└── src/
+    ├── main.tsx             # React 入口（挂载 Providers + App）
+    ├── App.tsx              # 根组件：认证门控 + 布局 + 模态窗协调
+    ├── index.css            # Tailwind 指令 + 全局样式 + 翻页时钟 CSS
+    ├── api/                 # API 请求层
+    │   ├── client.ts        # fetch 封装（JWT 注入、超时、SSE 流读取）
+    │   ├── auth.ts          # login(), register(), registerAndLogin()
+    │   ├── chat.ts          # sendChatMessage() 流式生成器 + 阶段进度
+    │   └── upload.ts        # uploadFile() multipart
+    ├── store/               # 状态管理（React Context）
+    │   ├── AuthContext.tsx    # 用户认证、JWT 持久化
+    │   ├── ChatContext.tsx    # 会话管理、SSE 流式消息
+    │   ├── TodoContext.tsx    # 待办 CRUD、拖拽排序、localStorage
+    │   └── PomodoroContext.tsx# 番茄钟状态机
+    ├── components/          # React 组件（20 个）
+    │   ├── layout/          # Header, Navbar
+    │   ├── auth/            # LoginForm, RegisterForm
+    │   ├── chat/            # ChatContainer, MessageBubble, ChatInput,
+    │   │                    #   TypingIndicator, QuickQuestions, FileAttachment
+    │   ├── history/         # HistorySidebar（可折叠，始终渲染）
+    │   ├── modals/          # Modal, InfoModal, TodoDetailModal,
+    │   │                    #   PomodoroModal, FlipClockModal
+    │   ├── todo/            # TodoForm, TodoList, TodoItem
+    │   └── flipclock/       # FlipClock, FlipCard
+    ├── hooks/
+    │   └── useFlipClock.ts  # 翻页时钟定时器
+    ├── types/
+    │   └── index.ts         # TypeScript 类型定义（API + App State）
+    └── utils/
+        ├── format.ts        # 时间/日期/文本格式化
+        └── storage.ts       # localStorage 安全读写
 ```
 
 ## 关键文件索引
@@ -168,7 +239,17 @@ project/
 - [project/agents/perception/](project/agents/perception/) — 全部 5 种感知代理
 - [project/agents/perception/video_agent.py](project/agents/perception/video_agent.py) — 视频关键帧提取代理
 - [project/utils/fusion.py](project/utils/fusion.py) — 多模态融合处理器
-- [project/static/index.html](project/static/index.html) — Web 前端
+- [project/static/index.html](project/static/index.html) — Web 前端（旧版，已被 web/ 取代）
+- [web/src/App.tsx](web/src/App.tsx) — React 根组件
+- [web/src/api/client.ts](web/src/api/client.ts) — fetch 封装 + SSE 流读取（\r\n 归一化 + 超时保护）
+- [web/src/api/chat.ts](web/src/api/chat.ts) — SSE 流式聊天调用 + 管道进度事件
+- [web/src/store/ChatContext.tsx](web/src/store/ChatContext.tsx) — 会话状态管理（含后端历史格式转换）
+- [web/src/store/AuthContext.tsx](web/src/store/AuthContext.tsx) — JWT 认证状态
+- [web/src/components/chat/ChatInput.tsx](web/src/components/chat/ChatInput.tsx) — 消息输入组件
+- [web/src/components/history/HistorySidebar.tsx](web/src/components/history/HistorySidebar.tsx) — 可折叠历史侧边栏
+- [web/src/components/chat/QuickQuestions.tsx](web/src/components/chat/QuickQuestions.tsx) — 职业规划提问面板
+- [web/vite.config.ts](web/vite.config.ts) — Vite 配置 + spawnBackend 后端自动启动插件
+- [web/技术文档.md](web/技术文档.md) — 前端技术文档 V2.0
 - [test_model/test_mvp_components.py](test_model/test_mvp_components.py) — MVP 测试
 - [dataset/career_knowledge_base.json](dataset/career_knowledge_base.json) — 职业知识库 JSON（21 条）
 - [data/chroma_db/](data/chroma_db/) — ChromaDB 向量持久化目录
@@ -179,27 +260,59 @@ project/
 
 ## 当前状态与进度
 
-**已完成（截至 2026-05-02）：**
+**已完成（截至 2026-05-03）：**
 - 优先级 1-4 全部完成
 - 14/14 单元测试通过（含 input_router 5, main AST 2, multimodal_pipeline 5, multimodal_api_flow 2）
-- Web 前端核心功能可用：登录注册、职业规划（SSE 流式）、对话助手（SSE 流式）、文件上传
+- Web 前端 React 现代化重构完成（38 个模块化源文件，构建产物 191KB JS + 22KB CSS gzip ~59KB+5KB）
+- 前端功能完整：JWT 登录/注册、对话助手（SSE 流式 + 5 阶段进度）、职业规划提问、待办管理（localStorage 持久化）、番茄钟、翻页时钟
 - DeepSeek API 云端推理正常（需配置 DEEPSEEK_API_KEY）
 - CLI 文件路径检测修复：`.match()` → `.search()` 支持中文文本中嵌入路径（无空格分隔）
 - CLI 文件/音频模式始终送云端分析，即使无显式 text_context
+- 前后端一键启动（`cd web && npm run dev`，Vite 插件自动 spawn 后端）
+- SSE 解析器兼容 HTTP CRLF 换行符
+- 会话历史前端 ↔ 后端字段格式对齐
+- 文件上传全链路修复：Vite 代理绕过 + 60s 超时 + HTTP 错误详情 + 路径格式修复
+- 会话数据保护：本地已有用户消息时不被后端数据覆盖
+- 对话助手会话历史 SQLite 持久化：注入 SessionMemory 到 MultimodalPipeline
+- JWT 密钥安全强化：启动时检测默认值自动生成随机密钥并警告
 
 **待完善：**
-- 历史对话管理功能
-- Web 前端 XSS 防护
-- 生产环境 JWT 密钥配置
+- 生产环境 JWT 密钥应通过 `JWT_SECRET_KEY` 环境变量显式配置（启动时若检测到默认值会自动生成随机密钥并警告）
 
 ## 已知问题
 1. **GPU 模型在 Docker 不可用**：Docker 镜像是 CPU-only，Qwen3-VL / Whisper 需在宿主机运行
 2. **Whisper 模型较大**：922MB，首次下载耗时较长
-3. **视频处理依赖 cv2**：需 opencv-python，已在 requirements 中
-4. **JWT 密钥默认值不安全**：生产环境需通过 JWT_SECRET_KEY 环境变量覆盖
-5. **前端无 XSS 防护**：单页 HTML 直接操作 innerHTML，仅用于开发/演示
-6. **DeepSeek API Key 必须配置**：不配置时对话助手不返回内容，职业规划退回固定模板
-7. **python-docx / openpyxl 为本地文档解析必需**：Docker 镜像已包含，本地 conda 环境需 `pip install python-docx openpyxl`
+3. **python-docx / openpyxl 为本地文档解析必需**：Docker 镜像已包含，本地 conda 环境需 `pip install python-docx openpyxl`
+4. **conda 环境依赖**：Vite 插件使用 `conda run -n agents` 启动后端，需确保 conda 环境名匹配
+
+## 前端重构关键变更记录（2026-05-02）
+
+### 架构升级
+| 旧版 | 新版 |
+|------|------|
+| 3 文件（HTML/CSS/JS ~2250 行） | 38 模块化 TypeScript 源文件 |
+| Tailwind CSS CDN + Font Awesome CDN | Tailwind CSS 编译时 + lucide-react（tree-shakeable） |
+| 无构建工具 | Vite 5（HMR + TypeScript + tree-shaking） |
+| `sendMessageToAI()` mock 1s 延迟固定文本 | 真实 SSE 流式调用 `/v1/multimodal/chat/stream` |
+| 待办数据刷新丢失 | localStorage 持久化 |
+| 无认证 | JWT 登录/注册 |
+| 死代码：9 个孤儿 DOM 引用 + 猴子补丁 | 零死代码 |
+
+### Bug 修复记录
+| 问题 | 根因 | 修复文件 |
+|------|------|---------|
+| 注册/登录失败 ECONNREFUSED | 后端未启动 | [vite.config.ts](web/vite.config.ts) — spawnBackend 插件 |
+| 聊天永远显示"思考中"无返回 | SSE `reader.read()` 无超时 | [client.ts](web/src/api/client.ts) — 15s 连接 + 30s 流读取超时 |
+| SSE 事件无法解析导致空返回 | HTTP CRLF `\r\n` vs parser `\n\n` 不匹配 | [client.ts](web/src/api/client.ts) — `.replace(/\r\n/g, '\n')` 归一化 |
+| 切换会话后聊天记录消失 | 后端 `{user,assistant}` vs 前端 `{role,content}` 字段不匹配 | [ChatContext.tsx](web/src/store/ChatContext.tsx) + [types/index.ts](web/src/types/index.ts) |
+| 侧边栏折叠后无法展开 | HistorySidebar 被条件渲染移除 | [App.tsx](web/src/App.tsx) — 始终渲染 `<HistorySidebar />` |
+| 对话助手/职业规划界限不清 | tab 标签不准确 | [Navbar.tsx](web/src/components/layout/Navbar.tsx) — "职业规划"→"对话助手" + 右侧面板"职业规划提问" |
+| 文件上传 "Upload failed" | Vite 代理破坏 multipart/form-data Content-Type | [upload.ts](web/src/api/upload.ts) — 直连 `http://localhost:8000/v1/upload` 绕过代理；60s 超时；手动注入 JWT |
+| 上传错误信息不具体（仅 "Upload failed"） | 未解析 HTTP 响应体 | [upload.ts](web/src/api/upload.ts) — 解析 `res.json()` 中的 `detail`/`message` 字段；降级到 `res.text()` |
+| 文件上传成功但后端报 "no valid document file found" | 前端消息格式 `[附件: file (D:\path.docx)]`，后端路径正则需要 `^[A-Za-z]:` 开头但匹配到 `(` | [ChatInput.tsx](web/src/components/chat/ChatInput.tsx) — 格式改为 `[附件: file]\nD:\path.docx`，路径独占一行无括号 |
+| 失败对话在切换会话后消失 | 后端仅存储成功的 LLM 轮次；切换回会话时后端数据覆盖本地 | [ChatContext.tsx](web/src/store/ChatContext.tsx) — `hasLocalConversations` 守卫：本地有用户消息则跳过后端覆盖 |
+| 对话助手聊天记录后端重启后丢失 | `MultimodalPipeline` 使用纯内存 dict 存储历史，未调用 `SessionMemory.append_interaction()` | [multimodal_pipeline.py](project/core/multimodal_pipeline.py) + [api.py](project/api/api.py) — 注入 `SessionMemory`；`run_stream()` 写入 SQLite；`get_session_history()` 内存缺失时从 DB 恢复 |
+| JWT 密钥默认值 `change-me-in-production` 不安全 | 开发者常忘记设置环境变量 | [settings.py](project/core/settings.py) — `get_settings()` 检测默认值，自动用 `os.urandom(32).hex()` 生成随机密钥并 stderr 警告 |
 
 ---
-> 最后更新：2026-05-02  by Agent (Claude Code)
+> 最后更新：2026-05-03 by Agent (Claude Code) — 会话历史 SQLite 持久化 + JWT 密钥安全强化 + 协作文档清理

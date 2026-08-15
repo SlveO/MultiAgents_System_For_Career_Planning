@@ -2,22 +2,30 @@ from __future__ import annotations
 
 import json
 import time
-from typing import Any, Dict, Generator, List, Tuple
+from typing import Any, Dict, Generator, List, Optional, Tuple
 
 try:
     from .core.schemas import CareerPlanResponse, Milestone, PerceptionResult, TaskRequest, UserProfile
-    from .core.brain_client import DeepSeekBrainClient
+    from .core.brain_client import BrainClient, DeepSeekBrainClient
     from .core.career_knowledge import CareerKnowledgeBase
     from .agents.perception import AudioPerceptionAgent, DocumentPerceptionAgent, ImagePerceptionAgent, TextPerceptionAgent, VideoPerceptionAgent
     from .core.session_memory import SessionMemory
     from .core.settings import get_settings
+    from .core.intake import apply_answers_to_profile
+    from .core.feedback import FEEDBACK_OPTIONS
+    from .core.privacy import redact_data
+    from .core.run_logging import JsonlRunLogger
 except ImportError:
     from project.core.schemas import CareerPlanResponse, Milestone, PerceptionResult, TaskRequest, UserProfile
-    from project.core.brain_client import DeepSeekBrainClient
+    from project.core.brain_client import BrainClient, DeepSeekBrainClient
     from project.core.career_knowledge import CareerKnowledgeBase
     from project.agents.perception import AudioPerceptionAgent, DocumentPerceptionAgent, ImagePerceptionAgent, TextPerceptionAgent, VideoPerceptionAgent
     from project.core.session_memory import SessionMemory
     from project.core.settings import get_settings
+    from project.core.intake import apply_answers_to_profile
+    from project.core.feedback import FEEDBACK_OPTIONS
+    from project.core.privacy import redact_data
+    from project.core.run_logging import JsonlRunLogger
 from project.utils.fusion import MultiModalFusion
 
 
@@ -26,19 +34,73 @@ class CareerOrchestrator:
         self,
         image_model_path: str = './models/Qwen3-VL-2B-Instruct',
         db_path: str = './data/session_memory.db',
+        brain_client: Optional[BrainClient] = None,
+        run_logger: Optional[JsonlRunLogger] = None,
     ):
         self.settings = get_settings()
         self.memory = SessionMemory(db_path=db_path)
         self.knowledge = CareerKnowledgeBase()
         self.text_agent = TextPerceptionAgent()
-        self.image_agent = ImagePerceptionAgent(image_model_path)
         self.document_agent = DocumentPerceptionAgent()
-        self.audio_agent = AudioPerceptionAgent()
-        self.video_agent = VideoPerceptionAgent(image_model_path=image_model_path)
+        self.image_agent = None
+        self.audio_agent = None
+        self.video_agent = None
 
-        self.cloud_brain = DeepSeekBrainClient()
+        self.cloud_brain = brain_client or DeepSeekBrainClient()
+        self.run_logger = run_logger or JsonlRunLogger()
+        self._pending_runs: Dict[str, Tuple[TaskRequest, CareerPlanResponse, str]] = {}
 
         self.image_model_path = image_model_path
+
+    def _persist_response(
+        self,
+        req: TaskRequest,
+        response: CareerPlanResponse,
+        model_name: str,
+    ) -> None:
+        self.memory.upsert_profile(req.session_id, redact_data(response.profile.model_dump()))
+        self.memory.append_interaction(
+            req.session_id,
+            redact_data(req.model_dump()),
+            redact_data(response.model_dump()),
+        )
+        self._pending_runs[req.session_id] = (req, response, model_name)
+
+    def submit_feedback(self, session_id: str, feedback: str) -> bool:
+        if feedback not in FEEDBACK_OPTIONS:
+            raise ValueError(f"unsupported feedback: {feedback}")
+        self.memory.append_feedback(session_id, feedback, None)
+        pending = self._pending_runs.pop(session_id, None)
+        if pending is None:
+            return False
+        req, response, model_name = pending
+        self.run_logger.log_run(
+            req,
+            response,
+            feedback=feedback,
+            model_name=model_name,
+        )
+        return True
+
+    def _get_image_agent(self) -> ImagePerceptionAgent:
+        if self.image_agent is None:
+            try:
+                self.image_agent = ImagePerceptionAgent(self.image_model_path)
+            except Exception as exc:
+                raise RuntimeError(
+                    "图像功能不可用，请安装 torch、transformers、qwen-vl-utils 并准备 Qwen3-VL 模型。"
+                ) from exc
+        return self.image_agent
+
+    def _get_audio_agent(self) -> AudioPerceptionAgent:
+        if self.audio_agent is None:
+            self.audio_agent = AudioPerceptionAgent()
+        return self.audio_agent
+
+    def _get_video_agent(self) -> VideoPerceptionAgent:
+        if self.video_agent is None:
+            self.video_agent = VideoPerceptionAgent(image_model_path=self.image_model_path)
+        return self.video_agent
 
     @staticmethod
     def detect_intent(query: str) -> str:
@@ -83,9 +145,16 @@ class CareerOrchestrator:
 
     @staticmethod
     def _valid_roadmap(items: Any) -> bool:
-        if not isinstance(items, list) or len(items) == 0:
+        if not isinstance(items, list) or len(items) != 3:
             return False
-        return all(isinstance(x, dict) and 'period' in x and 'objective' in x for x in items)
+        if not all(
+            isinstance(item, dict)
+            and isinstance(item.get('objective'), str)
+            and item['objective'].strip()
+            for item in items
+        ):
+            return False
+        return {item.get('period') for item in items} == {'30d', '90d', '180d'}
 
     def _collect_perception(self, req: TaskRequest) -> List[PerceptionResult]:
         results: List[PerceptionResult] = []
@@ -96,11 +165,17 @@ class CareerOrchestrator:
         for path in req.document_paths:
             results.append(self.document_agent.perceive(path))
         for path in req.audio_paths:
-            results.append(self.audio_agent.perceive(path))
+            results.append(self._get_audio_agent().perceive(path))
         for path in req.image_paths:
-            results.append(self.image_agent.perceive(path, user_goal=req.user_goal, user_text=req.text_input))
+            results.append(
+                self._get_image_agent().perceive(
+                    path,
+                    user_goal=req.user_goal,
+                    user_text=req.text_input,
+                )
+            )
         for path in req.video_paths:
-            results.append(self.video_agent.perceive(path))
+            results.append(self._get_video_agent().perceive(path))
         return results
 
     def _build_profile(self, req: TaskRequest, perception_results: List[PerceptionResult]) -> UserProfile:
@@ -113,13 +188,16 @@ class CareerOrchestrator:
         strengths = [x for x in facts if any(k in x for k in ['会', '熟悉', '掌握', '经验', '项目'])]
         weaknesses = [x for x in facts if any(k in x for k in ['缺乏', '不足', '短板', '薄弱'])]
 
-        return UserProfile(
+        profile = UserProfile(
             strengths=self._normalize_list(memory_profile.get('strengths', []) + strengths),
             weaknesses=self._normalize_list(memory_profile.get('weaknesses', []) + weaknesses),
             interests=self._normalize_list(memory_profile.get('interests', []) + interests),
             current_stage=memory_profile.get('current_stage', ''),
             constraints=req.constraints,
         )
+        if req.follow_up_answers:
+            profile = apply_answers_to_profile(profile, req.follow_up_answers)
+        return profile
 
     def _build_planning_prompt(
         self,
@@ -161,6 +239,21 @@ JSON schema:
 {json.dumps(knowledge_hints, ensure_ascii=False)}
 """
 
+    def _retrieve_knowledge(self, req: TaskRequest, query: str) -> Tuple[List[str], List[str]]:
+        if not req.use_knowledge:
+            return [], []
+
+        hits = self.knowledge.retrieve(query, top_k=4)
+        hints = [
+            (
+                f"{hit['role']} | 核心技能: {hit['skills']} | "
+                f"薪资参考: {hit['salary_hint']}"
+            )
+            for hit in hits
+        ]
+        hit_ids = [hit["item_id"] for hit in hits if hit.get("item_id")]
+        return hints, hit_ids
+
     def _planner_fallback(
         self,
         req: TaskRequest,
@@ -168,6 +261,7 @@ JSON schema:
         profile: UserProfile,
         perception_results: List[PerceptionResult],
         knowledge_hints: List[str],
+        knowledge_hit_ids: List[str],
     ) -> CareerPlanResponse:
         missing = []
         for p in perception_results:
@@ -222,6 +316,7 @@ JSON schema:
             confidence=0.55,
             perception_results=perception_results,
             knowledge_hits=knowledge_hints,
+            knowledge_hit_ids=knowledge_hit_ids,
             model_trace=[
                 'text-perception: rule-based',
                 f'image-perception: {self.image_model_path}',
@@ -245,6 +340,7 @@ JSON schema:
         profile: UserProfile,
         perception_results: List[PerceptionResult],
         knowledge_hints: List[str],
+        knowledge_hit_ids: List[str],
         model_obj: Dict[str, Any],
         served_by: str,
         retry_count: int,
@@ -284,6 +380,7 @@ JSON schema:
             confidence=max(0.35, min(0.95, float(model_obj.get('confidence', 0.6)))),
             perception_results=perception_results,
             knowledge_hits=knowledge_hints,
+            knowledge_hit_ids=knowledge_hit_ids,
             model_trace=[
                 'text-perception: rule-based',
                 f'image-perception: {self.image_model_path}',
@@ -299,7 +396,22 @@ JSON schema:
         intent = self.detect_intent(query)
         perception_results = self._collect_perception(req)
         profile = self._build_profile(req, perception_results)
-        knowledge_hints = self.knowledge.to_hints(query, top_k=4)
+        knowledge_hints, knowledge_hit_ids = self._retrieve_knowledge(req, query)
+
+        if req.planner_mode == "template":
+            resp = self._planner_fallback(
+                req,
+                intent,
+                profile,
+                perception_results,
+                knowledge_hints,
+                knowledge_hit_ids,
+            )
+            resp.latency_ms = int((time.time() - t0) * 1000)
+            resp = self._sanitize_for_user(resp, req.debug_trace)
+            self._persist_response(req, resp, "local-template")
+            return resp, 0
+
         prompt = self._build_planning_prompt(req, intent, profile, perception_results, knowledge_hints)
 
         retries = max(0, int(self.settings.brain_retry_times))
@@ -316,25 +428,33 @@ JSON schema:
                         profile,
                         perception_results,
                         knowledge_hints,
+                        knowledge_hit_ids,
                         model_obj,
                         served_by='cloud_brain',
                         retry_count=i,
                         model_name=used_model,
                     )
                     resp.latency_ms = int((time.time() - t0) * 1000)
-                    self.memory.upsert_profile(req.session_id, resp.profile.model_dump())
-                    self.memory.append_interaction(req.session_id, req.model_dump(), resp.model_dump())
-                    return self._sanitize_for_user(resp, req.debug_trace), i
+                    resp = self._sanitize_for_user(resp, req.debug_trace)
+                    self._persist_response(req, resp, used_model)
+                    return resp, i
             except Exception as e:
                 errors.append(str(e))
 
-        resp = self._planner_fallback(req, intent, profile, perception_results, knowledge_hints)
+        resp = self._planner_fallback(
+            req,
+            intent,
+            profile,
+            perception_results,
+            knowledge_hints,
+            knowledge_hit_ids,
+        )
         resp.latency_ms = int((time.time() - t0) * 1000)
         if errors and req.debug_trace:
             resp.follow_up_questions = self._normalize_list(resp.follow_up_questions + [f'cloud_error: {errors[-1]}'], 8)
-        self.memory.upsert_profile(req.session_id, resp.profile.model_dump())
-        self.memory.append_interaction(req.session_id, req.model_dump(), resp.model_dump())
-        return self._sanitize_for_user(resp, req.debug_trace), retries
+        resp = self._sanitize_for_user(resp, req.debug_trace)
+        self._persist_response(req, resp, "local-template")
+        return resp, retries
 
     def run(self, req: TaskRequest) -> CareerPlanResponse:
         resp, _ = self._run_core(req)
@@ -353,7 +473,24 @@ JSON schema:
         yield {'event': 'stage_end', 'data': {'stage': 'perception', 'count': len(perception_results)}}
 
         profile = self._build_profile(req, perception_results)
-        knowledge_hints = self.knowledge.to_hints(query, top_k=4)
+        knowledge_hints, knowledge_hit_ids = self._retrieve_knowledge(req, query)
+
+        if req.planner_mode == "template":
+            fallback = self._planner_fallback(
+                req,
+                intent,
+                profile,
+                perception_results,
+                knowledge_hints,
+                knowledge_hit_ids,
+            )
+            fallback.latency_ms = int((time.time() - start) * 1000)
+            fallback = self._sanitize_for_user(fallback, req.debug_trace)
+            self._persist_response(req, fallback, "local-template")
+            yield {'event': 'stage_end', 'data': {'stage': 'brain_planning', 'served_by': 'local_fallback'}}
+            yield {'event': 'final_result', 'data': fallback.model_dump()}
+            return
+
         prompt = self._build_planning_prompt(req, intent, profile, perception_results, knowledge_hints)
         used_model = req.brain_model or self.settings.brain_default_model
 
@@ -370,23 +507,28 @@ JSON schema:
                 model_obj = self._extract_json(token_buf)
                 if model_obj and self._valid_roadmap(model_obj.get('roadmap_30_90_180')):
                     resp = self._compose_from_model_obj(
-                        req, intent, profile, perception_results, knowledge_hints, model_obj,
+                        req, intent, profile, perception_results, knowledge_hints, knowledge_hit_ids, model_obj,
                         served_by='cloud_brain', retry_count=i, model_name=used_model,
                     )
                     resp.latency_ms = int((time.time() - start) * 1000)
                     resp = self._sanitize_for_user(resp, req.debug_trace)
-                    self.memory.upsert_profile(req.session_id, resp.profile.model_dump())
-                    self.memory.append_interaction(req.session_id, req.model_dump(), resp.model_dump())
+                    self._persist_response(req, resp, used_model)
                     yield {'event': 'stage_end', 'data': {'stage': 'brain_planning', 'retry': i}}
                     yield {'event': 'final_result', 'data': resp.model_dump()}
                     return
             except Exception as e:
                 yield {'event': 'stage_progress', 'data': {'stage': 'brain_planning', 'retry': i, 'error': str(e)}}
 
-        fallback = self._planner_fallback(req, intent, profile, perception_results, knowledge_hints)
+        fallback = self._planner_fallback(
+            req,
+            intent,
+            profile,
+            perception_results,
+            knowledge_hints,
+            knowledge_hit_ids,
+        )
         fallback.latency_ms = int((time.time() - start) * 1000)
         fallback = self._sanitize_for_user(fallback, req.debug_trace)
-        self.memory.upsert_profile(req.session_id, fallback.profile.model_dump())
-        self.memory.append_interaction(req.session_id, req.model_dump(), fallback.model_dump())
+        self._persist_response(req, fallback, "local-template")
         yield {'event': 'stage_end', 'data': {'stage': 'brain_planning', 'served_by': 'local_fallback'}}
         yield {'event': 'final_result', 'data': fallback.model_dump()}

@@ -50,7 +50,7 @@ class TestMultimodalApiFlow(unittest.TestCase):
     def test_stream_endpoint_with_session(self):
         resp = self.client.post(
             "/v1/multimodal/chat/stream",
-            json={"session_id": "s1", "user_input": "hello", "llm_model": "deepseek-chat"},
+            json={"session_id": "s1", "user_input": "hello", "llm_model": "deepseek-v4-flash"},
         )
         self.assertEqual(resp.status_code, 200)
         self.assertIn("event: route", resp.text)

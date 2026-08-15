@@ -1,207 +1,88 @@
-# MultiAgents System For Career Planning
+# 多模态职业规划助手（结题 MVP）
 
-基于多智能体的多模态职业规划助手：
-- 本地小模型负责多模态感知（图像/文档/音频/视频 → 文本描述）
-- 云端 DeepSeek API 负责规划推理大脑
-- 支持 CLI、REST API（含 SSE 流式）、Web 前端
+本仓库面向大学生创新项目结题演示，主流程为：文本或文档输入 → 8 个固定追问 → 结构化用户画像 → 职业知识检索 → DeepSeek 生成 30/90/180 天规划 → 三档反馈 → 脱敏 JSONL 日志。
 
-## 架构
+默认配置固定为：
 
-```
-文本输入 ────────────────────────────► DeepSeek API ──► 流式输出
-                                         ↑
-图片 ──► Qwen3-VL    ──► 文本描述 ───────┤
-文档 ──► 解析器       ──► 文本提取 ───────┤
-音频 ──► Whisper     ──► ASR 文本 ───────┤
-视频 ──► cv2 + Qwen  ──► 帧描述 ─────────┤
-                                         │
-RAG  ──► ChromaDB + bge-small-zh-v1.5 ───┘  (混合检索)
-                                         │
-MultiModalFusion ──► 置信度加权 + 去重 ───┘
-```
+- API：`https://api.deepseek.com`
+- 模型：`deepseek-v4-flash`
+- 模式：`thinking={"type":"disabled"}`
+- 密钥：环境变量 `DEEPSEEK_API_KEY`
 
-## 项目结构
-
-```
-project/
-├── main.py                     # CLI 交互入口（5 种模态）
-├── orchestrator.py             # 职业规划编排器（云端优先 + 规则回退）
-├── core/
-│   ├── auth.py                 # JWT 用户认证（register/login）
-│   ├── brain_client.py         # DeepSeek API 客户端（SSE 流式）
-│   ├── career_knowledge.py     # 职业知识库（ChromaDB + 混合检索，21 角色）
-│   ├── input_router.py         # 输入分类（5 模态）+ 数据路由
-│   ├── memory_manager.py       # GPU 显存管理（vision 模型）
-│   ├── multimodal_pipeline.py  # 多模态对话管道（route→小模型→RAG→LLM）
-│   ├── schemas.py              # Pydantic 数据契约
-│   ├── session_memory.py       # SQLite 会话持久化
-│   └── settings.py             # 全局配置（环境变量）
-├── agents/
-│   ├── image.py                # Qwen3-VL 图像处理器
-│   └── perception/             # 感知代理
-│       ├── base.py             # 公共工具（置信度标准化）
-│       ├── text_agent.py       # 规则文本分析（无模型）
-│       ├── image_agent.py      # 图像感知（Qwen3-VL）
-│       ├── document_agent.py   # 文档感知（txt/md/csv/pdf/docx/xlsx）
-│       ├── audio_agent.py      # 音频感知（Whisper-small）
-│       └── video_agent.py      # 视频关键帧提取 + Qwen3-VL 描述
-├── api/
-│   ├── api.py                  # FastAPI 应用（16 路由 + CORS + 认证 + 上传）
-│   ├── run_api.py              # API 启动入口
-│   ├── chat_from_file.py       # 文件批量调用工具
-│   └── request.sample.json     # 请求样例
-├── utils/
-│   └── fusion.py               # MultiModalFusion（跨模态融合 + 去重）
-├── static/
-│   └── index.html              # Web 前端（单页应用）
-└── tests/                      # 单元测试（14 个）
-```
+图片、音频、视频、向量检索、FastAPI、Web 和 GPU 模型均为可选功能，不影响文本与文档主流程。
 
 ## 快速开始
 
-### 1. 环境配置
+建议使用 Python 3.10 或 3.11：
 
-```bash
-conda activate agents
-pip install -r requirements-docker.txt
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements-mvp.txt
+Copy-Item .env.example .env
 ```
 
-GPU 模型额外依赖（需要 CUDA）：
-```bash
-pip install torch torchvision opencv-python modelscope
+在 `.env` 中填写 `DEEPSEEK_API_KEY`，然后运行唯一 CLI 入口：
+
+```powershell
+python -m project.assistant_cli --session-id demo-1 --goal "获得数据分析实习" --text "会 Python 和 SQL"
 ```
 
-### 2. 设置 API Key
+CLI 会依次询问 8 个问题，并在规划结束后要求选择“过短 / 合适 / 过于详细”。无 API Key 或请求失败时会回退到本地规则模板，便于离线演示。
 
-在项目根目录创建 `.env` 文件（已自动加入 .gitignore）：
+## 输入与输出
 
-```
-DEEPSEEK_API_KEY=sk-your-api-key-here
-```
+文档明确支持：`.txt`、`.md`、`.csv`、`.tsv`、`.pdf`、`.docx`、`.xlsx`。例如：
 
-支持的环境变量（有默认值）：
-
-| 变量 | 默认值 | 说明 |
-|------|--------|------|
-| `DEEPSEEK_API_KEY` | (必填) | DeepSeek API 密钥 |
-| `DEEPSEEK_BASE_URL` | `https://api.deepseek.com` | API 地址 |
-| `BRAIN_DEFAULT_MODEL` | `deepseek-chat` | 默认模型 |
-| `BRAIN_TIMEOUT_SECONDS` | `45` | 超时秒数 |
-| `BRAIN_RETRY_TIMES` | `2` | 重试次数 |
-| `JWT_SECRET_KEY` | `change-me-in-production` | JWT 签名密钥 |
-| `CORS_ORIGINS` | `*` | CORS 允许域名 |
-| `API_HOST` | `0.0.0.0` | 监听地址 |
-| `API_PORT` | `8000` | 监听端口 |
-
-### 3. 下载本地模型（可选，GPU 模式下需要）
-
-```bash
-python -c "from modelscope import snapshot_download; snapshot_download('Qwen/Qwen3-VL-2B-Instruct', cache_dir='./models')"
-python -c "from modelscope import snapshot_download; snapshot_download('openai-mirror/whisper-small', cache_dir='./models')"
-python -c "from modelscope import snapshot_download; snapshot_download('BAAI/bge-small-zh-v1.5', cache_dir='./models')"
+```powershell
+python -m project.assistant_cli --goal "六个月内转岗数据分析" --docs .\examples\sample_profile.txt
 ```
 
-## CLI 使用
+可重复演示时，可跳过交互追问并传入 JSON：
 
-```bash
-python -m project.main --session-id demo-1 --goal "我想在6个月内转岗数据分析" --text "我会Python和SQL" --city 上海 --time-budget 10
+```powershell
+python -m project.assistant_cli --goal "获得数据分析实习" --answers-json '{"education":"本科大三","major":"统计学","skills":"Python、SQL","interests":"数据分析","target_role":"数据分析师","time_budget":"每周10小时","preference":"上海互联网","constraints":"项目经验不足"}'
 ```
 
-流式输出：
-```bash
-python -m project.main --stream --session-id demo-1 --goal "转岗数据分析" --text "会Python和SQL"
+反馈完成后，脱敏运行记录写入 `data/logs/runs.jsonl`。日志不保留原始文档路径、完整文档内容、姓名、手机号、邮箱、学号、身份证号或 Windows 用户名。
+
+## 实验
+
+以下命令离线运行四组对照实验，不调用真实 API：
+
+```powershell
+python -m project.experiments.run_completion_experiments --output-dir data/experiments
 ```
 
-## API 使用
+实验覆盖规则模板 vs DeepSeek、无检索 vs 有检索、仅文本 vs 文本加文档、无追问 vs 有追问，并生成 `results.json` 与 `results.csv`。指标包括完整性、个性化、可执行性、响应时间和反馈。
 
-### 启动服务
+需要生成真实 DeepSeek 对照结果时，在配置 API Key 后显式增加 `--live`；该模式会产生 API 调用与费用：
 
-```bash
-python -m project.api.run_api
+```powershell
+python -m project.experiments.run_completion_experiments --output-dir data/experiments-live --live
 ```
-
-### 端点一览
-
-| 方法 | 路径 | 认证 | 说明 |
-|------|------|------|------|
-| GET | `/healthz` | 无 | 健康检查 |
-| POST | `/auth/register` | 无 | 注册（username + password） |
-| POST | `/auth/login` | 无 | 登录（返回 JWT token） |
-| POST | `/v1/assist` | JWT | 职业规划（非流式） |
-| POST | `/v1/assist/stream` | JWT | 职业规划（SSE 流式） |
-| GET | `/v1/session/{id}` | JWT | 获取会话历史和档案 |
-| POST | `/v1/feedback` | JWT | 提交反馈 |
-| POST | `/v1/upload` | JWT | 上传文件（自动识别类型） |
-| POST | `/v1/multimodal/chat/stream` | 可选 | 通用对话（SSE 流式） |
-| GET | `/v1/multimodal/chat/session/{id}` | 无 | 获取对话历史 |
-| DELETE | `/v1/multimodal/chat/session/{id}` | 无 | 清除对话历史 |
-| GET | `/` | 无 | Web 前端页面 |
-
-### 调用示例
-
-注册并登录：
-```bash
-curl -X POST http://localhost:8000/auth/register -H "Content-Type: application/json" \
-  -d '{"username":"demo","password":"demo1234"}'
-
-curl -X POST http://localhost:8000/auth/login -H "Content-Type: application/json" \
-  -d '{"username":"demo","password":"demo1234"}'
-```
-
-职业规划（需 Bearer token）：
-```bash
-curl -X POST http://localhost:8000/v1/assist \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <token>" \
-  -d '{"session_id":"s1","user_goal":"转行数据分析","text_input":"会Python和SQL"}'
-```
-
-流式对话（可选认证）：
-```bash
-curl -X POST http://localhost:8000/v1/multimodal/chat/stream \
-  -H "Content-Type: application/json" \
-  -d '{"session_id":"s1","user_input":"我适合做什么工作？"}'
-```
-
-## Web 前端
-
-服务启动后浏览器打开 `http://localhost:8000`，提供：
-- 用户注册/登录
-- 职业规划（表单 + 流式 SSE）
-- 对话助手（SSE 流式）
-- 文件上传（自动类型检测）
-- 暗色主题、响应式布局
-
-## Docker 部署
-
-```bash
-docker build -t career-assistant .
-docker run -p 8000:8000 -e DEEPSEEK_API_KEY=sk-xxx career-assistant
-```
-
-或使用 docker-compose：
-```bash
-DEEPSEEK_API_KEY=sk-xxx docker-compose up -d
-```
-
-注意：Docker 镜像为 CPU-only，不包含 GPU 推理模型（Qwen3-VL / Whisper）。图像和音频理解功能需在宿主机运行。
 
 ## 测试
 
-```bash
-# 全部测试（17 个）
+```powershell
 python -m unittest discover -s project/tests -v
 python -m unittest test_model.test_mvp_components -v
 ```
 
-## 依赖一览
+前端为可选模块；需要验证时运行：
 
-核心：`fastapi` `uvicorn` `httpx` `sse-starlette` `pydantic` `pydantic-settings`
+```powershell
+cd web
+npm install
+npm run build
+```
 
-RAG：`chromadb` `sentence-transformers`
+## 可选服务
 
-文档解析：`pypdf` `python-docx` `openpyxl`
+安装完整依赖后可启动 FastAPI：
 
-认证：`python-jose[cryptography]` `passlib[bcrypt]` `python-multipart`
+```powershell
+python -m project.api.run_api
+```
 
-GPU（本地模型）：`torch` `torchvision` `opencv-python` `modelscope`
+打开 `http://localhost:8000`。部署时应显式设置强随机 `JWT_SECRET_KEY` 并检查 `CORS_ORIGINS`。

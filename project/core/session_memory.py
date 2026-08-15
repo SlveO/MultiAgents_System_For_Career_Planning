@@ -170,7 +170,7 @@ class SessionMemory:
         if self.backend == "json":
             data = self._load_fallback()
             rows = [x for x in data.get("interactions", []) if x.get("session_id") == session_id]
-            rows = list(reversed(rows))[:limit]
+            rows = rows[-limit:]
             return [
                 {
                     "created_at": r.get("created_at"),
@@ -193,7 +193,7 @@ class SessionMemory:
             ).fetchall()
 
         history = []
-        for row in rows:
+        for row in reversed(rows):
             history.append(
                 {
                     "created_at": row["created_at"],
@@ -202,3 +202,18 @@ class SessionMemory:
                 }
             )
         return history
+
+    def clear_session_history(self, session_id: str) -> None:
+        if self.backend == "json":
+            data = self._load_fallback()
+            data["interactions"] = [
+                item
+                for item in data.get("interactions", [])
+                if item.get("session_id") != session_id
+            ]
+            self._save_fallback(data)
+            return
+
+        with self._connect() as conn:
+            conn.execute("DELETE FROM interactions WHERE session_id = ?", (session_id,))
+            conn.commit()

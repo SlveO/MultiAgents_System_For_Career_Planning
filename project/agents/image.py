@@ -19,17 +19,20 @@ class ImageProcessor:
         self.vram_manager = get_vram_manager()
 
     def _load(self):
+        device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        dtype = torch.float16 if device == 'cuda' else torch.float32
         print('  加载视觉处理器...')
         processor = Qwen3VLProcessor.from_pretrained(self.model_path, trust_remote_code=True)
 
-        print('  加载视觉模型到GPU...')
+        print(f'  加载视觉模型到{device.upper()}...')
         model = Qwen3VLForConditionalGeneration.from_pretrained(
             self.model_path,
-            dtype=torch.float16,
+            dtype=dtype,
             trust_remote_code=True,
-        ).cuda().eval()
+        ).to(device).eval()
 
-        torch.cuda.synchronize()
+        if device == 'cuda':
+            torch.cuda.synchronize()
         return model, processor, None
 
     def analyze(self, image_path, question=None, context=None):
@@ -65,13 +68,14 @@ class ImageProcessor:
             raise RuntimeError('缺少 qwen_vl_utils.process_vision_info，请安装相关依赖后再使用图像功能。')
 
         image_inputs, video_inputs = process_vision_info(messages)
+        device = 'cuda' if torch.cuda.is_available() else 'cpu'
         inputs = processor(
             text=[text],
             images=image_inputs,
             videos=video_inputs,
             padding=True,
             return_tensors='pt',
-        ).to('cuda')
+        ).to(device)
 
         with torch.no_grad():
             generated_ids = model.generate(

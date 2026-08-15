@@ -9,10 +9,14 @@ try:
     from .brain_client import DeepSeekBrainClient
     from .career_knowledge import CareerKnowledgeBase
     from .input_router import DataRouter
+    from .privacy import redact_data
+    from .session_memory import SessionMemory
 except ImportError:
     from project.core.brain_client import DeepSeekBrainClient
     from project.core.career_knowledge import CareerKnowledgeBase
     from project.core.input_router import DataRouter
+    from project.core.privacy import redact_data
+    from project.core.session_memory import SessionMemory
 
 
 class PipelineError(Exception):
@@ -39,6 +43,7 @@ class MultimodalChatPipeline:
         audio_agent: Any = None,
         video_agent: Any = None,
         knowledge_base: Any = None,
+        memory: Optional[SessionMemory] = None,
     ) -> None:
         self.router = router or DataRouter()
         self.brain_client = brain_client or DeepSeekBrainClient()
@@ -50,6 +55,7 @@ class MultimodalChatPipeline:
         self._audio_agent = audio_agent
         self._video_agent = video_agent
         self._session_history: Dict[str, List[Dict[str, str]]] = {}
+        self._memory = memory
 
     def _get_image_agent(self):
         if self._image_agent is None:
@@ -276,10 +282,29 @@ class MultimodalChatPipeline:
         )
 
     def get_session_history(self, session_id: str) -> List[Dict[str, str]]:
-        return list(self._session_history.get(session_id, []))
+        history = self._session_history.get(session_id, [])
+        if history:
+            return list(history)
+        if self._memory:
+            interactions = self._memory.get_session_history(session_id)
+            if interactions:
+                result: List[Dict[str, str]] = []
+                for entry in interactions:
+                    req = entry.get("request", {})
+                    resp = entry.get("response", {})
+                    result.append({
+                        "user": req.get("user_input", ""),
+                        "assistant": resp.get("assistant", ""),
+                    })
+                safe_result = redact_data(result)
+                self._session_history[session_id] = safe_result
+                return list(safe_result)
+        return []
 
     def clear_session(self, session_id: str) -> None:
         self._session_history.pop(session_id, None)
+        if self._memory:
+            self._memory.clear_session_history(session_id)
 
     def run_stream(
         self,
@@ -361,7 +386,17 @@ class MultimodalChatPipeline:
                 {"token": token},
             )
 
-        self._session_history.setdefault(session_id, []).append({"user": user_input, "assistant": full_text})
+        safe_user = redact_data(user_input)
+        safe_assistant = redact_data(full_text)
+        self._session_history.setdefault(session_id, []).append(
+            {"user": safe_user, "assistant": safe_assistant}
+        )
+        if self._memory:
+            self._memory.append_interaction(
+                session_id,
+                {"user_input": safe_user},
+                {"assistant": safe_assistant},
+            )
 
         yield self._event(
             "final",

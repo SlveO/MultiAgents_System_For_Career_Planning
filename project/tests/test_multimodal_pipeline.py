@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import unittest
 
 from project.core.multimodal_pipeline import MultimodalChatPipeline
@@ -52,6 +53,20 @@ class FakeRouter:
 
     def validate(self, _metadata):
         return True, "ok"
+
+
+class FakeMemory:
+    def __init__(self):
+        self.records = []
+
+    def get_session_history(self, _session_id):
+        return []
+
+    def append_interaction(self, session_id, request, response):
+        self.records.append((session_id, request, response))
+
+    def clear_session_history(self, _session_id):
+        return None
 
 
 class TestMultimodalPipeline(unittest.TestCase):
@@ -124,6 +139,34 @@ class TestMultimodalPipeline(unittest.TestCase):
         self.assertEqual(len(history), 2)
         self.assertIn("Recent conversation history:", brain.last_prompt)
         self.assertIn("first turn", brain.last_prompt)
+
+    def test_session_history_redacts_private_input_before_persistence(self):
+        brain = FakeBrainClient()
+        memory = FakeMemory()
+        private_input = r"邮箱 student@example.com，文件 C:\Users\Alice\resume.docx"
+        routed = {
+            "route": "text",
+            "target_agent": "agents.perception.TextPerceptionAgent",
+            "payload": {"text": private_input},
+            "metadata": {"text_content": private_input},
+        }
+        pipeline = MultimodalChatPipeline(
+            router=FakeRouter(routed),
+            brain_client=brain,
+            image_agent=FakeImageAgent(),
+            knowledge_base=type("KB", (), {"retrieve": lambda self, query, top_k=4: []})(),
+            memory=memory,
+        )
+
+        _ = list(pipeline.run_stream(private_input, session_id="private"))
+
+        serialized = json.dumps(
+            {"history": pipeline.get_session_history("private"), "records": memory.records},
+            ensure_ascii=False,
+        )
+        self.assertNotIn("student@example.com", serialized)
+        self.assertNotIn("Alice", serialized)
+        self.assertIn("[REDACTED_EMAIL]", serialized)
 
     def test_file_mode_is_processed_and_sent_to_llm(self):
         brain = FakeBrainClient()

@@ -467,5 +467,208 @@
       "后端开发 -> 云平台"
     ],
     "salary_hint": "一线城市应届约15k-30k/月"
+  },
+  {
+    "role": "后端开发工程师",
+    "skills": ["Python/Java/Go", "数据库", "REST API", "缓存", "系统设计"],
+    "resources": ["MDN HTTP", "Designing Data-Intensive Applications", "后端项目实战"],
+    "transition_paths": ["计算机专业 -> 后端开发", "测试开发 -> 后端开发"],
+    "salary_hint": "一线城市应届约12k-25k/月"
+  },
+  {
+    "role": "前端开发工程师",
+    "skills": ["HTML/CSS", "JavaScript", "TypeScript", "React/Vue", "浏览器调试"],
+    "resources": ["MDN Web Docs", "JavaScript.info", "React官方文档"],
+    "transition_paths": ["网页设计 -> 前端开发", "计算机专业 -> 前端开发"],
+    "salary_hint": "一线城市应届约10k-22k/月"
+  },
+  {
+    "role": "全栈开发工程师",
+    "skills": ["前端框架", "后端框架", "SQL", "部署", "接口设计"],
+    "resources": ["Full Stack Open", "Docker入门", "系统设计基础"],
+    "transition_paths": ["前端开发 -> 全栈开发", "后端开发 -> 全栈开发"],
+    "salary_hint": "一线城市应届约12k-25k/月"
+  },
+  {
+    "role": "Java开发工程师",
+    "skills": ["Java", "Spring Boot", "MySQL", "Redis", "JVM"],
+    "resources": ["Java核心技术", "Spring官方指南", "JavaGuide"],
+    "transition_paths": ["软件工程 -> Java开发", "测试开发 -> Java开发"],
+    "salary_hint": "一线城市应届约12k-24k/月"
+  },
+  {
+    "role": "Python开发工程师",
+    "skills": ["Python", "FastAPI/Django", "SQL", "自动化", "Linux"],
+    "resources": ["Python官方教程", "FastAPI文档", "Django教程"],
+    "transition_paths": ["数据分析 -> Python开发", "自动化测试 -> Python开发"],
+    "salary_hint": "一线城市应届约11k-23k/月"
+  },
+  {
+    "role": "数据工程师",
+    "skills": ["SQL", "Python", "ETL", "Spark", "数据仓库"],
+    "resources": ["Data Engineering Zoomcamp", "Spark权威指南", "数据仓库工具箱"],
+    "transition_paths": ["数据分析 -> 数据工程", "后端开发 -> 数据工程"],
+    "salary_hint": "一线城市应届约13k-26k/月"
+  },
+  {
+    "role": "数据科学家",
+    "skills": ["统计学", "Python", "机器学习", "实验设计", "业务分析"],
+    "resources": ["统计学习方法", "Kaggle", "Practical Statistics for Data Scientists"],
+    "transition_paths": ["数据分析师 -> 数据科学家", "算法工程师 -> 数据科学家"],
+    "salary_hint": "一线城市应届约15k-30k/月"
+  },
+  {
+    "role": "BI工程师",
+    "skills": ["SQL", "Power BI/Tableau", "数据建模", "指标体系", "报表开发"],
+    "resources": ["Power BI官方学习", "Tableau Public", "数据化管理"],
+    "transition_paths": ["财务分析 -> BI工程师", "数据分析 -> BI工程师"],
+    "salary_hint": "一线城市应届约10k-20k/月"
+  },
+  {
+    "role": "NLP算法工程师",
+    "skills": ["Python", "自然语言处理", "Transformer", "PyTorch", "模型评估"],
+    "resources": ["CS224N", "Hugging Face课程", "NLP项目实战"],
+    "transition_paths": ["算法工程师 -> NLP算法", "数据科学 -> NLP算法"],
+    "salary_hint": "一线城市应届约16k-32k/月"
+  },
+  {
+    "role": "大模型应用工程师",
+    "skills": ["Python", "LLM API", "提示词", "RAG", "评测"],
+    "resources": ["DeepLearning.AI LLM课程", "LangChain文档", "RAG评测实践"],
+    "transition_paths": ["后端开发 -> 大模型应用", "NLP算法 -> 大模型应用"],
+    "salary_hint": "一线城市应届约15k-30k/月"
+  },
+  {
+    "role": "DevOps工程师",
+    "skills": ["Linux", "CI/CD", "Docker", "Kubernetes", "自动化脚本"],
+    "resources": ["DevOps实践指南", "GitHub Actions文档", "Kubernetes文档"],
+    "transition_paths": ["运维 -> DevOps", "后端开发 -> DevOps"],
+    "salary_hint": "一线城市应届约12k-24k/月"
+  },
+  {
+    "role": "SRE工程师",
+    "skills": ["Linux", "可观测性", "容量规划", "故障处理", "自动化"],
+    "resources": ["Google SRE Book", "Prometheus文档", "Site Reliability Workbook"],
+    "transition_paths": ["运维 -> SRE", "DevOps -> SRE"],
+    "salary_hint": "一线城市应届约14k-28k/月"
+  },
+  {
+    "role": "网络安全工程师",
+    "skills": ["网络协议", "Linux", "安全基线", "日志分析", "应急响应"],
+    "resources": ["OWASP", "网络安全基础", "CTF入门"],
+    "transition_paths": ["网络工程 -> 网络安全", "运维 -> 安全工程"],
+    "salary_hint": "一线城市应届约11k-23k/月"
+  },
+  {
+    "role": "渗透测试工程师",
+    "skills": ["Web安全", "Burp Suite", "Python", "漏洞复现", "安全报告"],
+    "resources": ["PortSwigger Academy", "OWASP Web Security Testing Guide", "靶场实践"],
+    "transition_paths": ["安全运维 -> 渗透测试", "开发 -> 安全测试"],
+    "salary_hint": "一线城市应届约10k-22k/月"
+  },
+  {
+    "role": "数据库工程师",
+    "skills": ["MySQL/PostgreSQL", "SQL优化", "备份恢复", "高可用", "监控"],
+    "resources": ["高性能MySQL", "PostgreSQL文档", "数据库内核课程"],
+    "transition_paths": ["后端开发 -> 数据库工程", "运维 -> DBA"],
+    "salary_hint": "一线城市应届约12k-24k/月"
+  },
+  {
+    "role": "软件测试工程师",
+    "skills": ["测试设计", "接口测试", "缺陷管理", "SQL", "业务分析"],
+    "resources": ["软件测试的艺术", "Postman学习中心", "测试用例设计"],
+    "transition_paths": ["计算机专业 -> 软件测试", "业务运营 -> 业务测试"],
+    "salary_hint": "一线城市应届约8k-16k/月"
+  },
+  {
+    "role": "Android开发工程师",
+    "skills": ["Kotlin", "Android SDK", "Jetpack", "网络编程", "性能优化"],
+    "resources": ["Android Developers", "Kotlin官方教程", "Jetpack Compose课程"],
+    "transition_paths": ["Java开发 -> Android开发", "移动应用专业 -> Android开发"],
+    "salary_hint": "一线城市应届约11k-23k/月"
+  },
+  {
+    "role": "iOS开发工程师",
+    "skills": ["Swift", "UIKit/SwiftUI", "网络编程", "App生命周期", "性能优化"],
+    "resources": ["Apple Developer文档", "Swift官方教程", "SwiftUI教程"],
+    "transition_paths": ["移动开发 -> iOS开发", "前端开发 -> iOS开发"],
+    "salary_hint": "一线城市应届约12k-24k/月"
+  },
+  {
+    "role": "游戏开发工程师",
+    "skills": ["C#/C++", "Unity/Unreal", "计算机图形学", "性能优化", "游戏数学"],
+    "resources": ["Unity Learn", "Unreal Online Learning", "游戏编程模式"],
+    "transition_paths": ["软件开发 -> 游戏开发", "数字媒体 -> 游戏开发"],
+    "salary_hint": "一线城市应届约11k-24k/月"
+  },
+  {
+    "role": "UI设计师",
+    "skills": ["Figma", "视觉设计", "设计规范", "原型", "交付协作"],
+    "resources": ["Figma Learn", "Material Design", "优秀界面临摹"],
+    "transition_paths": ["视觉设计 -> UI设计", "数字媒体 -> UI设计"],
+    "salary_hint": "一线城市应届约8k-16k/月"
+  },
+  {
+    "role": "UX研究员",
+    "skills": ["用户访谈", "可用性测试", "问卷设计", "数据分析", "研究报告"],
+    "resources": ["用户体验要素", "NN/g文章", "用户研究方法"],
+    "transition_paths": ["心理学 -> 用户研究", "产品运营 -> 用户研究"],
+    "salary_hint": "一线城市应届约9k-18k/月"
+  },
+  {
+    "role": "技术产品经理",
+    "skills": ["需求分析", "API理解", "原型设计", "项目协调", "数据分析"],
+    "resources": ["启示录", "API设计基础", "PRD案例"],
+    "transition_paths": ["开发工程师 -> 技术产品经理", "测试开发 -> 技术产品经理"],
+    "salary_hint": "一线城市应届约12k-24k/月"
+  },
+  {
+    "role": "项目经理",
+    "skills": ["计划管理", "风险管理", "沟通", "资源协调", "复盘"],
+    "resources": ["PMBOK", "敏捷项目管理", "项目复盘模板"],
+    "transition_paths": ["开发组长 -> 项目经理", "产品经理 -> 项目经理"],
+    "salary_hint": "一线城市应届约10k-20k/月"
+  },
+  {
+    "role": "机器人算法工程师",
+    "skills": ["C++", "Python", "ROS", "路径规划", "传感器融合"],
+    "resources": ["ROS Wiki", "机器人学导论", "SLAM十四讲"],
+    "transition_paths": ["自动化 -> 机器人算法", "计算机视觉 -> 机器人算法"],
+    "salary_hint": "一线城市应届约15k-30k/月"
+  },
+  {
+    "role": "自动化控制工程师",
+    "skills": ["PLC", "控制理论", "MATLAB/Simulink", "工业通信", "现场调试"],
+    "resources": ["自动控制原理", "西门子学习平台", "Simulink教程"],
+    "transition_paths": ["自动化专业 -> 控制工程", "电气工程 -> 自动化控制"],
+    "salary_hint": "一线城市应届约9k-18k/月"
+  },
+  {
+    "role": "FPGA开发工程师",
+    "skills": ["Verilog", "FPGA", "时序分析", "数字电路", "仿真验证"],
+    "resources": ["FPGA Prototyping by Verilog Examples", "Vivado文档", "数字设计实验"],
+    "transition_paths": ["电子信息 -> FPGA开发", "数字IC验证 -> FPGA开发"],
+    "salary_hint": "一线城市应届约14k-28k/月"
+  },
+  {
+    "role": "数字IC设计工程师",
+    "skills": ["Verilog/SystemVerilog", "数字电路", "RTL设计", "时序", "EDA工具"],
+    "resources": ["数字集成电路", "芯片设计流程课程", "EDA工具教程"],
+    "transition_paths": ["微电子 -> 数字IC设计", "FPGA开发 -> 数字IC设计"],
+    "salary_hint": "一线城市应届约18k-35k/月"
+  },
+  {
+    "role": "芯片验证工程师",
+    "skills": ["SystemVerilog", "UVM", "验证计划", "覆盖率", "脚本语言"],
+    "resources": ["UVM实战", "SystemVerilog验证", "芯片验证项目"],
+    "transition_paths": ["数字电路 -> 芯片验证", "FPGA验证 -> 芯片验证"],
+    "salary_hint": "一线城市应届约16k-32k/月"
+  },
+  {
+    "role": "硬件工程师",
+    "skills": ["模拟/数字电路", "原理图", "PCB", "器件选型", "硬件调试"],
+    "resources": ["电子技术基础", "Altium Designer教程", "硬件项目实战"],
+    "transition_paths": ["电子信息 -> 硬件工程", "嵌入式开发 -> 硬件工程"],
+    "salary_hint": "一线城市应届约10k-22k/月"
   }
 ]
