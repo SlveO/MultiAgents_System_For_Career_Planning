@@ -3,7 +3,7 @@
 ## Task 1: Freeze and Publish MVP
 
 - Owner: project lead
-- Status: completed; `main` and `completion-mvp` publish `3d0bfbc`
+- Status: completed; `main` is at `47f5c7d` and includes cleanup `3d0bfbc`; `completion-mvp` remains as backup
 - Deliverable: tested branch, then fast-forward `main`
 - Acceptance: no secrets or runtime data committed; tests and README smoke checks pass
 - Next action: continue MVP work on `main`
