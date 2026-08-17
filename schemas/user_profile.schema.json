@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "user_profile",
+  "description": "成员B定义的画像字段（手册冻结）：专业、年级、技能、兴趣、职业目标、输出偏好、缺失字段。所有字段允许空值；信息不足时置空并写入 missing_fields。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["missing_fields"],
+  "properties": {
+    "major": {"type": "string", "description": "专业"},
+    "grade": {"type": "string", "description": "年级"},
+    "skills": {"type": "array", "items": {"type": "string"}, "description": "技能"},
+    "interests": {"type": "array", "items": {"type": "string"}, "description": "兴趣"},
+    "career_goals": {"type": "array", "items": {"type": "string"}, "description": "职业目标"},
+    "output_preference": {
+      "type": "string",
+      "enum": ["", "too_short", "suitable", "too_detailed"],
+      "description": "输出偏好（空字符串=用户未提及）"
+    },
+    "missing_fields": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "用户未提供信息的字段名数组（必填）"
+    }
+  }
+}

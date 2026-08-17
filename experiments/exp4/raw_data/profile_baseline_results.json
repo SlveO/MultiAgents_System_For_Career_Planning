@@ -1,0 +1,110 @@
+[
+  {
+    "profile": {
+      "major": "计算机科学与技术",
+      "grade": "大三",
+      "skills": [
+        "Python",
+        "C++"
+      ],
+      "interests": [
+        "人工智能",
+        "数据分析"
+      ],
+      "career_goals": [
+        "算法工程师"
+      ],
+      "output_preference": "too_detailed",
+      "missing_fields": []
+    },
+    "errors": [],
+    "used_fallback": false,
+    "elapsed_ms": 8939,
+    "usage": {
+      "prompt_tokens": 400,
+      "completion_tokens": 201,
+      "total_tokens": 601,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 130
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 400
+    },
+    "sample_id": "sample_1_full",
+    "input": "我是计算机科学与技术专业的大三学生，会Python和C++，对人工智能和数据分析很感兴趣，毕业后想做算法工程师，希望输出内容详细一些。"
+  },
+  {
+    "profile": {
+      "major": "软件工程",
+      "grade": "大二",
+      "skills": [
+        "Java"
+      ],
+      "interests": [],
+      "career_goals": [],
+      "output_preference": "",
+      "missing_fields": [
+        "career_goals",
+        "interests",
+        "output_preference"
+      ]
+    },
+    "errors": [],
+    "used_fallback": false,
+    "elapsed_ms": 10036,
+    "usage": {
+      "prompt_tokens": 382,
+      "completion_tokens": 219,
+      "total_tokens": 601,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 158
+      },
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 382
+    },
+    "sample_id": "sample_2_partial",
+    "input": "软件工程大二，目前只会Java，还没想好以后做什么。"
+  },
+  {
+    "profile": {
+      "major": "",
+      "grade": "",
+      "skills": [],
+      "interests": [],
+      "career_goals": [],
+      "output_preference": "",
+      "missing_fields": [
+        "career_goals",
+        "grade",
+        "interests",
+        "major",
+        "output_preference",
+        "skills"
+      ]
+    },
+    "errors": [],
+    "used_fallback": false,
+    "elapsed_ms": 2298,
+    "usage": {
+      "prompt_tokens": 371,
+      "completion_tokens": 227,
+      "total_tokens": 598,
+      "prompt_tokens_details": {
+        "cached_tokens": 256
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 173
+      },
+      "prompt_cache_hit_tokens": 256,
+      "prompt_cache_miss_tokens": 115
+    },
+    "sample_id": "sample_3_minimal",
+    "input": "帮我规划一下。"
+  }
+]
