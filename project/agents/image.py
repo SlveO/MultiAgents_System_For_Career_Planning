@@ -1,12 +1,3 @@
-# image_processor.py
-import torch
-from transformers import Qwen3VLForConditionalGeneration, Qwen3VLProcessor
-
-try:
-    from qwen_vl_utils import process_vision_info
-except Exception:
-    process_vision_info = None
-
 try:
     from ..core.memory_manager import get_vram_manager
 except ImportError:
@@ -14,25 +5,71 @@ except ImportError:
 
 
 class ImageProcessor:
-    def __init__(self, model_path='./models/Qwen3-VL-2B-Instruct'):
+    def __init__(
+        self,
+        model_path='./models/Qwen3-VL-2B-Instruct',
+        *,
+        torch_module=None,
+        model_class=None,
+        processor_class=None,
+        vision_info_fn=None,
+        vram_manager=None,
+    ):
         self.model_path = model_path
-        self.vram_manager = get_vram_manager()
+        self.vram_manager = vram_manager or get_vram_manager()
+        self._torch = torch_module
+        self._model_class = model_class
+        self._processor_class = processor_class
+        self._process_vision_info = vision_info_fn
+
+    def _ensure_dependencies(self):
+        if self._torch is None:
+            try:
+                import torch
+            except ImportError as exc:
+                raise RuntimeError(
+                    '图像功能需要 GPU profile 中的 torch、transformers 和 qwen-vl-utils。'
+                ) from exc
+            self._torch = torch
+
+        if self._model_class is None or self._processor_class is None:
+            try:
+                from transformers import Qwen3VLForConditionalGeneration, Qwen3VLProcessor
+            except ImportError as exc:
+                raise RuntimeError(
+                    '图像功能需要 GPU profile 中的 torch、transformers 和 qwen-vl-utils。'
+                ) from exc
+            self._model_class = Qwen3VLForConditionalGeneration
+            self._processor_class = Qwen3VLProcessor
+
+        if self._process_vision_info is None:
+            try:
+                from qwen_vl_utils import process_vision_info
+            except ImportError as exc:
+                raise RuntimeError(
+                    '图像功能需要 GPU profile 中的 torch、transformers 和 qwen-vl-utils。'
+                ) from exc
+            self._process_vision_info = process_vision_info
 
     def _load(self):
-        device = 'cuda' if torch.cuda.is_available() else 'cpu'
-        dtype = torch.float16 if device == 'cuda' else torch.float32
+        self._ensure_dependencies()
+        device = 'cuda' if self._torch.cuda.is_available() else 'cpu'
+        dtype = self._torch.float16 if device == 'cuda' else self._torch.float32
         print('  加载视觉处理器...')
-        processor = Qwen3VLProcessor.from_pretrained(self.model_path, trust_remote_code=True)
+        processor = self._processor_class.from_pretrained(
+            self.model_path,
+            trust_remote_code=True,
+        )
 
         print(f'  加载视觉模型到{device.upper()}...')
-        model = Qwen3VLForConditionalGeneration.from_pretrained(
+        model = self._model_class.from_pretrained(
             self.model_path,
             dtype=dtype,
             trust_remote_code=True,
         ).to(device).eval()
 
         if device == 'cuda':
-            torch.cuda.synchronize()
+            self._torch.cuda.synchronize()
         return model, processor, None
 
     def analyze(self, image_path, question=None, context=None):
@@ -64,11 +101,8 @@ class ImageProcessor:
 
         text = processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
 
-        if process_vision_info is None:
-            raise RuntimeError('缺少 qwen_vl_utils.process_vision_info，请安装相关依赖后再使用图像功能。')
-
-        image_inputs, video_inputs = process_vision_info(messages)
-        device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        image_inputs, video_inputs = self._process_vision_info(messages)
+        device = 'cuda' if self._torch.cuda.is_available() else 'cpu'
         inputs = processor(
             text=[text],
             images=image_inputs,
@@ -77,7 +111,7 @@ class ImageProcessor:
             return_tensors='pt',
         ).to(device)
 
-        with torch.no_grad():
+        with self._torch.no_grad():
             generated_ids = model.generate(
                 **inputs,
                 max_new_tokens=1024,

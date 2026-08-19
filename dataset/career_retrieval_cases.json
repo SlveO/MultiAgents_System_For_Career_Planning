@@ -1,0 +1,38 @@
+[
+  {
+    "id": "retrieval-ai-001",
+    "description": "计算机专业本科生，希望从事大模型或视觉算法工作",
+    "profile": {
+      "education_stage": "本科大三",
+      "major": "计算机科学与技术",
+      "skills": ["Python", "Java", "SQL", "PyTorch"],
+      "interests": ["人工智能", "深度学习", "自然语言处理"],
+      "target_role": "大模型算法工程师"
+    },
+    "expected_roles": ["大模型算法工程师", "算法工程师", "AI Agent工程师"]
+  },
+  {
+    "id": "retrieval-fintech-002",
+    "description": "金融工程硕士，希望从事金融科技风控或数据分析",
+    "profile": {
+      "education_stage": "硕士一年级",
+      "major": "金融工程",
+      "skills": ["Python", "R", "SQL", "机器学习", "统计分析"],
+      "interests": ["金融风险管理", "量化投资", "数据建模"],
+      "target_role": "金融科技分析师/风控岗"
+    },
+    "expected_roles": ["金融科技分析师/风控岗", "人工智能专家（金融方向）", "数据分析师"]
+  },
+  {
+    "id": "retrieval-materials-003",
+    "description": "材料专业本科生，希望从事高分子或储能材料研发",
+    "profile": {
+      "education_stage": "本科大四",
+      "major": "材料科学与工程",
+      "skills": ["材料表征", "高分子合成", "力学性能测试", "CAD绘图"],
+      "interests": ["高分子材料", "新能源材料", "复合材料"],
+      "target_role": "高分子材料工程师"
+    },
+    "expected_roles": ["高分子材料工程师", "储能结构工程师"]
+  }
+]

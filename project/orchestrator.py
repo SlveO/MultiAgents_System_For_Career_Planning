@@ -6,7 +6,12 @@ from typing import Any, Dict, Generator, List, Optional, Tuple
 
 try:
     from .core.schemas import CareerPlanResponse, Milestone, PerceptionResult, TaskRequest, UserProfile
-    from .core.brain_client import BrainClient, DeepSeekBrainClient
+    from .core.brain_client import (
+        BrainClient,
+        BrainClientError,
+        BrainResponseError,
+        DeepSeekBrainClient,
+    )
     from .core.career_knowledge import CareerKnowledgeBase
     from .agents.perception import AudioPerceptionAgent, DocumentPerceptionAgent, ImagePerceptionAgent, TextPerceptionAgent, VideoPerceptionAgent
     from .core.session_memory import SessionMemory
@@ -17,7 +22,12 @@ try:
     from .core.run_logging import JsonlRunLogger
 except ImportError:
     from project.core.schemas import CareerPlanResponse, Milestone, PerceptionResult, TaskRequest, UserProfile
-    from project.core.brain_client import BrainClient, DeepSeekBrainClient
+    from project.core.brain_client import (
+        BrainClient,
+        BrainClientError,
+        BrainResponseError,
+        DeepSeekBrainClient,
+    )
     from project.core.career_knowledge import CareerKnowledgeBase
     from project.agents.perception import AudioPerceptionAgent, DocumentPerceptionAgent, ImagePerceptionAgent, TextPerceptionAgent, VideoPerceptionAgent
     from project.core.session_memory import SessionMemory
@@ -262,6 +272,7 @@ JSON schema:
         perception_results: List[PerceptionResult],
         knowledge_hints: List[str],
         knowledge_hit_ids: List[str],
+        retry_count: int = 0,
     ) -> CareerPlanResponse:
         missing = []
         for p in perception_results:
@@ -323,7 +334,7 @@ JSON schema:
                 'brain: local-fallback',
             ],
             served_by='local_fallback',
-            retry_count=self.settings.brain_retry_times,
+            retry_count=retry_count,
         )
 
     def _sanitize_for_user(self, response: CareerPlanResponse, debug_trace: bool) -> CareerPlanResponse:
@@ -415,31 +426,40 @@ JSON schema:
         prompt = self._build_planning_prompt(req, intent, profile, perception_results, knowledge_hints)
 
         retries = max(0, int(self.settings.brain_retry_times))
-        errors = []
+        errors: List[str] = []
+        attempts = 0
         used_model = req.brain_model or self.settings.brain_default_model
         for i in range(retries + 1):
+            attempts = i + 1
             try:
                 raw = self.cloud_brain.plan(prompt, model=used_model)
                 model_obj = self._extract_json(raw)
-                if model_obj and self._valid_roadmap(model_obj.get('roadmap_30_90_180')):
-                    resp = self._compose_from_model_obj(
-                        req,
-                        intent,
-                        profile,
-                        perception_results,
-                        knowledge_hints,
-                        knowledge_hit_ids,
-                        model_obj,
-                        served_by='cloud_brain',
-                        retry_count=i,
-                        model_name=used_model,
-                    )
-                    resp.latency_ms = int((time.time() - t0) * 1000)
-                    resp = self._sanitize_for_user(resp, req.debug_trace)
-                    self._persist_response(req, resp, used_model)
-                    return resp, i
-            except Exception as e:
-                errors.append(str(e))
+                if not model_obj:
+                    raise BrainResponseError("规划模型未返回有效 JSON")
+                if not self._valid_roadmap(model_obj.get('roadmap_30_90_180')):
+                    raise BrainResponseError("规划模型缺少完整的 30/90/180 天路线")
+                resp = self._compose_from_model_obj(
+                    req,
+                    intent,
+                    profile,
+                    perception_results,
+                    knowledge_hints,
+                    knowledge_hit_ids,
+                    model_obj,
+                    served_by='cloud_brain',
+                    retry_count=i,
+                    model_name=used_model,
+                )
+                resp.latency_ms = int((time.time() - t0) * 1000)
+                resp = self._sanitize_for_user(resp, req.debug_trace)
+                self._persist_response(req, resp, used_model)
+                return resp, i
+            except BrainClientError as exc:
+                errors.append(exc.code)
+                if not exc.retryable:
+                    break
+            except Exception as exc:
+                errors.append(type(exc).__name__)
 
         resp = self._planner_fallback(
             req,
@@ -448,13 +468,17 @@ JSON schema:
             perception_results,
             knowledge_hints,
             knowledge_hit_ids,
+            retry_count=max(0, attempts - 1),
         )
         resp.latency_ms = int((time.time() - t0) * 1000)
         if errors and req.debug_trace:
-            resp.follow_up_questions = self._normalize_list(resp.follow_up_questions + [f'cloud_error: {errors[-1]}'], 8)
+            resp.follow_up_questions = self._normalize_list(
+                resp.follow_up_questions + [f'cloud_error: {errors[-1]}'],
+                8,
+            )
         resp = self._sanitize_for_user(resp, req.debug_trace)
         self._persist_response(req, resp, "local-template")
-        return resp, retries
+        return resp, resp.retry_count
 
     def run(self, req: TaskRequest) -> CareerPlanResponse:
         resp, _ = self._run_core(req)
@@ -497,7 +521,9 @@ JSON schema:
         yield {'event': 'stage_start', 'data': {'stage': 'brain_planning', 'model': used_model}}
 
         retries = max(0, int(self.settings.brain_retry_times))
+        attempts = 0
         for i in range(retries + 1):
+            attempts = i + 1
             try:
                 token_buf = ''
                 for token in self.cloud_brain.plan_stream(prompt, model=used_model):
@@ -505,19 +531,36 @@ JSON schema:
                     yield {'event': 'token', 'data': {'stage': 'brain_planning', 'token': token}}
 
                 model_obj = self._extract_json(token_buf)
-                if model_obj and self._valid_roadmap(model_obj.get('roadmap_30_90_180')):
-                    resp = self._compose_from_model_obj(
-                        req, intent, profile, perception_results, knowledge_hints, knowledge_hit_ids, model_obj,
-                        served_by='cloud_brain', retry_count=i, model_name=used_model,
-                    )
-                    resp.latency_ms = int((time.time() - start) * 1000)
-                    resp = self._sanitize_for_user(resp, req.debug_trace)
-                    self._persist_response(req, resp, used_model)
-                    yield {'event': 'stage_end', 'data': {'stage': 'brain_planning', 'retry': i}}
-                    yield {'event': 'final_result', 'data': resp.model_dump()}
-                    return
-            except Exception as e:
-                yield {'event': 'stage_progress', 'data': {'stage': 'brain_planning', 'retry': i, 'error': str(e)}}
+                if not model_obj:
+                    raise BrainResponseError("规划模型未返回有效 JSON")
+                if not self._valid_roadmap(model_obj.get('roadmap_30_90_180')):
+                    raise BrainResponseError("规划模型缺少完整的 30/90/180 天路线")
+                resp = self._compose_from_model_obj(
+                    req, intent, profile, perception_results, knowledge_hints, knowledge_hit_ids, model_obj,
+                    served_by='cloud_brain', retry_count=i, model_name=used_model,
+                )
+                resp.latency_ms = int((time.time() - start) * 1000)
+                resp = self._sanitize_for_user(resp, req.debug_trace)
+                self._persist_response(req, resp, used_model)
+                yield {'event': 'stage_end', 'data': {'stage': 'brain_planning', 'retry': i}}
+                yield {'event': 'final_result', 'data': resp.model_dump()}
+                return
+            except BrainClientError as exc:
+                yield {
+                    'event': 'stage_progress',
+                    'data': {'stage': 'brain_planning', 'retry': i, 'error': exc.code},
+                }
+                if not exc.retryable:
+                    break
+            except Exception as exc:
+                yield {
+                    'event': 'stage_progress',
+                    'data': {
+                        'stage': 'brain_planning',
+                        'retry': i,
+                        'error': type(exc).__name__,
+                    },
+                }
 
         fallback = self._planner_fallback(
             req,
@@ -526,6 +569,7 @@ JSON schema:
             perception_results,
             knowledge_hints,
             knowledge_hit_ids,
+            retry_count=max(0, attempts - 1),
         )
         fallback.latency_ms = int((time.time() - start) * 1000)
         fallback = self._sanitize_for_user(fallback, req.debug_trace)

@@ -7,6 +7,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from project.core.schemas import TaskRequest
+from project.core.brain_client import BrainAuthError, BrainTimeoutError
 from project.core.run_logging import JsonlRunLogger
 from project.orchestrator import CareerOrchestrator
 
@@ -37,6 +38,28 @@ class FakeDeepSeekClient:
 
     def plan_stream(self, prompt: str, model: str | None = None):
         yield self.plan(prompt, model)
+
+
+class RetryOnceDeepSeekClient(FakeDeepSeekClient):
+    def __init__(self) -> None:
+        self.calls = 0
+
+    def plan(self, prompt: str, model: str | None = None) -> str:
+        self.calls += 1
+        if self.calls == 1:
+            raise BrainTimeoutError("temporary timeout")
+        return super().plan(prompt, model)
+
+
+class AuthFailureClient:
+    model_name = "deepseek-v4-flash"
+
+    def __init__(self) -> None:
+        self.calls = 0
+
+    def plan(self, prompt: str, model: str | None = None) -> str:
+        self.calls += 1
+        raise BrainAuthError("invalid key")
 
 
 class TestCompletionFlow(unittest.TestCase):
@@ -91,6 +114,42 @@ class TestCompletionFlow(unittest.TestCase):
         self.assertNotIn(str(document), persisted)
         self.assertNotIn("demo@example.com", persisted)
         self.assertEqual(log_record["feedback"], "合适")
+
+    def test_retryable_brain_error_retries_once_then_succeeds(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            brain = RetryOnceDeepSeekClient()
+            orchestrator = CareerOrchestrator(
+                db_path=str(root / "sessions.db"),
+                brain_client=brain,
+                run_logger=JsonlRunLogger(root / "runs.jsonl"),
+            )
+
+            response = orchestrator.run(
+                TaskRequest(session_id="retry", user_goal="规划数据分析职业路线")
+            )
+
+        self.assertEqual(brain.calls, 2)
+        self.assertEqual(response.served_by, "cloud_brain")
+        self.assertEqual(response.retry_count, 1)
+
+    def test_non_retryable_brain_error_falls_back_without_retrying(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            brain = AuthFailureClient()
+            orchestrator = CareerOrchestrator(
+                db_path=str(root / "sessions.db"),
+                brain_client=brain,
+                run_logger=JsonlRunLogger(root / "runs.jsonl"),
+            )
+
+            response = orchestrator.run(
+                TaskRequest(session_id="auth", user_goal="规划数据分析职业路线")
+            )
+
+        self.assertEqual(brain.calls, 1)
+        self.assertEqual(response.served_by, "local_fallback")
+        self.assertEqual(response.retry_count, 0)
 
 
 if __name__ == "__main__":

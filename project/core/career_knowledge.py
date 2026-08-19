@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence
 
@@ -15,6 +15,8 @@ class KnowledgeItem:
     resources: List[str]
     transition_paths: List[str]
     salary_hint: str
+    suitable_majors: List[str] = field(default_factory=list)
+    sources: List[str] = field(default_factory=list)
 
 
 class CareerKnowledgeBase:
@@ -79,8 +81,8 @@ class CareerKnowledgeBase:
                 name="career_knowledge",
                 metadata={"hnsw:space": "cosine"},
             )
-            if self._collection.count() == 0 and self.items:
-                self._build_vector_index()
+            if self.items and self._collection.count() != len(self.items):
+                self.rebuild_index()
         except Exception:
             self._chroma_client = None
             self._collection = None
@@ -115,6 +117,8 @@ class CareerKnowledgeBase:
                     resources=obj.get("resources", []),
                     transition_paths=obj.get("transition_paths", []),
                     salary_hint=obj.get("salary_hint", ""),
+                    suitable_majors=obj.get("suitable_majors", []),
+                    sources=obj.get("sources", []),
                 )
             )
         return items
@@ -129,6 +133,8 @@ class CareerKnowledgeBase:
                 "resources": item.resources,
                 "transition_paths": item.transition_paths,
                 "salary_hint": item.salary_hint,
+                "suitable_majors": item.suitable_majors,
+                "sources": item.sources,
             }
             for item in self.items
         ]
@@ -185,7 +191,7 @@ class CareerKnowledgeBase:
 
     def _item_to_text(self, item: KnowledgeItem) -> str:
         return " ".join(
-            [item.role] + item.skills + item.transition_paths
+            [item.role] + item.skills + item.suitable_majors + item.transition_paths
         )
 
     def _build_vector_index(self) -> None:
@@ -200,6 +206,8 @@ class CareerKnowledgeBase:
                 "resources": ", ".join(item.resources),
                 "transition_paths": ", ".join(item.transition_paths),
                 "salary_hint": item.salary_hint,
+                "suitable_majors": ", ".join(item.suitable_majors),
+                "sources": "; ".join(item.sources),
             }
             for item in self.items
         ]
@@ -231,7 +239,9 @@ class CareerKnowledgeBase:
 
     def _keyword_score(self, query: str, item: KnowledgeItem) -> int:
         query_lower = query.lower()
-        item_text = " ".join([item.role] + item.skills + item.transition_paths).lower()
+        item_text = " ".join(
+            [item.role] + item.skills + item.suitable_majors + item.transition_paths
+        ).lower()
         token_overlap = len(
             set(self._tokenize(query_lower)).intersection(self._tokenize(item_text))
         )
@@ -277,6 +287,8 @@ class CareerKnowledgeBase:
                 "resources": meta.get("resources", ""),
                 "transition_paths": meta.get("transition_paths", ""),
                 "salary_hint": meta.get("salary_hint", ""),
+                "suitable_majors": meta.get("suitable_majors", ""),
+                "sources": meta.get("sources", ""),
                 "vector_score": round(1.0 - min(distance, 1.0), 4),
             })
         return out
@@ -308,6 +320,8 @@ class CareerKnowledgeBase:
                     "resources": ", ".join(item.resources[:4]),
                     "transition_paths": ", ".join(item.transition_paths[:3]),
                     "salary_hint": item.salary_hint,
+                    "suitable_majors": ", ".join(item.suitable_majors[:5]),
+                    "sources": "; ".join(item.sources),
                     "match_score": str(score),
                 }
             )
@@ -374,6 +388,8 @@ class CareerKnowledgeBase:
                     "resources": ", ".join(item.resources[:4]),
                     "transition_paths": ", ".join(item.transition_paths[:3]),
                     "salary_hint": item.salary_hint,
+                    "suitable_majors": ", ".join(item.suitable_majors[:5]),
+                    "sources": "; ".join(item.sources),
                     "match_score": f"{entry['score']:.2f} ({entry['source']})",
                 }
             )
@@ -402,6 +418,8 @@ class CareerKnowledgeBase:
                     "resources": ", ".join(item.resources),
                     "transition_paths": ", ".join(item.transition_paths),
                     "salary_hint": item.salary_hint,
+                    "suitable_majors": ", ".join(item.suitable_majors),
+                    "sources": "; ".join(item.sources),
                 }
             )
         return out
@@ -421,6 +439,8 @@ class CareerKnowledgeBase:
                     "resources": ", ".join(item.resources),
                     "transition_paths": ", ".join(item.transition_paths),
                     "salary_hint": item.salary_hint,
+                    "suitable_majors": ", ".join(item.suitable_majors),
+                    "sources": "; ".join(item.sources),
                 }],
                 ids=[item.item_id],
             )

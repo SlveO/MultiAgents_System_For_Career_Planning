@@ -1,20 +1,32 @@
-# memory_manager.py
-import torch
 import gc
 import time
-from contextlib import contextmanager
+
+try:
+    import torch
+except ImportError:
+    torch = None
+
+
+def _cuda_available():
+    return torch is not None and torch.cuda.is_available()
 
 
 class VRAMManager:
-    """VRAM Manager - strict 6GB model switching"""
+    """Lazy model registry with a device-aware VRAM warning threshold."""
 
-    def __init__(self, max_memory_gb=6.0):
-        self.max_memory = max_memory_gb * 1024**3
+    def __init__(self, max_memory_gb=None):
+        detected_gb = 0.0
+        if _cuda_available():
+            detected_gb = torch.cuda.get_device_properties(0).total_memory / 1024**3
+        self.max_memory_gb = float(max_memory_gb) if max_memory_gb else detected_gb
+        self.max_memory = self.max_memory_gb * 1024**3
+        self.warning_threshold_gb = self.max_memory_gb * 0.9
         self.loaded_models = {}
         self.model_sizes = {
             'vision': 4.0 * 1024**3,
         }
-        print(f"[VRAM] Manager init | Max: {max_memory_gb}GB")
+        limit = f"{self.max_memory_gb:.1f}GB" if self.max_memory_gb else "CPU/no CUDA"
+        print(f"[VRAM] Manager init | Available: {limit}")
         self._print_gpu_info()
         self._initial_cleanup()
 
@@ -23,22 +35,22 @@ class VRAMManager:
         self._hard_cleanup()
 
     def _print_gpu_info(self):
-        if torch.cuda.is_available():
+        if _cuda_available():
             gpu_name = torch.cuda.get_device_name(0)
             total_memory = torch.cuda.get_device_properties(0).total_memory / 1024**3
             print(f"   GPU: {gpu_name} | Total VRAM: {total_memory:.1f}GB")
-            print(f"   [WARN] Strict limit: 6.0GB (2GB reserved for system)")
+            print(f"   Warning threshold: {self.warning_threshold_gb:.1f}GB")
 
     def _get_memory_info(self):
-        if not torch.cuda.is_available():
-            return None, None
+        if not _cuda_available():
+            return 0.0, 0.0
         torch.cuda.synchronize()
         allocated = torch.cuda.memory_allocated(0) / 1024**3
         reserved = torch.cuda.memory_reserved(0) / 1024**3
         return allocated, reserved
 
     def _hard_cleanup(self):
-        if not torch.cuda.is_available():
+        if not _cuda_available():
             return
 
         torch.cuda.synchronize()
@@ -60,14 +72,16 @@ class VRAMManager:
         processor = model_data.get('processor')
         tokenizer = model_data.get('tokenizer')
 
-        torch.cuda.synchronize()
+        if _cuda_available():
+            torch.cuda.synchronize()
 
         if hasattr(model, 'cpu'):
             try:
                 model.cpu()
-            except:
+            except Exception:
                 pass
-        torch.cuda.synchronize()
+        if _cuda_available():
+            torch.cuda.synchronize()
 
         del model
         if processor is not None:
@@ -128,8 +142,11 @@ class VRAMManager:
             allocated, reserved = self._get_memory_info()
             print(f"[VRAM] After load - Allocated: {allocated:.2f}GB | Reserved: {reserved:.2f}GB")
 
-            if allocated > 5.5:
-                print(f"   [WARN] VRAM usage near limit ({allocated:.2f}GB/6.0GB)")
+            if self.warning_threshold_gb and allocated > self.warning_threshold_gb:
+                print(
+                    "   [WARN] VRAM usage near device limit "
+                    f"({allocated:.2f}GB/{self.max_memory_gb:.1f}GB)"
+                )
 
             return model
 
@@ -159,6 +176,6 @@ def cleanup_all():
         _vram_manager.unload_all()
         _vram_manager = None
     gc.collect()
-    if torch.cuda.is_available():
+    if _cuda_available():
         torch.cuda.synchronize()
         torch.cuda.empty_cache()

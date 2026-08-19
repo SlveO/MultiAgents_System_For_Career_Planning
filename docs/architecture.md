@@ -2,46 +2,67 @@
 
 ## Research Position
 
-The project studies whether a modular system of specialized perceiver agents
-and a text reasoner can match or exceed a monolithic multimodal model in a
-career-planning scenario. Career planning is the evaluation domain; the main
-research variable is the system architecture.
+The project tests whether specialized single-modality perceivers coordinated
+with a text reasoner can match or exceed one monolithic multimodal model in a
+career-planning task. Career planning is the application and evaluation
+domain; the independent variable is the system architecture.
 
-## Current MVP
+## Implemented Completion MVP
 
 ```text
-text/document input
-    -> parser or rule-based perception
-    -> structured profile and user follow-up
-    -> keyword career retrieval
-    -> DeepSeek text planning
-    -> three-level feedback and redacted JSONL log
+text or TXT/MD/CSV/TSV/PDF/DOCX/XLSX
+  -> text/document perception
+  -> eight fixed user follow-ups
+  -> canonical UserProfile
+  -> keyword retrieval over 65 career records
+  -> DeepSeek-compatible planner or labeled template fallback
+  -> 30/90/180-day plan
+  -> three-level feedback
+  -> redacted SQLite history and JSONL run record
 ```
 
-The MVP is API-first and can run without GPU dependencies. Optional image,
-audio, video, vector retrieval, FastAPI, and Web features must fail readably
-and must not block the text/document path.
+`project/assistant_cli.py` is the canonical CLI. `CareerOrchestrator` owns the
+flow; `project/core/` owns schemas, retrieval, settings, privacy, logs, and
+persistence. Image, audio, video, vector retrieval, FastAPI, and Web remain
+optional. Their imports and model loading must not block text/document use.
+
+The DeepSeek client sends `deepseek-v4-flash` with
+`thinking={"type":"disabled"}`. Typed errors distinguish configuration,
+authentication, balance, rate-limit, timeout, server, HTTP, and invalid
+response failures. Only retryable failures are retried.
 
 ## Target Research System
 
 ```text
-raw modality
-    -> specialized perceiver (vision / audio / document / text)
-    -> coordinator
-    -> text reasoner requests evidence or clarification
-    -> perceiver answers from the original modality
-    -> career knowledge retrieval
-    -> final career plan
+raw modality -> specialized perceiver -> coordinator -> text reasoner
+     ^                                                |
+     +------ bounded evidence clarification ----------+
+  -> shared career retrieval -> final plan and evidence trace
 ```
 
-The current orchestrator performs one-shot perception. Reasoner-to-perceiver
-multi-turn clarification is a later experiment and must not be described as
-implemented until its protocol and tests exist.
+The controlled comparison has three groups: `Qwen3-VL-8B-Instruct` as the
+monolithic baseline, `Qwen3-VL-2B-Instruct` plus
+`Qwen3-4B-Instruct-2507` as the one-shot modular system, and the same modular
+pair with bounded evidence clarification. DeepSeek remains an external
+engineering reference rather than a primary controlled group.
 
-## Device Profiles
+The current system performs one-shot perception. The monolithic adapter and
+reasoner-to-perceiver protocol are specified but not implemented. They must
+remain behind an experiment entry point and must not change the completion-MVP
+default flow.
 
-- MVP: CPU or GPU, core dependencies only, DeepSeek API for planning.
-- API/Web: MVP plus FastAPI, authentication, and SSE.
-- GPU/L20: API profile plus local Qwen/Whisper/BGE and batch experiments.
+## Hardware Profiles
 
-Local model weights remain untracked under `models/`.
+- Core MVP: CPU or GPU machine; no local model is required.
+- API/Web: core plus FastAPI, authentication, and SSE.
+- Team GPU: optional Qwen/Whisper/BGE development with device-aware VRAM
+  thresholds rather than a fixed 6GB assumption.
+- Laboratory L20 (48 GB, networked Ubuntu): the only target for downloading
+  the three research models and running the primary architecture comparison.
+  Record the exact Ubuntu, driver, CUDA, Python, PyTorch, and disk state before
+  setup because the Ubuntu version is not yet known.
+
+Weights remain under ignored `models/`; runtime artifacts remain under ignored
+`data/`. No research weights are downloaded on the current development
+machine. Incoming member work under ignored `corwork/` is review material and
+must be adapted into the canonical layout.

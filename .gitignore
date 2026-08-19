@@ -20,6 +20,7 @@ venv/
 # Runtime data and temporary test directories
 /data/
 /logs/
+/corwork/
 /request.json
 /project/data/test_tmp/
 /project/tests/router_case_*/

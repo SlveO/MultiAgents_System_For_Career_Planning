@@ -2,26 +2,22 @@
 
 ## Project Structure
 
-The repository combines a Python service with a Vite/React client. Backend entry points are `project/assistant_cli.py` (MVP CLI), `project/main.py` (compatibility wrapper), and `project/api/` (optional FastAPI). Shared business logic, routing, settings, retrieval, memory, and orchestration live in `project/core/`; modality-specific agents are under `project/agents/`. Tests are in `project/tests/`, versioned static inputs are in `dataset/`, optional download helpers are in `scripts/models/`, and frontend source is in `web/src/`. Local runtime data and model weights belong in ignored `data/` and `models/` directories.
+The canonical Python implementation is under `project/`. Use `project/assistant_cli.py` for the MVP CLI, `project/orchestrator.py` for the planning flow, `project/core/` for schemas, retrieval, settings, privacy, and persistence, and `project/agents/` for optional perception modules. Tests belong in `project/tests/`; versioned knowledge and anonymized cases belong in `dataset/`; React source is in `web/src/`. Runtime logs, databases, uploads, and experiments go in ignored `data/`; model weights go in ignored `models/`. `corwork/` is an ignored local review area for member submissions, not a second source tree.
 
 ## Build, Test, and Development Commands
 
-Install the default MVP with `pip install -r requirements.txt`; use `requirements-api.txt` for FastAPI/Web and `requirements-gpu.txt` after installing a CUDA-matched PyTorch build. Run the CLI with `python -m project.assistant_cli --help`. Start the optional API with `python -m project.api.run_api`. Run tests with `python -m unittest discover -s project/tests -v`, and run the offline experiment harness with `python -m project.experiments.run_completion_experiments --output-dir data/experiments`.
+Install the text/document MVP with `pip install -r requirements.txt`. Use `requirements-api.txt` for FastAPI/Web. For GPU work, first install a CUDA-matched PyTorch build, then run `pip install -r requirements-gpu.txt`; this profile includes API and MVP dependencies.
 
-For the frontend, run `cd web; npm install` once, `npm run dev` for Vite development, and `npm run build` for the TypeScript/Vite production build. `docker compose up --build` runs the API container; provide `DEEPSEEK_API_KEY` through the environment.
+Run `python -m project.assistant_cli --help`, `python -m unittest discover -s project/tests -v`, and `python -m compileall -q project` before handoff. Run the deterministic four-group harness with `python -m project.experiments.run_completion_experiments --output-dir data/experiments`. Frontend changes require `cd web; npm run build`.
 
-## Coding Style & Naming
+## Style and Testing
 
-Use four-space indentation in Python and the existing TypeScript/TSX formatting. Prefer clear, descriptive `snake_case` names for Python modules, functions, and variables; use `PascalCase` for React components and `camelCase` for frontend functions and variables. Keep API schemas and settings changes localized to their existing modules. No repository-wide formatter or linter is configured, so keep diffs small and manually consistent with nearby code.
+Use four-space Python indentation, `snake_case` for Python symbols, `PascalCase` for React components, and `camelCase` for TypeScript variables. Keep canonical Pydantic fields defined in `project/core/schemas.py`; adapt incoming legacy fields at boundaries instead of creating parallel schemas. Tests use `unittest`; name files and methods `test_*`. Mock network/model calls in automated tests. Keep optional GPU imports lazy so the core profile remains runnable without `torch`.
 
-## Testing Guidelines
+## Data, Security, and Collaboration
 
-Tests use Python's standard `unittest` framework. Name test files `test_*.py` and test methods `test_*`. Add regression coverage beside the affected subsystem, especially for routing, multimodal flows, dependency profiles, API behavior, and persistence. Run the full discovery command before submitting changes; frontend validation uses `npm run build`.
+Never commit `.env`, keys, weights, raw uploads, generated databases, logs, caches, or private local paths. Redact names, student IDs, phones, emails, and account data from outward-facing artifacts. Download research model weights and run the primary architecture experiment only on the L20 Ubuntu host, not on the current Windows checkout. Member work must be selectively ported into `project/` and covered by regression tests; do not merge legacy `src/` trees wholesale. Handoffs must state owner, deliverable, dependency or deadline, acceptance criteria, and next action.
 
-## Commits & Pull Requests
+Use focused conventional commits such as `feat:`, `fix:`, `test:`, and `docs:`. Do not commit, push, merge, publish, or modify remote systems without explicit approval after the final diff and test report are reviewed.
 
-Use imperative, conventional prefixes consistent with history, such as `feat:`, `fix:`, and `docs:`; keep each commit focused. Pull requests should describe behavior changes, list verification commands, identify configuration or migration requirements, and include screenshots for visible frontend changes. Never commit `.env`, API keys, model downloads, generated databases, raw uploads, or temporary test data.
-
-## Configuration & Security
-
-Copy required settings into a local `.env`; at minimum configure `DEEPSEEK_API_KEY`, and use a strong `JWT_SECRET_KEY` outside local development. Review `CORS_ORIGINS` before deployment, and avoid logging uploaded content or credentials. The current MVP can run without GPU packages, while the GPU profile enables optional local perception and retrieval experiments.
+Team tasks start from `origin/integration/week1-results`. Create a personal `work/<role>-<task>` branch and do not push task commits directly to the shared integration branch.

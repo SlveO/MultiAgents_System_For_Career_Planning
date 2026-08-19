@@ -82,6 +82,19 @@ class TestPrivacyAndLogging(unittest.TestCase):
         self.assertEqual(record["model"], "deepseek-v4-flash")
         self.assertEqual(record["feedback"], "合适")
         self.assertEqual(record["latency_ms"], 321)
+        self.assertEqual(record["status"], "completed")
+        self.assertEqual(
+            record["pipeline_events"],
+            [
+                "input_received",
+                "perception_completed",
+                "follow_up_completed",
+                "profile_completed",
+                "knowledge_retrieved",
+                "plan_completed",
+                "feedback_recorded",
+            ],
+        )
         self.assertIn("timestamp", record)
         serialized = json.dumps(record, ensure_ascii=False)
         for secret in ["张三", "student@example.com", "Alice", "完整简历内容"]:

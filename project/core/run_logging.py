@@ -20,9 +20,22 @@ class JsonlRunLogger:
         feedback: str,
         model_name: str,
     ) -> dict:
+        pipeline_events = ["input_received", "perception_completed"]
+        if request.follow_up_answers and not request.skip_follow_up:
+            pipeline_events.append("follow_up_completed")
+        pipeline_events.extend(
+            [
+                "profile_completed",
+                "knowledge_retrieved" if request.use_knowledge else "knowledge_skipped",
+                "plan_completed",
+                "feedback_recorded",
+            ]
+        )
         record = {
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "session_id": redact_data(request.session_id),
+            "status": "completed",
+            "pipeline_events": pipeline_events,
             "input": redact_data(
                 {
                     "user_goal": request.user_goal,

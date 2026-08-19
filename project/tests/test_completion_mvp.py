@@ -84,6 +84,20 @@ class TestCompletionMvpFoundation(unittest.TestCase):
     def test_image_processor_loads_on_cpu_when_cuda_is_unavailable(self) -> None:
         from project.agents import image as image_module
 
+        class FakeCuda:
+            @staticmethod
+            def is_available() -> bool:
+                return False
+
+            @staticmethod
+            def synchronize() -> None:
+                raise AssertionError("CPU loading must not synchronize CUDA")
+
+        class FakeTorch:
+            cuda = FakeCuda()
+            float16 = "float16"
+            float32 = "float32"
+
         class FakeModel:
             def __init__(self) -> None:
                 self.device = None
@@ -97,18 +111,26 @@ class TestCompletionMvpFoundation(unittest.TestCase):
 
         fake_model = FakeModel()
         fake_processor = object()
-        processor = image_module.ImageProcessor(model_path="unused")
 
-        with patch.object(image_module.torch.cuda, "is_available", return_value=False), patch.object(
-            image_module.Qwen3VLProcessor,
-            "from_pretrained",
-            return_value=fake_processor,
-        ), patch.object(
-            image_module.Qwen3VLForConditionalGeneration,
-            "from_pretrained",
-            return_value=fake_model,
-        ):
-            loaded_model, loaded_processor, _ = processor._load()
+        class FakeProcessorClass:
+            @staticmethod
+            def from_pretrained(*_args, **_kwargs):
+                return fake_processor
+
+        class FakeModelClass:
+            @staticmethod
+            def from_pretrained(*_args, **_kwargs):
+                return fake_model
+
+        processor = image_module.ImageProcessor(
+            model_path="unused",
+            torch_module=FakeTorch(),
+            model_class=FakeModelClass,
+            processor_class=FakeProcessorClass,
+            vision_info_fn=lambda _messages: ([], []),
+            vram_manager=object(),
+        )
+        loaded_model, loaded_processor, _ = processor._load()
 
         self.assertIs(loaded_model, fake_model)
         self.assertIs(loaded_processor, fake_processor)
