@@ -21,3 +21,5 @@ Never commit `.env`, keys, weights, raw uploads, generated databases, logs, cach
 Use focused conventional commits such as `feat:`, `fix:`, `test:`, and `docs:`. Do not commit, push, merge, publish, or modify remote systems without explicit approval after the final diff and test report are reviewed.
 
 Team tasks start from `origin/integration/week1-results`. Create a personal `work/<role>-<task>` branch and do not push task commits directly to the shared integration branch.
+
+After the project lead confirms a research strategy, update `docs/research-decisions.md`, the applicable machine-readable contract, related documentation, and contract tests in the same reviewed change. Preserve superseded decisions in the log instead of deleting their history.

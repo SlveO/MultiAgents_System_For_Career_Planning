@@ -61,6 +61,12 @@ python -m project.experiments.run_completion_experiments --output-dir data/exper
 
 默认实验使用确定性的 Fake DeepSeek，只验证四组结题对照的流程和结果文件，共输出 8 行；真实 API、GPU、前端与 Docker 的手工步骤和验收标准见 [验证指南](docs/verification.md)。主研究实验设计见 [实验设计](docs/experiments.md)。
 
+主研究案例、证据、协作决策和规划输出由 `dataset/research_*.schema.json`
+统一约束；模型、提示词、生成参数和失败策略固定在
+`dataset/research_protocol.json`。五维盲评见
+[评分量表](docs/evaluation-rubric.md)，已确认策略及后续调整见
+[研究决策记录](docs/research-decisions.md)。成员实现不得自行改名或另建平行契约。
+
 启动可选 API：
 
 ```powershell

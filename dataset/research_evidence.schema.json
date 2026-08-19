@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "research_evidence.schema.json",
+  "title": "Career Planning Research Evidence Packet",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "packet_type",
+    "request_id",
+    "facts",
+    "missing_fields",
+    "conflicts"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "research-evidence-v1"
+    },
+    "packet_type": {
+      "enum": ["initial", "delta"]
+    },
+    "request_id": {
+      "type": ["string", "null"]
+    },
+    "facts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "evidence_id",
+          "fact",
+          "supporting_detail",
+          "source_location",
+          "confidence"
+        ],
+        "properties": {
+          "evidence_id": {
+            "type": "string",
+            "pattern": "^f-[1-9][0-9]*$"
+          },
+          "fact": {
+            "type": "string",
+            "minLength": 1
+          },
+          "supporting_detail": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_location": {
+            "type": "string",
+            "minLength": 1
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0
+          }
+        }
+      }
+    },
+    "missing_fields": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "existing_evidence_ref",
+          "new_observation",
+          "source_location",
+          "confidence"
+        ],
+        "properties": {
+          "existing_evidence_ref": {
+            "type": "string",
+            "pattern": "^f-[1-9][0-9]*$"
+          },
+          "new_observation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_location": {
+            "type": "string",
+            "minLength": 1
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0
+          }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "packet_type": {
+            "const": "initial"
+          }
+        },
+        "required": ["packet_type"]
+      },
+      "then": {
+        "properties": {
+          "request_id": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "packet_type": {
+            "const": "delta"
+          }
+        },
+        "required": ["packet_type"]
+      },
+      "then": {
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "pattern": "^r-[1-9][0-9]*$"
+          }
+        }
+      }
+    }
+  ]
+}

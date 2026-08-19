@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "research_decision.schema.json",
+  "title": "Career Planning Research Collaboration Decision",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "action", "reason_code"],
+      "properties": {
+        "schema_version": {
+          "const": "research-decision-v1"
+        },
+        "action": {
+          "const": "final"
+        },
+        "reason_code": {
+          "enum": [
+            "evidence_sufficient",
+            "round_cap_reached",
+            "no_resolvable_request"
+          ]
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "action",
+        "reason_code",
+        "request_id",
+        "target",
+        "question",
+        "required_fields"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "research-decision-v1"
+        },
+        "action": {
+          "const": "request_evidence"
+        },
+        "reason_code": {
+          "const": "missing_decisive_evidence"
+        },
+        "request_id": {
+          "type": "string",
+          "pattern": "^r-[1-9][0-9]*$"
+        },
+        "target": {
+          "const": "vision"
+        },
+        "question": {
+          "type": "string",
+          "minLength": 1
+        },
+        "required_fields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "maxItems": 5,
+          "uniqueItems": true
+        }
+      }
+    }
+  ]
+}

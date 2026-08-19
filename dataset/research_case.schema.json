@@ -1,0 +1,186 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "research_case.schema.json",
+  "title": "Career Planning Architecture Experiment Case",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "case_id",
+    "sets",
+    "modality",
+    "asset_path",
+    "asset_sha256",
+    "source",
+    "user_goal",
+    "fixed_profile",
+    "knowledge_snippets",
+    "expected_evidence",
+    "scoring_notes",
+    "decisive_evidence_not_in_text",
+    "privacy_reviewed"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "research-case-v1"
+    },
+    "case_id": {
+      "type": "string",
+      "pattern": "^(image|pdf)-[0-9]{3}$"
+    },
+    "sets": {
+      "type": "array",
+      "items": {
+        "enum": ["pilot", "primary"]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "modality": {
+      "enum": ["image", "pdf_page"]
+    },
+    "asset_path": {
+      "type": "string",
+      "pattern": "^dataset/research_cases/assets/[A-Za-z0-9._/-]+$"
+    },
+    "asset_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "page_number": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_type", "source_url", "license"],
+      "properties": {
+        "source_type": {
+          "enum": ["self_created", "public_domain", "permissive_license"]
+        },
+        "source_url": {
+          "type": "string"
+        },
+        "license": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "user_goal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "fixed_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "education_stage",
+        "major",
+        "skills",
+        "interests",
+        "target_role",
+        "time_budget_hours_per_week",
+        "preference",
+        "main_constraints"
+      ],
+      "properties": {
+        "education_stage": {"type": "string", "minLength": 1},
+        "major": {"type": "string", "minLength": 1},
+        "skills": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "interests": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "target_role": {"type": "string", "minLength": 1},
+        "time_budget_hours_per_week": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 80
+        },
+        "preference": {"type": "string"},
+        "main_constraints": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        }
+      }
+    },
+    "knowledge_snippets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["knowledge_id", "text"],
+        "properties": {
+          "knowledge_id": {
+            "type": "string",
+            "pattern": "^career-[0-9]{3}$"
+          },
+          "text": {"type": "string", "minLength": 1}
+        }
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "expected_evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "evidence_id",
+          "fact",
+          "location_hint",
+          "career_implication",
+          "required_for_plan"
+        ],
+        "properties": {
+          "evidence_id": {
+            "type": "string",
+            "pattern": "^ev-[1-9][0-9]*$"
+          },
+          "fact": {"type": "string", "minLength": 1},
+          "location_hint": {"type": "string", "minLength": 1},
+          "career_implication": {"type": "string", "minLength": 1},
+          "required_for_plan": {"type": "boolean"}
+        }
+      },
+      "minItems": 3,
+      "maxItems": 5
+    },
+    "scoring_notes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["acceptable_inferences", "forbidden_assumptions"],
+      "properties": {
+        "acceptable_inferences": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "forbidden_assumptions": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "decisive_evidence_not_in_text": {"const": true},
+    "privacy_reviewed": {"const": true}
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"modality": {"const": "pdf_page"}}
+      },
+      "then": {"required": ["page_number"]}
+    }
+  ]
+}

@@ -6,6 +6,12 @@
   logging fields, and legacy member-field mappings.
 - `experiments.md`: completion checks plus the frozen three-group architecture,
   case, collaboration-round, evaluation, and L20 execution protocol.
+- `evaluation-rubric.md`: authoritative five-dimension blind scoring anchors,
+  adjudication, and the two-vs-three-round selection rule.
+- `research-decisions.md`: durable record of confirmed research choices,
+  rationale, pending values, and superseding decisions.
+- `integration-review-checklist.md`: project-lead acceptance checks and review
+  record for member A/B/C branches.
 - `verification.md`: commands for automated checks and user-run live API,
   GPU, frontend, and Docker verification.
 - `progress.md`: English agent-facing phases, shared branch, two-day ownership,

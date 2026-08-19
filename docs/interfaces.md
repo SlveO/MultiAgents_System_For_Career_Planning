@@ -52,25 +52,42 @@ not replace the eight user follow-ups in the MVP. A planner decision is either
 final output or an evidence request:
 
 ```json
-{"action": "final"}
+{
+  "schema_version": "research-decision-v1",
+  "action": "final",
+  "reason_code": "evidence_sufficient"
+}
 ```
 
 ```json
 {
+  "schema_version": "research-decision-v1",
   "action": "request_evidence",
+  "reason_code": "missing_decisive_evidence",
+  "request_id": "r-1",
   "target": "vision",
   "question": "Which requirement is stated in the highlighted region?",
   "required_fields": ["requirement", "location"]
 }
 ```
 
-The perceiver response records `facts`, supporting `evidence`, page or region,
-`confidence`, and `missing_fields`. Each request targets one perceiver and
-counts as one round. Every turn logs the case ID, round index, request,
-response, latency, and error without raw private content.
+The initial perceiver response is an `initial` evidence packet. A clarification
+response is a `delta` packet with the matching `request_id`; it contains only
+new facts, missing fields, and conflicts and is appended without replacing old
+evidence. Each request plus one perceiver response counts as one round; the
+reasoner's decision call does not. Every turn logs the case ID, round index,
+request, response, latency, and error without raw private content.
 
 Pilot runs may cap collaboration at two or three rounds. Freeze one cap before
 the 20-case architecture comparison; a later `0/1/2/3`-round experiment studies
 turn depth separately. At the cap or after a perception failure, the reasoner
-must finalize using available evidence and add an insufficient-evidence item to
-`risk_flags` rather than retrying without limit.
+must finalize using available evidence rather than retrying without limit. It
+sets `evidence_status=insufficient` and adds a corresponding `risk_flags` item
+only when decisive evidence is still missing.
+
+Machine-readable case, evidence, decision, and plan contracts are versioned in
+the four `dataset/research_*.schema.json` files. Prompt, model, generation,
+runtime, and failure policies are versioned in
+`dataset/research_protocol.json`; confirmed changes are retained in
+`docs/research-decisions.md`. Experiment code must consume these contracts
+instead of defining different field names in a parallel source tree.

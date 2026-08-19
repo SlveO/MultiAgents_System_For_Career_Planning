@@ -1,0 +1,265 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "research_plan.schema.json",
+  "title": "Career Planning Research Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "target_roles",
+    "gap_analysis",
+    "roadmap_30_90_180",
+    "learning_resources",
+    "next_actions",
+    "risk_flags",
+    "user_facing_advice",
+    "confidence",
+    "evidence_status",
+    "missing_evidence",
+    "evidence_used",
+    "knowledge_ids_used"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "research-plan-v1"
+    },
+    "target_roles": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "maxItems": 3,
+      "uniqueItems": true
+    },
+    "gap_analysis": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "maxItems": 8
+    },
+    "roadmap_30_90_180": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "prefixItems": [
+        {
+          "$ref": "#/$defs/milestone_30d"
+        },
+        {
+          "$ref": "#/$defs/milestone_90d"
+        },
+        {
+          "$ref": "#/$defs/milestone_180d"
+        }
+      ],
+      "items": false
+    },
+    "learning_resources": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "maxItems": 10
+    },
+    "next_actions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "maxItems": 10
+    },
+    "risk_flags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "maxItems": 8
+    },
+    "user_facing_advice": {
+      "type": "string",
+      "minLength": 1
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "evidence_status": {
+      "enum": ["sufficient", "insufficient"]
+    },
+    "missing_evidence": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "evidence_used": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "evidence_ref",
+          "fact",
+          "source_location",
+          "supports"
+        ],
+        "properties": {
+          "evidence_ref": {
+            "type": "string",
+            "pattern": "^f-[1-9][0-9]*$"
+          },
+          "fact": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_location": {
+            "type": "string",
+            "minLength": 1
+          },
+          "supports": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^(?:(?:target_roles|gap_analysis|roadmap_30_90_180|learning_resources|next_actions|risk_flags)(?:\\[[0-9]+\\])?|user_facing_advice)$"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "knowledge_ids_used": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^career-[0-9]{3}$"
+      },
+      "uniqueItems": true
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "evidence_status": {
+            "const": "sufficient"
+          }
+        },
+        "required": ["evidence_status"]
+      },
+      "then": {
+        "properties": {
+          "missing_evidence": {
+            "maxItems": 0
+          },
+          "evidence_used": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "evidence_status": {
+            "const": "insufficient"
+          }
+        },
+        "required": ["evidence_status"]
+      },
+      "then": {
+        "properties": {
+          "missing_evidence": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "milestone_base": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["period", "objective", "deliverables", "metrics"],
+      "properties": {
+        "period": {
+          "type": "string"
+        },
+        "objective": {
+          "type": "string",
+          "minLength": 1
+        },
+        "deliverables": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "milestone_30d": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/milestone_base"
+        },
+        {
+          "properties": {
+            "period": {
+              "const": "30d"
+            }
+          }
+        }
+      ]
+    },
+    "milestone_90d": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/milestone_base"
+        },
+        {
+          "properties": {
+            "period": {
+              "const": "90d"
+            }
+          }
+        }
+      ]
+    },
+    "milestone_180d": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/milestone_base"
+        },
+        {
+          "properties": {
+            "period": {
+              "const": "180d"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

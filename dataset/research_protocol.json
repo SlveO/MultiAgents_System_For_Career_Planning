@@ -1,0 +1,191 @@
+{
+  "protocol_version": "architecture-comparison-v2",
+  "decision_log": "docs/research-decisions.md",
+  "schema_refs": {
+    "case": "dataset/research_case.schema.json",
+    "evidence": "dataset/research_evidence.schema.json",
+    "decision": "dataset/research_decision.schema.json",
+    "plan": "dataset/research_plan.schema.json"
+  },
+  "execution_boundary": {
+    "model_downloads": "l20_ubuntu_only",
+    "formal_inference": "l20_ubuntu_only",
+    "current_windows_role": "contract_tests_and_review_only"
+  },
+  "groups": {
+    "monolithic": {
+      "model_id": "Qwen/Qwen3-VL-8B-Instruct",
+      "model_revision": null,
+      "planner_receives_raw_media": true,
+      "max_collaboration_rounds": 0,
+      "planner_inputs": [
+        "user_goal",
+        "fixed_profile",
+        "knowledge_snippets",
+        "raw_media",
+        "plan_schema"
+      ]
+    },
+    "modular_one_shot": {
+      "perceiver_model_id": "Qwen/Qwen3-VL-2B-Instruct",
+      "perceiver_model_revision": null,
+      "reasoner_model_id": "Qwen/Qwen3-4B-Instruct-2507",
+      "reasoner_model_revision": null,
+      "perceiver_receives_raw_media": true,
+      "reasoner_receives_raw_media": false,
+      "max_collaboration_rounds": 0,
+      "perceiver_inputs": [
+        "user_goal",
+        "target_role",
+        "raw_media",
+        "evidence_schema"
+      ],
+      "reasoner_inputs": [
+        "user_goal",
+        "fixed_profile",
+        "knowledge_snippets",
+        "evidence_packet",
+        "plan_schema"
+      ]
+    },
+    "modular_collaborative": {
+      "perceiver_model_id": "Qwen/Qwen3-VL-2B-Instruct",
+      "perceiver_model_revision": null,
+      "reasoner_model_id": "Qwen/Qwen3-4B-Instruct-2507",
+      "reasoner_model_revision": null,
+      "perceiver_receives_raw_media": true,
+      "reasoner_receives_raw_media": false,
+      "pilot_round_caps": [2, 3],
+      "primary_round_cap": null,
+      "perceiver_inputs": [
+        "user_goal",
+        "target_role",
+        "raw_media",
+        "evidence_schema"
+      ],
+      "reasoner_inputs": [
+        "user_goal",
+        "fixed_profile",
+        "knowledge_snippets",
+        "evidence_packet",
+        "plan_schema"
+      ]
+    }
+  },
+  "generation": {
+    "decoding": "greedy",
+    "do_sample": false,
+    "num_beams": 1,
+    "max_new_tokens": 2048,
+    "seed": 42,
+    "reasoning_mode": "instruct_non_thinking"
+  },
+  "runtime": {
+    "dtype": "bfloat16",
+    "eval_mode": true,
+    "pin_model_revision": true,
+    "revision_freeze_required_before_pilot": true,
+    "revision_manifest": "data/experiments/environment/model_revisions.json",
+    "pdf_render_dpi": 144,
+    "visual_token_min": 256,
+    "visual_token_max": 1280
+  },
+  "shared_planning_inputs": [
+    "user_goal",
+    "fixed_profile",
+    "knowledge_snippets",
+    "plan_schema",
+    "max_new_tokens"
+  ],
+  "prompt_contract": {
+    "version": "research-prompts-v2",
+    "language": "zh-CN",
+    "strict_json": true,
+    "markdown_forbidden": true,
+    "chain_of_thought_forbidden": true,
+    "hidden_from_models": [
+      "experiment_group",
+      "expected_evidence",
+      "scoring_notes"
+    ],
+    "hashing": {
+      "algorithm": "sha256",
+      "encoding": "utf-8",
+      "separator": "\n---\n",
+      "hashes": {
+        "perception_initial": "2ed667f1364291fe05a5b6740d124173922d3acf9aa23b8d91fd0947cfc86c5f",
+        "perception_clarification": "0047155b29fb8d30d099e1bdcd4d0f6430a704641c6f6ea0cfa634fe2520b357",
+        "planning_raw_media": "775a77e4389efaa4ae5fd5d5dc32cb463772b95d436de4bb031e5b3015b62231",
+        "planning_structured_evidence": "62797e530d4143383037f8163369d8c75675c87d46d90c024d0aa733ed09060e",
+        "collaboration_decision": "58b3d6df222d70afd160cf8d41bb6d7ad5ae4655b8a935584bd84f4ae7ce5b29"
+      }
+    }
+  },
+  "prompts": {
+    "perception": {
+      "system": "你是多模态证据提取器。只提取当前媒体中可直接观察或读取、且与给定用户目标或目标岗位有关的事实。不得使用常识补全，不得生成职业规划，不得假设未提供的完整用户画像或职业知识。每条事实必须包含唯一 evidence_id、fact、supporting_detail、source_location 和 confidence；无法确认的内容写入 missing_fields，冲突写入 conflicts。不要输出思维过程。只输出符合 research_evidence.schema.json 的 zh-CN JSON，不得输出 Markdown。",
+      "initial_user_template": "user_goal={user_goal}\ntarget_role={target_role}\npacket_type=initial\nrequest_id=null\n请检查随消息提供的原始媒体，提取与目标直接相关的可观察事实。没有证据时保持 facts 为空并填写 missing_fields。",
+      "clarification_user_template": "user_goal={user_goal}\ntarget_role={target_role}\nrequest={request_evidence}\ncurrent_evidence={current_evidence}\npacket_type=delta\n请仅针对 request 再检查原始媒体。request_id 必须与请求一致；只返回新增或发生变化的事实，不重复 current_evidence。新观察若与已有事实冲突，应保留原事实并写入 conflicts；找不到新证据时保持 facts 为空并填写 missing_fields。"
+    },
+    "planning": {
+      "system": "你是职业规划推理器。只能使用本次输入中的用户目标、固定画像、固定职业知识以及当前媒体或结构化证据，不得编造经历、技能、证书或岗位要求。结论必须通过 evidence_used 和 knowledge_ids_used 标明依据；证据不足时设置 evidence_status=insufficient，填写 missing_evidence，并在 risk_flags 中说明限制。confidence 仅表示当前证据下的自评置信度，不是质量分。不要输出思维过程。只输出符合 research_plan.schema.json 的 zh-CN JSON，不得输出 Markdown 或额外文本。",
+      "common_user_template": "user_goal={user_goal}\nfixed_profile={fixed_profile}\nknowledge_snippets={knowledge_snippets}\ninput_payload={input_payload}\n请生成目标岗位、差距分析、30/90/180 天路线、学习资源、下一步行动、风险和用户建议。三个阶段必须依次为 30d、90d、180d，并包含 objective、deliverables 和 metrics。",
+      "raw_media_adapter": "输入模式为 raw_media。input_payload 是随消息提供的原始媒体。请直接检查媒体，在内部为引用到最终规划的可观察事实依次分配 f-1、f-2 等 evidence_ref，并在 evidence_used 中给出 fact、source_location 和 supports；不要额外输出证据包。",
+      "structured_evidence_adapter": "输入模式为 structured_evidence。input_payload 是 research_evidence.schema.json 证据包，你无法访问原始媒体。evidence_used 只能引用证据包中已有的 evidence_id；冲突证据应保守处理，缺失信息不得用常识补齐。"
+    },
+    "collaboration_decision": {
+      "system": "你是证据充分性控制器。只判断现有证据是否足以生成可靠职业规划，不生成规划内容，也不解释思维过程。证据足够时输出 action=final；仍缺少一个可由视觉感知器回答的决定性字段且尚有轮次时，只提出一个 request_evidence。只输出符合 research_decision.schema.json 的 zh-CN JSON，不得输出 Markdown。",
+      "user_template": "user_goal={user_goal}\ntarget_role={target_role}\ncurrent_evidence={current_evidence}\nrounds_remaining={rounds_remaining}\n若 rounds_remaining 为 0，必须输出 action=final：证据已经充分时使用 reason_code=evidence_sufficient，仍缺决定性证据时使用 reason_code=round_cap_reached。否则在 final 与一个最小、可定位的视觉证据请求之间选择；不得一次请求多个无关问题。"
+    }
+  },
+  "collaboration": {
+    "round_definition": "one_request_plus_one_perceiver_delta_response",
+    "decision_call_counts_as_round": false,
+    "request_target": "vision",
+    "clarification_response": "delta_only",
+    "append_new_evidence": true,
+    "preserve_conflicts": true,
+    "at_cap": "finalize_with_available_evidence_and_mark_insufficient_only_if_decisive_evidence_is_still_missing"
+  },
+  "formal_run_policy": {
+    "response_parser": "json.loads_then_json_schema",
+    "strip_markdown_fences": false,
+    "automatic_json_repair": false,
+    "format_retry_count": 0,
+    "save_raw_invalid_output": true,
+    "invalid_output_effective_quality_score": 1,
+    "run_metadata_outside_model_output": true
+  },
+  "evaluation": {
+    "blind_raters": 2,
+    "score_min": 1,
+    "score_max": 5,
+    "dimensions": [
+      "evidence_faithfulness",
+      "career_relevance",
+      "actionability",
+      "completeness",
+      "detail_adaptation"
+    ],
+    "primary_metric": "effective_five_dimension_mean",
+    "evidence_guardrail": "evidence_faithfulness",
+    "adjudicate_when_dimension_difference_greater_than": 1,
+    "pilot": {
+      "case_count": 6,
+      "candidate_round_caps": [2, 3],
+      "select_three_only_if_all": {
+        "new_failures_or_invalid_json": 0,
+        "minimum_evidence_mean_gain": 0.5,
+        "minimum_five_dimension_mean_gain": 0.25,
+        "minimum_cases_improved": 3,
+        "maximum_single_case_evidence_drop": 1.0
+      },
+      "exclude_from_primary_comparison": true
+    },
+    "primary_comparison": {
+      "case_count": 20,
+      "group_count": 3,
+      "total_runs": 60
+    }
+  }
+}

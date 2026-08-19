@@ -30,7 +30,7 @@ part of this publication and requires a later explicit merge decision.
 
 | Owner | Integrated deliverable | Dependency/deadline | Acceptance | Next action |
 |---|---|---|---|---|
-| Project lead | Canonical MVP, privacy, experiments, repository cleanup, final integration | Member branches by 2026-08-21 | Full tests pass; diff contains no secrets/runtime data | Freeze evaluation contracts and review all three member branches |
+| Project lead | Canonical MVP, privacy, experiments, repository cleanup, final integration | Member branches by 2026-08-21 | Full tests pass; diff contains no secrets/runtime data | Evaluation contracts complete; review all three member branches |
 | Member A | CLI/session/logging skeleton and smoke-flow idea | Frozen experiment protocol | Adapted pipeline events are redacted and covered by end-to-end/log tests | Build the offline architecture runner and bounded controller |
 | Member B | DeepSeek baseline, structured failures, retry/schema tests | Authorized L20 access | Typed errors and retries remain covered; no model downloads occur on Windows | Record L20 environment and prepare local-model adapters |
 | Member C | 20 career records, follow-up rules, three retrieval cases | Public sources and redistributable case assets | 65 unique roles and three target-role retrieval cases pass | Verify source URLs and deliver the six-case pilot set |
@@ -57,11 +57,23 @@ error, completed evidence, and next action instead of substituting unverified
 results. Training, audio, the 20-case full run, and direct `main` changes are
 outside these two days.
 
+### Project Lead Status
+
+Day 1 is complete on local branch `work/lead-evaluation`: case, evidence,
+decision, and plan Schemas; the hashed prompt/runtime protocol; five-dimension
+rubric; round-cap rule; durable decision log; and integration checklist are
+written and covered by 11 contract tests. Day 2 is dependency-blocked until
+member A/B/C push reviewable branches; then the lead uses
+`docs/integration-review-checklist.md` and records accept/revise/blocked
+decisions separately for each branch.
+
 ## Verification Evidence
 
-- Default `.venv`: 62 discovered; 60 passed; 2 API tests skipped because the
+- Default `.venv`: 73 discovered; 71 passed; 2 API tests skipped because the
   core profile intentionally omits FastAPI.
-- Existing `agents` Conda environment: all 62 tests passed, including API tests.
+- Existing `agents` Conda environment: all 73 tests passed, including API tests.
+- All four Draft 2020-12 research Schemas passed `jsonschema` meta-schema
+  validation in the existing `agents` environment.
 - `compileall`, CLI help, and `git diff --check`: passed.
 - Offline harness: eight rows written to JSON and CSV.
 - User-run live evidence: the 2026-08-18 18:45 UTC record uses
@@ -81,11 +93,15 @@ outside these two days.
   decisive evidence is not duplicated in the fixed text profile.
 - Pilot: six shared cases with two- and three-round caps. Freeze one cap before
   the 20-case, three-group comparison. Study `0/1/2/3` rounds separately later.
+- Runtime: greedy decoding, 2,048 output tokens, BF16, 144-DPI PDF rendering,
+  and 256–1,280 visual tokens. Exact model revisions remain pending L20 freeze.
 - Execution: download research weights and run real comparisons only on the
   networked 48 GB L20 Ubuntu host. The exact Ubuntu version must be captured
   before setup; no research weights are downloaded on this Windows machine.
-- Status: protocol documentation is complete. Experiment adapters, case
-  manifest, model downloads, inference runs, and human scores do not yet exist.
+- Status: protocol documentation and machine-readable contracts are complete.
+  Experiment adapters, case manifest, model downloads, inference runs, and
+  human scores do not yet exist. Confirmed and superseding choices are retained
+  in `docs/research-decisions.md`.
 
 ## Next Actions
 
