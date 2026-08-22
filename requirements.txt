@@ -2,6 +2,7 @@
 httpx>=0.24,<1
 pydantic>=2,<3
 pydantic-settings>=2,<3
+jsonschema>=4.22,<5
 python-dotenv>=1,<2
 pypdf>=3,<7
 python-docx>=0.8,<2

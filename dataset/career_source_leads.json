@@ -1,0 +1,715 @@
+{
+  "schema_version": "career-source-leads-v1",
+  "reviewed_at": "2026-08-22",
+  "purpose": "成员C提交的职业来源线索规范化副本，不作为正式实验真值。",
+  "records": [
+    {
+      "role": "大模型算法工程师",
+      "candidate_profile": {
+        "required_skills": [
+          "深度学习",
+          "PyTorch/TensorFlow",
+          "Transformer架构",
+          "数据开发",
+          "Python/C++"
+        ],
+        "suitable_majors": [
+          "计算机科学与技术",
+          "人工智能",
+          "软件工程",
+          "数学"
+        ],
+        "career_path": "算法工程师→高级算法工程师→算法专家/技术负责人"
+      },
+      "source_lead": {
+        "attribution": "脉脉高聘人才智库《2025春招职场安全感洞察》",
+        "title": "《脉脉春招报告：大模型算法平均月薪6.8万元 智能硬件、电商新零售行业连续两年人才净流入》",
+        "publisher": "每经网",
+        "url": "https://m.nbd.com.cn/rss/xingye_zhengquan/articles/3804085.html#1",
+        "publish_date": "2025-03-25",
+        "source_type": "二手报道"
+      },
+      "review": {
+        "status": "provenance_lead_only",
+        "member_reported_status": "verified",
+        "member_claimed_supported_fields": [
+          "岗位名称",
+          "技能",
+          "发展路径"
+        ],
+        "verified_fields": [],
+        "note": "URL或报道只能作为来源线索；正式实验使用前需逐字段保存原文位置或证据摘录。"
+      }
+    },
+    {
+      "role": "算法工程师",
+      "candidate_profile": {
+        "required_skills": [
+          "机器学习",
+          "数据开发",
+          "Python/Java",
+          "算法设计与优化"
+        ],
+        "suitable_majors": [
+          "计算机科学与技术",
+          "数学",
+          "统计学",
+          "电子信息"
+        ],
+        "career_path": "初级算法工程师→中级算法工程师→高级算法工程师/算法架构师"
+      },
+      "source_lead": {
+        "attribution": "智联招聘《2025年四季度人才市场热点快报》",
+        "title": "《报告：2025年四季度算法工程师需求同比增110.1%》",
+        "publisher": "中新经纬",
+        "url": "https://www.jwview.com/jingwei/html/m/01-14/654208.shtml",
+        "publish_date": "2026-01-14",
+        "source_type": "行业报告"
+      },
+      "review": {
+        "status": "provenance_lead_only",
+        "member_reported_status": "verified",
+        "member_claimed_supported_fields": [
+          "岗位名称",
+          "技能",
+          "发展路径"
+        ],
+        "verified_fields": [],
+        "note": "URL或报道只能作为来源线索；正式实验使用前需逐字段保存原文位置或证据摘录。"
+      }
+    },
+    {
+      "role": "AI Agent工程师",
+      "candidate_profile": {
+        "required_skills": [
+          "LangChain/AutoGen/LiteLLM",
+          "Python",
+          "AI应用构建与系统集成",
+          "MES/ERP数据对接"
+        ],
+        "suitable_majors": [
+          "计算机",
+          "人工智能",
+          "软件工程"
+        ],
+        "career_path": "AI Agent开发工程师→高级AI工程师→AI技术负责人"
+      },
+      "source_lead": {
+        "attribution": "2025无锡市“百企千才高校行”厦门大学专场招聘会",
+        "title": "2025无锡市“百企千才高校行”厦门大学专场招聘会",
+        "publisher": "无锡市政府/厦门大学",
+        "url": "https://job.xmut.edu.cn/info/1008/11323.htm",
+        "publish_date": "2025-12-26",
+        "source_type": "官方招聘"
+      },
+      "review": {
+        "status": "provenance_lead_only",
+        "member_reported_status": "verified",
+        "member_claimed_supported_fields": [
+          "岗位名称",
+          "专业"
+        ],
+        "verified_fields": [],
+        "note": "URL或报道只能作为来源线索；正式实验使用前需逐字段保存原文位置或证据摘录。"
+      }
+    },
+    {
+      "role": "AI科学家/负责人",
+      "candidate_profile": {
+        "required_skills": [
+          "AI前沿研究",
+          "大模型训练与优化",
+          "团队管理",
+          "跨模态理解"
+        ],
+        "suitable_majors": [
+          "计算机科学",
+          "人工智能",
+          "数学",
+          "物理学（博士优先）"
+        ],
+        "career_path": "AI研究员→资深AI科学家→AI负责人/首席科学家"
+      },
+      "source_lead": {
+        "attribution": "36氪《2025年职场红利盘点》",
+        "title": "《2025年职场红利盘点：在这些赛道里，捡回“上行”信心（全文版）》",
+        "publisher": "36氪职场Bonus",
+        "url": "https://36kr.com/p/3602071123936263",
+        "publish_date": "2025-12-19",
+        "source_type": "二手报道"
+      },
+      "review": {
+        "status": "provenance_lead_only",
+        "member_reported_status": "verified",
+        "member_claimed_supported_fields": [
+          "岗位名称",
+          "发展路径"
+        ],
+        "verified_fields": [],
+        "note": "URL或报道只能作为来源线索；正式实验使用前需逐字段保存原文位置或证据摘录。"
+      }
+    },
+    {
+      "role": "嵌入式软件开发工程师",
+      "candidate_profile": {
+        "required_skills": [
+          "C/C++",
+          "嵌入式Linux",
+          "硬件驱动开发",
+          "RTOS"
+        ],
+        "suitable_majors": [
+          "计算机科学",
+          "电子信息工程",
+          "自动化",
+          "通信工程"
+        ],
+        "career_path": "嵌入式初级工程师→嵌入式软件工程师→嵌入式架构师"
+      },
+      "source_lead": {
+        "attribution": "智联招聘四季度报告",
+        "title": "《报告：2025年四季度算法工程师需求同比增110.1%》",
+        "publisher": "中新经纬",
+        "url": "https://www.jwview.com/jingwei/html/m/01-14/654208.shtml",
+        "publish_date": "2026-01-14",
+        "source_type": "行业报告"
+      },
+      "review": {
+        "status": "provenance_lead_only",
+        "member_reported_status": "verified",
+        "member_claimed_supported_fields": [
+          "岗位名称",
+          "技能"
+        ],
+        "verified_fields": [],
+        "note": "URL或报道只能作为来源线索；正式实验使用前需逐字段保存原文位置或证据摘录。"
+      }
+    },
+    {
+      "role": "硬件工程师",
+      "candidate_profile": {
+        "required_skills": [
+          "电路设计",
+          "EDA工具",
+          "单相/三相/储能机种维护",
+          "白盒测试"
+        ],
+        "suitable_majors": [
+          "电子电力",
+          "电气自动化",
+          "新能源储能"
+        ],
+        "career_path": "助理硬件工程师→硬件工程师→高级硬件工程师/硬件经理"
+      },
+      "source_lead": {
+        "attribution": "2025无锡市“百企千才高校行”招聘",
+        "title": "2025无锡市“百企千才高校行”厦门大学专场招聘会",
+        "publisher": "无锡市政府/厦门大学",
+        "url": "https://job.xmut.edu.cn/info/1008/11323.htm",
+        "publish_date": "2025-12-26",
+        "source_type": "官方招聘"
+      },
+      "review": {
+        "status": "provenance_lead_only",
+        "member_reported_status": "verified",
+        "member_claimed_supported_fields": [
+          "岗位名称",
+          "技能"
+        ],
+        "verified_fields": [],
+        "note": "URL或报道只能作为来源线索；正式实验使用前需逐字段保存原文位置或证据摘录。"
+      }
+    },
+    {
+      "role": "运维工程师",
+      "candidate_profile": {
+        "required_skills": [
+          "阿里云等云平台运维",
+          "K8S",
+          "Jenkins",
+          "Grafana",
+          "网络VPN运维"
+        ],
+        "suitable_majors": [
+          "计算机",
+          "电力电子",
+          "电气自动化"
+        ],
+        "career_path": "初级运维→运维工程师→高级运维/运维架构师"
+      },
+      "source_lead": {
+        "attribution": "2025无锡市“百企千才高校行”招聘",
+        "title": "2025无锡市“百企千才高校行”厦门大学专场招聘会",
+        "publisher": "无锡市政府/厦门大学",
+        "url": "https://job.xmut.edu.cn/info/1008/11323.htm",
+        "publish_date": "2025-12-26",
+        "source_type": "官方招聘"
+      },
+      "review": {
+        "status": "provenance_lead_only",
+        "member_reported_status": "verified",
+        "member_claimed_supported_fields": [
+          "岗位名称",
+          "技能"
+        ],
+        "verified_fields": [],
+        "note": "URL或报道只能作为来源线索；正式实验使用前需逐字段保存原文位置或证据摘录。"
+      }
+    },
+    {
+      "role": "Java软件工程师",
+      "candidate_profile": {
+        "required_skills": [
+          "Java",
+          "Spring Boot",
+          "J2EE",
+          "数据结构",
+          "操作系统"
+        ],
+        "suitable_majors": [
+          "计算机科学与技术",
+          "软件工程",
+          "电子信息类",
+          "计算机类"
+        ],
+        "career_path": "初级Java开发→中级Java开发→高级开发/技术经理"
+      },
+      "source_lead": {
+        "attribution": "OPPO 2025届秋季校园招聘",
+        "title": "软件工程师",
+        "publisher": "重庆大学毕业生就业信息网",
+        "url": "https://cqu.cqbys.com/job/view/id/1353734",
+        "publish_date": "2025-09-04",
+        "source_type": "官方招聘"
+      },
+      "review": {
+        "status": "provenance_lead_only",
+        "member_reported_status": "verified",
+        "member_claimed_supported_fields": [
+          "岗位名称",
+          "技能",
+          "专业"
+        ],
+        "verified_fields": [],
+        "note": "URL或报道只能作为来源线索；正式实验使用前需逐字段保存原文位置或证据摘录。"
+      }
+    },
+    {
+      "role": "数据分析师",
+      "candidate_profile": {
+        "required_skills": [
+          "SQL",
+          "Python",
+          "数据分析",
+          "数据处理"
+        ],
+        "suitable_majors": [
+          "计算机科学与技术",
+          "软件工程",
+          "信息管理与信息系统",
+          "电子信息"
+        ],
+        "career_path": "助理数据分析师→数据分析师→高级数据分析师/数据科学家"
+      },
+      "source_lead": {
+        "attribution": "星环科技2025届秋季校园招聘",
+        "title": "星环科技2025届秋季校园招聘简章",
+        "publisher": "北京大学学生就业指导服务中心",
+        "url": "https://scc.pku.edu.cn/frontpage/pku/html/recruitmentinfoForm.html?positionDetailId=22e903459081ee920190e4d4b9432031",
+        "publish_date": "2024-07-24",
+        "source_type": "官方招聘"
+      },
+      "review": {
+        "status": "provenance_lead_only",
+        "member_reported_status": "verified",
+        "member_claimed_supported_fields": [
+          "岗位名称"
+        ],
+        "verified_fields": [],
+        "note": "URL或报道只能作为来源线索；正式实验使用前需逐字段保存原文位置或证据摘录。"
+      }
+    },
+    {
+      "role": "AI产品经理",
+      "candidate_profile": {
+        "required_skills": [
+          "AI技术理解",
+          "产品规划",
+          "Axure/MasterGo",
+          "市场洞察",
+          "数据分析"
+        ],
+        "suitable_majors": [
+          "软件工程",
+          "人工智能",
+          "计算机",
+          "产品设计"
+        ],
+        "career_path": "助理产品经理→AI产品经理→高级产品经理/产品总监"
+      },
+      "source_lead": {
+        "attribution": "脉脉《2025年度人才迁徙报告》",
+        "title": "《2025年度人才迁徙报告》",
+        "publisher": "脉脉高聘人才智库",
+        "url": "https://www3.xinhuanet.com/tech/20251215/db15c57301044b78b55b9d4c30a4e93b/c.html",
+        "publish_date": "2025",
+        "source_type": "未核验"
+      },
+      "review": {
+        "status": "provenance_lead_only",
+        "member_reported_status": "unverified",
+        "member_claimed_supported_fields": [
+          "岗位名称"
+        ],
+        "verified_fields": [],
+        "note": "URL或报道只能作为来源线索；正式实验使用前需逐字段保存原文位置或证据摘录。"
+      }
+    },
+    {
+      "role": "金融科技分析师/风控岗",
+      "candidate_profile": {
+        "required_skills": [
+          "逻辑回归/决策树等机器学习算法",
+          "Python/R/SQL",
+          "数据分析与建模"
+        ],
+        "suitable_majors": [
+          "金融工程",
+          "金融数学",
+          "统计学",
+          "计算机科学"
+        ],
+        "career_path": "金融科技助理→金融科技分析师→风控专家/数据科学负责人"
+      },
+      "source_lead": {
+        "attribution": "交大高金《金融科技人才求职红宝书2025》",
+        "title": "上海交大高金发布《金融科技人才求职红宝书2025》",
+        "publisher": "教育星球",
+        "url": "https://www.jfdaily.com/wx/detail.do?id=1002462",
+        "publish_date": "2025-10-20",
+        "source_type": "行业报告"
+      },
+      "review": {
+        "status": "provenance_lead_only",
+        "member_reported_status": "verified",
+        "member_claimed_supported_fields": [
+          "岗位名称",
+          "专业"
+        ],
+        "verified_fields": [],
+        "note": "URL或报道只能作为来源线索；正式实验使用前需逐字段保存原文位置或证据摘录。"
+      }
+    },
+    {
+      "role": "人工智能专家（金融方向）",
+      "candidate_profile": {
+        "required_skills": [
+          "人工智能项目实践",
+          "团队管理",
+          "金融场景AI落地",
+          "计算机科学/信息安全"
+        ],
+        "suitable_majors": [
+          "计算机科学",
+          "软件工程",
+          "信息安全",
+          "统计学",
+          "人工智能"
+        ],
+        "career_path": "AI工程师→AI专家→AI团队负责人/技术总监"
+      },
+      "source_lead": {
+        "attribution": "浦发银行总行科技发展部招聘",
+        "title": "总行招聘岗位列表",
+        "publisher": "浦发银行",
+        "url": "https://job.spdb.com.cn/noticeDetail?id=608202100000054519",
+        "publish_date": "2026-08-20",
+        "source_type": "官方招聘"
+      },
+      "review": {
+        "status": "provenance_lead_only",
+        "member_reported_status": "verified",
+        "member_claimed_supported_fields": [
+          "岗位名称"
+        ],
+        "verified_fields": [],
+        "note": "URL或报道只能作为来源线索；正式实验使用前需逐字段保存原文位置或证据摘录。"
+      }
+    },
+    {
+      "role": "高分子材料工程师",
+      "candidate_profile": {
+        "required_skills": [
+          "高分子材料研发",
+          "材料分析与测试",
+          "系统科研训练"
+        ],
+        "suitable_majors": [
+          "材料科学与工程",
+          "高分子材料",
+          "化学工程"
+        ],
+        "career_path": "助理材料工程师→材料工程师→高级材料工程师/研发经理"
+      },
+      "source_lead": {
+        "attribution": "智联招聘《2025年四季度人才市场热点快报》",
+        "title": "《2025年四季度人才市场热点快报》",
+        "publisher": "智联招聘",
+        "url": "https://cos.hrtools.club/6/58667/pdf/17726244620232cd21659811d61a031323430b1d62a86.pdf",
+        "publish_date": "2026-01-14",
+        "source_type": "未核验"
+      },
+      "review": {
+        "status": "provenance_lead_only",
+        "member_reported_status": "unverified",
+        "member_claimed_supported_fields": [
+          "岗位名称"
+        ],
+        "verified_fields": [],
+        "note": "URL或报道只能作为来源线索；正式实验使用前需逐字段保存原文位置或证据摘录。"
+      }
+    },
+    {
+      "role": "无人机工程师",
+      "candidate_profile": {
+        "required_skills": [
+          "无人机系统设计",
+          "飞控算法",
+          "巡检/安防/农业应用场景开发"
+        ],
+        "suitable_majors": [
+          "航空航天工程",
+          "自动化",
+          "机械电子工程",
+          "计算机"
+        ],
+        "career_path": "助理无人机工程师→无人机工程师→高级无人机工程师/技术总监"
+      },
+      "source_lead": {
+        "attribution": "智联招聘《2025年四季度人才市场热点快报》",
+        "title": "《2025年四季度人才市场热点快报》",
+        "publisher": "智联招聘",
+        "url": "https://hzdaily.hangzhou.com.cn/hzrb/2026/01/29/article_detail_1_20260129A098.html",
+        "publish_date": "2026-01-14",
+        "source_type": "未核验"
+      },
+      "review": {
+        "status": "provenance_lead_only",
+        "member_reported_status": "unverified",
+        "member_claimed_supported_fields": [
+          "岗位名称"
+        ],
+        "verified_fields": [],
+        "note": "URL或报道只能作为来源线索；正式实验使用前需逐字段保存原文位置或证据摘录。"
+      }
+    },
+    {
+      "role": "机器人算法工程师",
+      "candidate_profile": {
+        "required_skills": [
+          "机器人算法",
+          "仿真环境搭建",
+          "VLM",
+          "Python/C++"
+        ],
+        "suitable_majors": [
+          "计算机",
+          "自动化",
+          "机器人",
+          "数学"
+        ],
+        "career_path": "算法工程师→高级算法工程师→算法负责人"
+      },
+      "source_lead": {
+        "attribution": "浪潮（北京）电子信息产业有限公司招聘",
+        "title": "浪潮信息 26届校园招聘",
+        "publisher": "浪潮（北京）电子信息产业有限公司",
+        "url": "https://job.ustb.edu.cn/frontpage/ustb/html/recruitmentinfoForm.html?positionDetailId=27e903196cd349f78bcb4e0c9f70544e",
+        "publish_date": "2025-09-17",
+        "source_type": "官方招聘"
+      },
+      "review": {
+        "status": "provenance_lead_only",
+        "member_reported_status": "verified",
+        "member_claimed_supported_fields": [
+          "岗位名称",
+          "技能",
+          "专业"
+        ],
+        "verified_fields": [],
+        "note": "URL或报道只能作为来源线索；正式实验使用前需逐字段保存原文位置或证据摘录。"
+      }
+    },
+    {
+      "role": "储能结构工程师",
+      "candidate_profile": {
+        "required_skills": [
+          "电池储能产品结构设计",
+          "机械设计",
+          "钣金/塑料材料工艺",
+          "电池PACK/集装箱设计"
+        ],
+        "suitable_majors": [
+          "机械类",
+          "机械工程",
+          "机械制造及其自动化"
+        ],
+        "career_path": "结构设计助理→储能结构工程师→高级结构工程师/研发经理"
+      },
+      "source_lead": {
+        "attribution": "格力钛新能源股份有限公司2025届校园招聘",
+        "title": "格力钛新能源股份有限公司校园招聘——储能结构工程师",
+        "publisher": "格力钛新能源股份有限公司/新疆大学就业网",
+        "url": "https://job.xju.edu.cn/Web/Employ/NetEmployDetails?0tp1Cd1pH0Rp3lbKXyuk68En69OloyHqDIiCf2f8WL4=.shtml",
+        "publish_date": "2025",
+        "source_type": "官方招聘"
+      },
+      "review": {
+        "status": "provenance_lead_only",
+        "member_reported_status": "verified",
+        "member_claimed_supported_fields": [
+          "岗位名称",
+          "技能",
+          "专业",
+          "发展路径"
+        ],
+        "verified_fields": [],
+        "note": "URL或报道只能作为来源线索；正式实验使用前需逐字段保存原文位置或证据摘录。"
+      }
+    },
+    {
+      "role": "骨科医师",
+      "candidate_profile": {
+        "required_skills": [
+          "中医骨伤科学",
+          "临床诊断与治疗",
+          "住院医师规范化培训"
+        ],
+        "suitable_majors": [
+          "中医骨伤科学",
+          "临床医学"
+        ],
+        "career_path": "住院医师→主治医师→副主任/主任医师"
+      },
+      "source_lead": {
+        "attribution": "佛山市中医院三水医院2025年度招聘",
+        "title": "佛山市中医院三水医院2025年度招聘工作人员的岗位及任职要求",
+        "publisher": "佛山市中医院三水医院",
+        "url": "https://www.sszyy.com.cn/sdk/editor/attached/file/20250205/20250205172164666466.pdf",
+        "publish_date": null,
+        "source_type": "官方招聘"
+      },
+      "review": {
+        "status": "provenance_lead_only",
+        "member_reported_status": "verified",
+        "member_claimed_supported_fields": [
+          "岗位名称",
+          "专业"
+        ],
+        "verified_fields": [],
+        "note": "URL或报道只能作为来源线索；正式实验使用前需逐字段保存原文位置或证据摘录。"
+      }
+    },
+    {
+      "role": "妇产科医师",
+      "candidate_profile": {
+        "required_skills": [
+          "妇产科临床诊疗",
+          "遗传学知识",
+          "科研论文发表",
+          "医师资格证"
+        ],
+        "suitable_majors": [
+          "临床医学（博士优先）"
+        ],
+        "career_path": "住院医师→主治医师→副主任/主任医师"
+      },
+      "source_lead": {
+        "attribution": "重庆医科大学附属第二医院2025年度招聘",
+        "title": "重庆医科大学附属第二医院2025年度招聘",
+        "publisher": "重庆医科大学附属第二医院",
+        "url": "https://www.cqyz.gov.cn/bm_229/qrlsbj/zwxx_97154/dt/202503/P020250319601427866519.pdf",
+        "publish_date": "2025-02-08",
+        "source_type": "未核验"
+      },
+      "review": {
+        "status": "provenance_lead_only",
+        "member_reported_status": "unverified",
+        "member_claimed_supported_fields": [
+          "岗位名称"
+        ],
+        "verified_fields": [],
+        "note": "URL或报道只能作为来源线索；正式实验使用前需逐字段保存原文位置或证据摘录。"
+      }
+    },
+    {
+      "role": "AI素养方向信息技术教师",
+      "candidate_profile": {
+        "required_skills": [
+          "人工智能教学",
+          "学科竞赛指导",
+          "信息技术课程设计"
+        ],
+        "suitable_majors": [
+          "信息技术",
+          "计算机科学",
+          "教育技术"
+        ],
+        "career_path": "信息技术教师→学科组长→教学主任"
+      },
+      "source_lead": {
+        "attribution": "2025年冬季长三角联合师资招聘专场",
+        "title": "《这场长三角师资招聘传递新信号：有AI素养、“一专多能”复合型教师成香饽饽》",
+        "publisher": "上观新闻",
+        "url": "https://www.jfdaily.com/wx/detail.do?id=1002236",
+        "publish_date": "2025-10-19",
+        "source_type": "二手报道"
+      },
+      "review": {
+        "status": "provenance_lead_only",
+        "member_reported_status": "verified",
+        "member_claimed_supported_fields": [
+          "岗位名称",
+          "技能"
+        ],
+        "verified_fields": [],
+        "note": "URL或报道只能作为来源线索；正式实验使用前需逐字段保存原文位置或证据摘录。"
+      }
+    },
+    {
+      "role": "医药研发管理岗",
+      "candidate_profile": {
+        "required_skills": [
+          "药物合成研发",
+          "医药研发项目管理",
+          "团队协调"
+        ],
+        "suitable_majors": [
+          "药学",
+          "化学",
+          "生物医药",
+          "制药工程"
+        ],
+        "career_path": "研发专员→研发主管→研发经理/总监"
+      },
+      "source_lead": {
+        "attribution": "2025天津市制造业新质生产力人才需求目录",
+        "title": "《天津市制造业新质生产力人才需求目录（2025）》",
+        "publisher": "天津市人力资源和社会保障局",
+        "url": "https://hrss.tj.gov.cn/jsdw/yjrczhfwzx/zcyjdnew/202603/t20260310_7258975.html",
+        "publish_date": "2026-03-10",
+        "source_type": "政府目录"
+      },
+      "review": {
+        "status": "provenance_lead_only",
+        "member_reported_status": "verified",
+        "member_claimed_supported_fields": [
+          "岗位名称",
+          "发展路径"
+        ],
+        "verified_fields": [],
+        "note": "URL或报道只能作为来源线索；正式实验使用前需逐字段保存原文位置或证据摘录。"
+      }
+    }
+  ]
+}

@@ -21,6 +21,12 @@ uploads, logs, and experiment outputs belong in ignored `data/`.
   prompts and hashes, collaboration caps, strict failure policy, and scoring
   thresholds. Human-readable decision history is in
   `docs/research-decisions.md`.
+- `research_cases/pilot_cases.json`: six Schema-valid pilot cases (three PNG
+  images and three single-page PDFs) with project-created anonymous assets,
+  fixed profiles, fixed knowledge, licenses, hashes, and expected evidence.
+- `career_source_leads.json`: normalized source leads from member research.
+  Candidate skills and paths remain unverified until a reviewer records a
+  field-level excerpt or source location; this file is not experiment truth.
 - `career_coaching_dataset.jsonl`: anonymized coaching conversations, one JSON
   object per line, retained for later experiments.
 - `career.json`: legacy career conversations retained until their consumers
@@ -28,10 +34,10 @@ uploads, logs, and experiment outputs belong in ignored `data/`.
 
 Source labels added from team research are provenance leads, not proof that
 facts or salary ranges have been independently verified. Verify sources and
-record URLs before using them as formal experimental ground truth. Append new
-roles instead of reordering existing entries so generated IDs remain stable.
-Member C cases under `dataset/research_cases/` must follow the case schema;
-only the project lead may approve protocol changes.
+record field-level excerpts before using them as formal experimental ground
+truth. Append new roles instead of reordering existing entries so generated
+IDs remain stable. Cases under `dataset/research_cases/` must follow the case
+schema; only the project lead may approve protocol changes.
 
 Do not store API keys, raw resumes, names, student IDs, phone numbers, emails,
 accounts, or private local paths here.

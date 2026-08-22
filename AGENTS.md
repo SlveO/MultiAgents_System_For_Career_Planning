@@ -10,6 +10,8 @@ Install the text/document MVP with `pip install -r requirements.txt`. Use `requi
 
 Run `python -m project.assistant_cli --help`, `python -m unittest discover -s project/tests -v`, and `python -m compileall -q project` before handoff. Run the deterministic four-group harness with `python -m project.experiments.run_completion_experiments --output-dir data/experiments`. Frontend changes require `cd web; npm run build`.
 
+Validate the six-case research plumbing with `python -m project.experiments.run_architecture_experiments --round-cap 2 --output-dir data/experiments/architecture`. Its Fake output is interface evidence only; real model execution follows `docs/member-b-l20-agent-handoff.md` on the L20.
+
 ## Style and Testing
 
 Use four-space Python indentation, `snake_case` for Python symbols, `PascalCase` for React components, and `camelCase` for TypeScript variables. Keep canonical Pydantic fields defined in `project/core/schemas.py`; adapt incoming legacy fields at boundaries instead of creating parallel schemas. Tests use `unittest`; name files and methods `test_*`. Mock network/model calls in automated tests. Keep optional GPU imports lazy so the core profile remains runnable without `torch`.

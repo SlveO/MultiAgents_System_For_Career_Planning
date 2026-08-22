@@ -1,0 +1,404 @@
+{
+  "schema_version": "research-case-manifest-v1",
+  "cases": [
+    {
+      "schema_version": "research-case-v1",
+      "case_id": "image-001",
+      "sets": ["pilot"],
+      "modality": "image",
+      "asset_path": "dataset/research_cases/assets/image-001.png",
+      "asset_sha256": "fb70d0124917ff6a23988dca5bdce22f19ca2215957f5319d39f74d016df4ce5",
+      "source": {
+        "source_type": "self_created",
+        "source_url": "repository://dataset/research_cases/assets/image-001.png",
+        "license": "CC0-1.0; project-created synthetic fixture"
+      },
+      "user_goal": "申请数据分析实习并形成可展示的求职材料。",
+      "fixed_profile": {
+        "education_stage": "本科大三",
+        "major": "统计学",
+        "skills": ["Python", "描述性统计"],
+        "interests": ["业务数据分析", "可视化表达"],
+        "target_role": "数据分析师",
+        "time_budget_hours_per_week": 10,
+        "preference": "互联网或零售行业实习",
+        "main_constraints": ["没有正式实习经历", "作品集内容较少"]
+      },
+      "knowledge_snippets": [
+        {
+          "knowledge_id": "career-002",
+          "text": "数据分析岗位规划应把业务问题、分析过程和可核验成果连接起来。"
+        }
+      ],
+      "expected_evidence": [
+        {
+          "evidence_id": "ev-1",
+          "fact": "岗位材料明确要求 SQL 查询能力。",
+          "location_hint": "第 1 个编号卡片",
+          "career_implication": "学习计划必须包含 SQL 查询练习。",
+          "required_for_plan": true
+        },
+        {
+          "evidence_id": "ev-2",
+          "fact": "申请材料需要一个仪表盘作品。",
+          "location_hint": "第 2 个编号卡片",
+          "career_implication": "作品集阶段应交付可展示仪表盘。",
+          "required_for_plan": true
+        },
+        {
+          "evidence_id": "ev-3",
+          "fact": "岗位任务包含每周指标报告。",
+          "location_hint": "第 3 个编号卡片",
+          "career_implication": "训练应覆盖周期性指标复盘。",
+          "required_for_plan": true
+        },
+        {
+          "evidence_id": "ev-4",
+          "fact": "岗位面向在读本科生。",
+          "location_hint": "第 4 个编号卡片",
+          "career_implication": "当前教育阶段符合申请范围。",
+          "required_for_plan": true
+        }
+      ],
+      "scoring_notes": {
+        "acceptable_inferences": ["建议以一个仪表盘项目同时展示 SQL 和指标复盘能力"],
+        "forbidden_assumptions": ["不得假设用户已有 SQL、仪表盘或实习经验"]
+      },
+      "decisive_evidence_not_in_text": true,
+      "privacy_reviewed": true
+    },
+    {
+      "schema_version": "research-case-v1",
+      "case_id": "image-002",
+      "sets": ["pilot"],
+      "modality": "image",
+      "asset_path": "dataset/research_cases/assets/image-002.png",
+      "asset_sha256": "5bb9396f1521ec0da4fcade4d44dfc58396efa9d3e9363aa6b0a91014b24730b",
+      "source": {
+        "source_type": "self_created",
+        "source_url": "repository://dataset/research_cases/assets/image-002.png",
+        "license": "CC0-1.0; project-created synthetic fixture"
+      },
+      "user_goal": "从通用软件学习转向嵌入式软件开发岗位。",
+      "fixed_profile": {
+        "education_stage": "本科大二",
+        "major": "电子信息工程",
+        "skills": ["Python", "数字电路基础"],
+        "interests": ["设备控制", "软硬件协同"],
+        "target_role": "嵌入式软件开发工程师",
+        "time_budget_hours_per_week": 12,
+        "preference": "智能硬件行业",
+        "main_constraints": ["尚无完整工程项目", "调试经验不足"]
+      },
+      "knowledge_snippets": [
+        {
+          "knowledge_id": "career-016",
+          "text": "嵌入式软件岗位规划应使用可运行项目证明软件与设备协同能力。"
+        }
+      ],
+      "expected_evidence": [
+        {
+          "evidence_id": "ev-1",
+          "fact": "岗位要求掌握 C 或 C++。",
+          "location_hint": "第 1 个编号卡片",
+          "career_implication": "应安排 C/C++ 基础与工程练习。",
+          "required_for_plan": true
+        },
+        {
+          "evidence_id": "ev-2",
+          "fact": "岗位要求使用 FreeRTOS。",
+          "location_hint": "第 2 个编号卡片",
+          "career_implication": "项目应覆盖实时操作系统任务调度。",
+          "required_for_plan": true
+        },
+        {
+          "evidence_id": "ev-3",
+          "fact": "岗位涉及 UART、I2C 和 SPI 接口。",
+          "location_hint": "第 3 个编号卡片",
+          "career_implication": "调试训练应覆盖三类常见外设接口。",
+          "required_for_plan": true
+        },
+        {
+          "evidence_id": "ev-4",
+          "fact": "申请材料需要公开 Git 项目仓库。",
+          "location_hint": "第 4 个编号卡片",
+          "career_implication": "路线必须包含可复现的代码仓库交付。",
+          "required_for_plan": true
+        }
+      ],
+      "scoring_notes": {
+        "acceptable_inferences": ["可建议用单个开发板项目串联语言、RTOS 与接口训练"],
+        "forbidden_assumptions": ["不得假设用户已掌握 C/C++、FreeRTOS 或外设接口"]
+      },
+      "decisive_evidence_not_in_text": true,
+      "privacy_reviewed": true
+    },
+    {
+      "schema_version": "research-case-v1",
+      "case_id": "image-003",
+      "sets": ["pilot"],
+      "modality": "image",
+      "asset_path": "dataset/research_cases/assets/image-003.png",
+      "asset_sha256": "daca35933770d967d79b14e782245f75ae62114d21b54ec24a15e28a450d0d64",
+      "source": {
+        "source_type": "self_created",
+        "source_url": "repository://dataset/research_cases/assets/image-003.png",
+        "license": "CC0-1.0; project-created synthetic fixture"
+      },
+      "user_goal": "准备 AI 产品经理方向的校招作品集。",
+      "fixed_profile": {
+        "education_stage": "本科大三",
+        "major": "信息管理与信息系统",
+        "skills": ["Excel", "原型工具基础"],
+        "interests": ["生成式 AI 应用", "产品设计"],
+        "target_role": "AI产品经理",
+        "time_budget_hours_per_week": 9,
+        "preference": "AI 应用型团队",
+        "main_constraints": ["缺少完整产品案例", "技术理解较浅"]
+      },
+      "knowledge_snippets": [
+        {
+          "knowledge_id": "career-056",
+          "text": "AI 产品岗位规划应同时保留用户价值、业务目标和技术可行性的验证证据。"
+        }
+      ],
+      "expected_evidence": [
+        {
+          "evidence_id": "ev-1",
+          "fact": "岗位材料要求提交产品需求文档。",
+          "location_hint": "第 1 个编号卡片",
+          "career_implication": "作品集必须包含结构完整的需求文档。",
+          "required_for_plan": true
+        },
+        {
+          "evidence_id": "ev-2",
+          "fact": "岗位要求掌握产品指标。",
+          "location_hint": "第 2 个编号卡片",
+          "career_implication": "方案需定义可衡量的产品指标。",
+          "required_for_plan": true
+        },
+        {
+          "evidence_id": "ev-3",
+          "fact": "岗位任务包括用户访谈。",
+          "location_hint": "第 3 个编号卡片",
+          "career_implication": "产品案例应包含真实的访谈与需求证据。",
+          "required_for_plan": true
+        },
+        {
+          "evidence_id": "ev-4",
+          "fact": "岗位要求设计大语言模型评测。",
+          "location_hint": "第 4 个编号卡片",
+          "career_implication": "学习路线需加入 AI 输出质量评测。",
+          "required_for_plan": true
+        }
+      ],
+      "scoring_notes": {
+        "acceptable_inferences": ["可建议围绕一个 AI 功能串联访谈、需求、指标和评测"],
+        "forbidden_assumptions": ["不得假设用户已经完成产品需求文档或模型评测"]
+      },
+      "decisive_evidence_not_in_text": true,
+      "privacy_reviewed": true
+    },
+    {
+      "schema_version": "research-case-v1",
+      "case_id": "pdf-001",
+      "sets": ["pilot"],
+      "modality": "pdf_page",
+      "asset_path": "dataset/research_cases/assets/pdf-001.pdf",
+      "asset_sha256": "21d86a9787197005579b63a734915d5b6b71e4a068ba4279a38e2fd5298f09d1",
+      "page_number": 1,
+      "source": {
+        "source_type": "self_created",
+        "source_url": "repository://dataset/research_cases/assets/pdf-001.pdf",
+        "license": "CC0-1.0; project-created synthetic fixture"
+      },
+      "user_goal": "评估自己申请硬件工程师岗位前需要补齐的能力。",
+      "fixed_profile": {
+        "education_stage": "本科大三",
+        "major": "电子科学与技术",
+        "skills": ["模拟电路基础", "基础 CAD"],
+        "interests": ["电子产品开发", "实验室调试"],
+        "target_role": "硬件工程师",
+        "time_budget_hours_per_week": 11,
+        "preference": "消费电子行业",
+        "main_constraints": ["没有量产项目经历", "实验设备使用经验有限"]
+      },
+      "knowledge_snippets": [
+        {
+          "knowledge_id": "career-050",
+          "text": "硬件岗位规划应以设计、调试和验证环节中的可核验交付为主。"
+        }
+      ],
+      "expected_evidence": [
+        {
+          "evidence_id": "ev-1",
+          "fact": "岗位要求 PCB 布局能力。",
+          "location_hint": "第 1 页第 1 个编号卡片",
+          "career_implication": "项目应包含可检查的 PCB 布局文件。",
+          "required_for_plan": true
+        },
+        {
+          "evidence_id": "ev-2",
+          "fact": "岗位要求使用示波器。",
+          "location_hint": "第 1 页第 2 个编号卡片",
+          "career_implication": "训练应包含示波器测量与记录。",
+          "required_for_plan": true
+        },
+        {
+          "evidence_id": "ev-3",
+          "fact": "岗位任务包含 EMC 测试。",
+          "location_hint": "第 1 页第 3 个编号卡片",
+          "career_implication": "验证阶段需学习 EMC 基础与测试流程。",
+          "required_for_plan": true
+        },
+        {
+          "evidence_id": "ev-4",
+          "fact": "岗位可能需要最多百分之二十的出差。",
+          "location_hint": "第 1 页第 4 个编号卡片",
+          "career_implication": "用户应把出差接受度纳入岗位筛选。",
+          "required_for_plan": true
+        }
+      ],
+      "scoring_notes": {
+        "acceptable_inferences": ["可建议用一个硬件项目串联布局、测量与测试记录"],
+        "forbidden_assumptions": ["不得假设用户具备 PCB、示波器或 EMC 实操经验"]
+      },
+      "decisive_evidence_not_in_text": true,
+      "privacy_reviewed": true
+    },
+    {
+      "schema_version": "research-case-v1",
+      "case_id": "pdf-002",
+      "sets": ["pilot"],
+      "modality": "pdf_page",
+      "asset_path": "dataset/research_cases/assets/pdf-002.pdf",
+      "asset_sha256": "fcccc1c36462b539ce8b7477b2b9fbc11afac7760f18ad7573a7e522843863af",
+      "page_number": 1,
+      "source": {
+        "source_type": "self_created",
+        "source_url": "repository://dataset/research_cases/assets/pdf-002.pdf",
+        "license": "CC0-1.0; project-created synthetic fixture"
+      },
+      "user_goal": "判断高分子材料工程师方向是否适合作为升学与就业目标。",
+      "fixed_profile": {
+        "education_stage": "本科大三",
+        "major": "材料化学",
+        "skills": ["有机化学基础", "实验记录"],
+        "interests": ["新材料研发", "实验分析"],
+        "target_role": "高分子材料工程师",
+        "time_budget_hours_per_week": 10,
+        "preference": "研发型制造企业",
+        "main_constraints": ["尚未确定是否读研", "科研项目经历不足"]
+      },
+      "knowledge_snippets": [
+        {
+          "knowledge_id": "career-059",
+          "text": "材料研发岗位规划需要将教育选择、实验能力和可复现实验结果一起评估。"
+        }
+      ],
+      "expected_evidence": [
+        {
+          "evidence_id": "ev-1",
+          "fact": "岗位任务包含高分子合成。",
+          "location_hint": "第 1 页第 1 个编号卡片",
+          "career_implication": "实践计划应覆盖合成实验与完整实验记录。",
+          "required_for_plan": true
+        },
+        {
+          "evidence_id": "ev-2",
+          "fact": "岗位要求使用 DSC 和 GPC 表征。",
+          "location_hint": "第 1 页第 2 个编号卡片",
+          "career_implication": "需补充材料表征原理与数据分析能力。",
+          "required_for_plan": true
+        },
+        {
+          "evidence_id": "ev-3",
+          "fact": "岗位偏好硕士学历。",
+          "location_hint": "第 1 页第 3 个编号卡片",
+          "career_implication": "升学决策是职业路线中的关键约束。",
+          "required_for_plan": true
+        },
+        {
+          "evidence_id": "ev-4",
+          "fact": "岗位要求化学安全培训。",
+          "location_hint": "第 1 页第 4 个编号卡片",
+          "career_implication": "进入实验项目前应完成安全规范训练。",
+          "required_for_plan": true
+        }
+      ],
+      "scoring_notes": {
+        "acceptable_inferences": ["可把是否读研与岗位学历偏好关联，但不能替用户作决定"],
+        "forbidden_assumptions": ["不得假设用户已有合成、表征或安全培训经历"]
+      },
+      "decisive_evidence_not_in_text": true,
+      "privacy_reviewed": true
+    },
+    {
+      "schema_version": "research-case-v1",
+      "case_id": "pdf-003",
+      "sets": ["pilot"],
+      "modality": "pdf_page",
+      "asset_path": "dataset/research_cases/assets/pdf-003.pdf",
+      "asset_sha256": "4a25dce86e8d8e7ea685a689bbb6176665af871d29e390d68d07d87941b85244",
+      "page_number": 1,
+      "source": {
+        "source_type": "self_created",
+        "source_url": "repository://dataset/research_cases/assets/pdf-003.pdf",
+        "license": "CC0-1.0; project-created synthetic fixture"
+      },
+      "user_goal": "梳理妇产科医师方向的教育与资格准备路线。",
+      "fixed_profile": {
+        "education_stage": "本科大四",
+        "major": "临床医学",
+        "skills": ["医学基础课程", "临床见习记录"],
+        "interests": ["妇幼健康", "临床诊疗"],
+        "target_role": "妇产科医师",
+        "time_budget_hours_per_week": 14,
+        "preference": "综合医院或妇幼保健机构",
+        "main_constraints": ["培养周期较长", "尚未确定升学方案"]
+      },
+      "knowledge_snippets": [
+        {
+          "knowledge_id": "career-063",
+          "text": "临床岗位规划必须区分教育阶段、法定资格和医疗机构培养流程。"
+        }
+      ],
+      "expected_evidence": [
+        {
+          "evidence_id": "ev-1",
+          "fact": "岗位要求研究生学历。",
+          "location_hint": "第 1 页第 1 个编号卡片",
+          "career_implication": "教育路线应明确研究生阶段安排。",
+          "required_for_plan": true
+        },
+        {
+          "evidence_id": "ev-2",
+          "fact": "岗位要求医师资格证。",
+          "location_hint": "第 1 页第 2 个编号卡片",
+          "career_implication": "计划必须保留依法取得资格的阶段。",
+          "required_for_plan": true
+        },
+        {
+          "evidence_id": "ev-3",
+          "fact": "岗位要求住院医师规范化培训合格证。",
+          "location_hint": "第 1 页第 3 个编号卡片",
+          "career_implication": "路线应纳入住院医师规范化培训。",
+          "required_for_plan": true
+        },
+        {
+          "evidence_id": "ev-4",
+          "fact": "岗位包含夜班轮转。",
+          "location_hint": "第 1 页第 4 个编号卡片",
+          "career_implication": "用户需要评估夜班约束和身体适应性。",
+          "required_for_plan": true
+        }
+      ],
+      "scoring_notes": {
+        "acceptable_inferences": ["可按学历、资格、规培顺序组织长期路线"],
+        "forbidden_assumptions": ["不得假设用户已取得资格证、规培证或能够接受夜班"]
+      },
+      "decisive_evidence_not_in_text": true,
+      "privacy_reviewed": true
+    }
+  ]
+}

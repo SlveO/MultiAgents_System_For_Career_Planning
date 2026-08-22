@@ -76,8 +76,10 @@ environment record, and raw metric files for reproducibility.
 
 The L20 check passes when all three groups complete the same pilot cases,
 outputs match the shared schema, collaboration never exceeds the configured
-cap, and latency/VRAM/errors are recorded. Model download and L20 inference are
-manual future checks, not completed by this documentation change.
+cap, and latency/VRAM/errors are recorded. The required two-checkpoint workflow
+and exact executor acceptance criteria are in
+`docs/member-b-l20-agent-handoff.md`. Model download and L20 inference remain
+unverified until that handoff produces real L20 records.
 
 Frontend changes require:
 

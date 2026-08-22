@@ -16,6 +16,17 @@ fallback output is not model-quality evidence.
 - **H2:** Does bounded reasoner-to-perceiver evidence clarification improve
   evidence faithfulness and plan quality over one-shot perception?
 
+## Implemented Research Plumbing
+
+`python -m project.experiments.run_architecture_experiments` now loads six
+versioned pilot fixtures (three PNG images and three single-page PDFs), verifies
+their SHA-256 values, validates case/evidence/decision/plan payloads against the
+frozen Draft 2020-12 Schemas, and emits 18 fake rows for the three groups. The
+two-round fake path remains evidence-insufficient while the three-round path
+collects the fourth fixture fact, so the cap plumbing is observably distinct.
+This is deterministic interface evidence only. No Qwen model quality, L20
+runtime, latency, or VRAM result has been produced.
+
 ## Controlled Architecture Comparison
 
 Use the same fixed user profile, career-knowledge snippets, plan schema,

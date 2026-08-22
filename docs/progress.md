@@ -1,11 +1,11 @@
 # Project Progress
 
-Last updated: 2026-08-19
+Last updated: 2026-08-22
 
-Current stage: Week 1 integration is the shared collaboration baseline on
-`origin/integration/week1-results`. One user-run DeepSeek CLI case has produced
-a valid redacted cloud log. API/Web and full GPU checks remain. `main` is not
-part of this publication and requires a later explicit merge decision.
+Current stage: the lead has locally integrated and repaired the accepted parts
+of members A and C; these changes have not been committed or pushed. Member B
+did not execute on the L20, so that branch is reference code only. L20 download,
+smoke, and pilot evidence remain required. `main` is still unchanged.
 
 ## Overall Plan
 
@@ -13,9 +13,9 @@ part of this publication and requires a later explicit merge decision.
 |---|---|---|---|
 | 0. Scope freeze | Define completion MVP, canonical paths, dependencies, and privacy rules | README, interfaces, and acceptance criteria agree | Complete |
 | 1. Completion MVP | Run text/document -> follow-up -> profile -> retrieval -> plan -> feedback -> log | Core flow, 50+ roles, four offline comparisons, tests | Complete |
-| 2. Team integration | Adapt four contributors' work into one implementation | No parallel `src/`; integrated tests and clean data contracts | Complete, awaiting review |
+| 2. Team integration | Adapt four contributors' work into one implementation | No parallel `src/`; integrated tests and clean data contracts | A/C rework complete locally; awaiting diff review |
 | 3. Live evidence | Verify one real DeepSeek case, API/Web, and selected GPU smoke paths | Redacted live log and reproducible environment record | In progress: CLI case complete |
-| 4. Research comparison | Compare monolithic, one-shot modular, and bounded multi-turn modular systems | Frozen cases, 60 controlled runs, blind scores, report | Protocol frozen; implementation and cases pending |
+| 4. Research comparison | Compare monolithic, one-shot modular, and bounded multi-turn modular systems | Frozen cases, 60 controlled runs, blind scores, report | Offline runner and six cases complete; L20 backend and real runs pending |
 
 ## Final Deliverables
 
@@ -30,16 +30,19 @@ part of this publication and requires a later explicit merge decision.
 
 | Owner | Integrated deliverable | Dependency/deadline | Acceptance | Next action |
 |---|---|---|---|---|
-| Project lead | Canonical MVP, privacy, experiments, repository cleanup, final integration | Member branches by 2026-08-21 | Full tests pass; diff contains no secrets/runtime data | Evaluation contracts complete; review all three member branches |
-| Member A | CLI/session/logging skeleton and smoke-flow idea | Frozen experiment protocol | Adapted pipeline events are redacted and covered by end-to-end/log tests | Build the offline architecture runner and bounded controller |
-| Member B | DeepSeek baseline, structured failures, retry/schema tests | Authorized L20 access | Typed errors and retries remain covered; no model downloads occur on Windows | Record L20 environment and prepare local-model adapters |
-| Member C | 20 career records, follow-up rules, three retrieval cases | Public sources and redistributable case assets | 65 unique roles and three target-role retrieval cases pass | Verify source URLs and deliver the six-case pilot set |
+| Project lead | MVP, research contracts, A/C rework, final integration | Review the current local diff | Full tests pass; no secrets, weights, or runtime data | Present the diff/test report and wait for publication approval |
+| Member A | Offline three-group runner and bounded controller | Frozen protocol and six-case manifest | Strict Schemas, hashes, case-driven output, and 2/3-round tests pass | Selectively ported and repaired by the lead |
+| Member B | L20 downloads, real adapters, smoke, and pilot | Networked NVIDIA L20 Ubuntu host | Environment, revisions, valid outputs, latency, VRAM, and 24 real runs | Follow `member-b-l20-agent-handoff.md`; PC results do not satisfy acceptance |
+| Member C | Job-source leads and six pilot fixtures | Public leads and self-created anonymous media | 3 PNG + 3 PDF cases with hashes, licenses, profiles, knowledge, and evidence | Normalized by the lead; field-level source review remains |
 
 Incoming files remain locally under ignored `corwork/`. Useful behavior was
 ported into `project/` and `dataset/`; legacy `src/`, pytest caches, raw logs,
 duplicate dependencies, and old planning documents were not imported.
 
-## Two-Day Execution Plan: 2026-08-20 to 2026-08-21
+## Archived Two-Day Execution Plan: 2026-08-20 to 2026-08-21
+
+This table preserves the original assignment for traceability. Current status
+is defined by the handoff table and next actions.
 
 All owners run `git fetch origin` and create the listed branch from
 `origin/integration/week1-results`. They must not push directly to the shared
@@ -59,19 +62,19 @@ outside these two days.
 
 ### Project Lead Status
 
-Day 1 is complete on local branch `work/lead-evaluation`: case, evidence,
-decision, and plan Schemas; the hashed prompt/runtime protocol; five-dimension
-rubric; round-cap rule; durable decision log; and integration checklist are
-written and covered by 11 contract tests. Day 2 is dependency-blocked until
-member A/B/C push reviewable branches; then the lead uses
-`docs/integration-review-checklist.md` and records accept/revise/blocked
-decisions separately for each branch.
+The lead selectively ported and repaired member A's runner and member C's data.
+The runner now validates all four Schemas and asset hashes, derives fake output
+from six real fixtures, and exposes adapter injection for the L20 backend. The
+six cases contain three anonymous PNGs and three single-page PDFs. Member C's
+20 job records are retained as provenance leads, not field-level ground truth.
+Member B's PC-only result remains blocked pending the dedicated L20 handoff.
 
 ## Verification Evidence
 
-- Default `.venv`: 73 discovered; 71 passed; 2 API tests skipped because the
-  core profile intentionally omits FastAPI.
-- Existing `agents` Conda environment: all 73 tests passed, including API tests.
+- Current `agents` environment: all 89 tests passed, including 16 new A/C tests
+  and the API integration tests.
+- Updated default `.venv`: 89 discovered, 87 passed, and the 2 FastAPI tests
+  skipped as expected. The core profile now includes pure-Python `jsonschema`.
 - All four Draft 2020-12 research Schemas passed `jsonschema` meta-schema
   validation in the existing `agents` environment.
 - `compileall`, CLI help, and `git diff --check`: passed.
@@ -81,8 +84,11 @@ decisions separately for each branch.
   The log scan found no raw path/content keys or configured identifier/API-key
   patterns. The input contained no recognized identifiers, so no redaction
   placeholder was expected; synthetic redaction tests still pass.
-- Not run by agreement: complete Qwen/Whisper/BGE model load, L20 batch
-  experiment, frontend build (`web/node_modules` absent).
+- Architecture fake run: 18 rows for six cases and three groups. The two-round
+  collaborative fake remains insufficient; the three-round fake collects the
+  fourth fixture fact. This is plumbing evidence only.
+- Not run: any L20 environment capture, Qwen download/inference, 24-run real
+  pilot, complete Qwen/Whisper/BGE load, or frontend build.
 
 ## Frozen Research Protocol
 
@@ -98,16 +104,16 @@ decisions separately for each branch.
 - Execution: download research weights and run real comparisons only on the
   networked 48 GB L20 Ubuntu host. The exact Ubuntu version must be captured
   before setup; no research weights are downloaded on this Windows machine.
-- Status: protocol documentation and machine-readable contracts are complete.
-  Experiment adapters, case manifest, model downloads, inference runs, and
-  human scores do not yet exist. Confirmed and superseding choices are retained
-  in `docs/research-decisions.md`.
+- Status: protocol contracts, the offline adapter boundary, and the six-case
+  pilot manifest exist. The real L20 adapters, remaining 14 cases, model
+  downloads, inference records, and human scores do not yet exist.
 
 ## Next Actions
 
-1. Every owner branches from `origin/integration/week1-results` and completes
-   the two-day deliverable without writing directly to the shared branch.
-2. The project lead reviews the three branches after the 2026-08-21 checkpoint
-   and integrates only accepted files with passing checks.
-3. After the six-case pilot, freeze one collaboration cap before the 60-run
-   primary comparison. Training and audio remain outside the first round.
+1. The lead reviews the current A/C diff and test report before authorizing a
+   commit or push.
+2. The L20 executor starts from the newly published lead baseline and completes
+   environment, revision, download, and three-model smoke checkpoint A.
+3. After revision approval, run the 24-run six-case pilot, freeze one cap, then
+   prepare the remaining cases and 60-run comparison. Training and audio remain
+   outside the first comparison.

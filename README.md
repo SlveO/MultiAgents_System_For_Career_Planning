@@ -57,9 +57,15 @@ python -m compileall -q project
 python -m unittest discover -s project/tests -v
 python -m project.assistant_cli --help
 python -m project.experiments.run_completion_experiments --output-dir data/experiments
+python -m project.experiments.run_architecture_experiments --round-cap 2 --output-dir data/experiments/architecture
 ```
 
 默认实验使用确定性的 Fake DeepSeek，只验证四组结题对照的流程和结果文件，共输出 8 行；真实 API、GPU、前端与 Docker 的手工步骤和验收标准见 [验证指南](docs/verification.md)。主研究实验设计见 [实验设计](docs/experiments.md)。
+
+架构实验命令使用六个版本化匿名素材和三组 Fake Adapter，共输出18行，只验证
+案例哈希、Schema、适配器接口、2/3轮控制及结果文件，不能作为模型质量结论。
+L20 的真实下载、适配器返工和预实验必须按
+[成员 B L20 交接](docs/member-b-l20-agent-handoff.md)执行。
 
 主研究案例、证据、协作决策和规划输出由 `dataset/research_*.schema.json`
 统一约束；模型、提示词、生成参数和失败策略固定在
@@ -94,4 +100,5 @@ git fetch origin
 git switch -c work/<role>-<task> origin/integration/week1-results
 ```
 
-2026-08-20 至 2026-08-21 的负责人、交付物、依赖和验收标准见[团队进度](docs/progress.zh-CN.md)。`main` 暂不自动合并，待两天成果审查后再单独决定。
+当前负责人、交付物、依赖和验收标准见[团队进度](docs/progress.zh-CN.md)。
+`main` 暂不自动合并，待差异和测试报告审阅后再单独决定。

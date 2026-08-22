@@ -14,6 +14,9 @@
   record for member A/B/C branches.
 - `verification.md`: commands for automated checks and user-run live API,
   GPU, frontend, and Docker verification.
+- `member-b-l20-agent-handoff.md`: mandatory L20-only rework, environment,
+  model download, smoke, adapter integration, pilot commands, and evidence
+  checklist for the local-model executor.
 - `progress.md`: English agent-facing phases, shared branch, two-day ownership,
   acceptance, and next actions.
 - `progress.zh-CN.md`: Chinese team-facing progress and the authoritative
