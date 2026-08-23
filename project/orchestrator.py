@@ -20,6 +20,7 @@ try:
     from .core.feedback import FEEDBACK_OPTIONS
     from .core.privacy import redact_data
     from .core.run_logging import JsonlRunLogger
+    from .core.planning_prompt import build_planning_prompt
 except ImportError:
     from project.core.schemas import CareerPlanResponse, Milestone, PerceptionResult, TaskRequest, UserProfile
     from project.core.brain_client import (
@@ -36,6 +37,7 @@ except ImportError:
     from project.core.feedback import FEEDBACK_OPTIONS
     from project.core.privacy import redact_data
     from project.core.run_logging import JsonlRunLogger
+    from project.core.planning_prompt import build_planning_prompt
 from project.utils.fusion import MultiModalFusion
 
 
@@ -219,35 +221,15 @@ class CareerOrchestrator:
     ) -> str:
         perception_text = MultiModalFusion.fuse(perception_results)
 
-        return f"""
-你是职业规划总控代理。请只输出严格 JSON，不要输出其他文本。
-JSON schema:
-{{
-  "user_facing_advice": "面向用户的自然语言建议（分段，行动导向）",
-  "target_roles": ["岗位1", "岗位2"],
-  "gap_analysis": ["差距1", "差距2"],
-  "roadmap_30_90_180": [
-    {{"period":"30d","objective":"...","deliverables":["..."],"metrics":["..."]}},
-    {{"period":"90d","objective":"...","deliverables":["..."],"metrics":["..."]}},
-    {{"period":"180d","objective":"...","deliverables":["..."],"metrics":["..."]}}
-  ],
-  "learning_resources": ["资源1"],
-  "next_actions": ["下一步1"],
-  "risk_flags": ["风险1"],
-  "follow_up_questions": ["追问1"],
-  "confidence": 0.0
-}}
-
-用户目标: {req.user_goal}
-用户文本: {req.text_input}
-意图: {intent}
-约束: {req.constraints.model_dump_json(ensure_ascii=False)}
-用户画像: {profile.model_dump_json(ensure_ascii=False)}
-多模态感知结构化结果:
-{perception_text}
-知识库提示:
-{json.dumps(knowledge_hints, ensure_ascii=False)}
-"""
+        return build_planning_prompt(
+            user_goal=req.user_goal,
+            text_input=req.text_input,
+            intent=intent,
+            constraints_json=req.constraints.model_dump_json(ensure_ascii=False),
+            profile_json=profile.model_dump_json(ensure_ascii=False),
+            perception_text=perception_text,
+            knowledge_hints=knowledge_hints,
+        )
 
     def _retrieve_knowledge(self, req: TaskRequest, query: str) -> Tuple[List[str], List[str]]:
         if not req.use_knowledge:
