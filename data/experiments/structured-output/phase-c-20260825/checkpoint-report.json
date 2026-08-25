@@ -1,0 +1,94 @@
+{
+  "schema_version": "phase-c-checkpoint-report-v1",
+  "created_at_utc": "2026-08-24T17:38:19Z",
+  "git": {
+    "branch": "work/member-b-l20-rework",
+    "head": "b96d14d6a180363a8a38ca9221528fb5053dc294",
+    "status_entries_before_phase_c": 29,
+    "status_entries_after_phase_c": 32,
+    "tracked_status_entries_after_phase_c": 18,
+    "untracked_status_entries_after_phase_c": 14,
+    "commit_created": false,
+    "push_performed": false
+  },
+  "phase_c_change_attribution": {
+    "preexisting_dirty_or_untracked_paths_further_modified_in_phase_c": [
+      "dataset/research_protocol.json",
+      "docs/evaluation-rubric.md",
+      "docs/member-b-l20-agent-handoff.md",
+      "docs/research-decisions.md",
+      "docs/verification.md",
+      "project/experiments/run_architecture_experiments.py",
+      "project/experiments/local_models.py",
+      "project/tests/test_architecture_experiments.py",
+      "project/tests/test_dependency_profiles.py",
+      "project/tests/test_local_models.py",
+      "project/tests/test_research_contracts.py",
+      "requirements-gpu.txt"
+    ],
+    "new_git_status_paths_caused_by_phase_c": [
+      "project/experiments/architecture_protocol.py",
+      "project/experiments/structured_output.py",
+      "project/tests/test_structured_output.py"
+    ],
+    "phase_c_files_total": 15,
+    "current_status_entries_not_created_by_phase_c": 29
+  },
+  "implementation": {
+    "backend": "lm-format-enforcer",
+    "backend_version": "0.11.3",
+    "integration": "project-transformers-v5-prefix-v1",
+    "projection_version": "research-decoding-schema-v1",
+    "fail_closed": true,
+    "unconstrained_fallback": false,
+    "post_generation_repair": false,
+    "canonical_validation_after_generation": true,
+    "prompt_contract_version": "research-prompts-v3"
+  },
+  "tests": {
+    "compileall_project_and_scripts": "passed",
+    "phase_c_focused": {
+      "run": 49,
+      "passed": 49,
+      "failed": 0,
+      "skipped": 0
+    },
+    "full_suite_outside_agent_sandbox": {
+      "run": 132,
+      "passed": 131,
+      "failed": 1,
+      "failure": "preexisting document-flow privacy test persists an absolute temporary source path",
+      "phase_c_related_failures": 0
+    },
+    "pip_check": "passed",
+    "git_diff_check": "passed",
+    "git_ls_files_data_models": []
+  },
+  "preservation": {
+    "v2_file_count": 5,
+    "v2_manifest_sha256": "fcb82d533f022e3b1d4483dbb367558d28708bfb427456b6c1f8f22f98978c80",
+    "v2_sources_match_manifest": true,
+    "v3_file_count": 4,
+    "v3_manifest_sha256": "759ddd5059b1d3b2e3c0455bbe37b2f7d4c7b4507b1585df2580e76fdc57fc33",
+    "v3_sources_match_manifest": true,
+    "prompt_contract_unchanged_from_archived_v3": true,
+    "generation_and_revisions_unchanged_from_archived_v3": true,
+    "canonical_schemas_unchanged": true
+  },
+  "hashes": {
+    "research_protocol_after_phase_c": "fb218841fb0547c87a87f11f364f6a374b25bd2e01254b3259624de3202f478a",
+    "evidence_canonical_schema": "ec778c6b2b0a85564165db83bb0ce0d6543bd18ecf60b39ed8d09c451823029e",
+    "decision_canonical_schema": "ed24335d6bfe994ba197a2b871e6bac372f3273908c194ab1fe449da21e340e8",
+    "plan_canonical_schema": "66aff0060e4f1d5db27795cc50bfc493f40cc027bdd77c54df7f1c14c63a7b49",
+    "requirements_gpu": "466ca703e75a3ab06b231ad6f0c412cc304a487d1067e78788ac29c8bbf69df9",
+    "structured_output_module": "e894e23fc448cc8c2572d2b8ab54465ad9fdf8ca2ee99a87b2f74d127d6a1ac7",
+    "structured_output_tests": "a58c77d5f1a7d30922088f98b145dc669ad001e26a983be5a8b8fc796d4c5a4e"
+  },
+  "authorization": {
+    "gpu_smoke": false,
+    "pilot_24_runs": false,
+    "commit": false,
+    "push": false
+  },
+  "next_action": "stop and await explicit authorization for three independent-directory constrained GPU smokes"
+}

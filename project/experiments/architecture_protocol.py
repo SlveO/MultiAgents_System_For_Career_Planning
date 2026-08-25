@@ -1,6 +1,7 @@
 """Torch-free contracts for the controlled architecture experiment."""
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 from abc import ABC, abstractmethod
@@ -27,7 +28,7 @@ REASON_MISSING_DECISIVE_EVIDENCE = "missing_decisive_evidence"
 EVIDENCE_SUFFICIENT = "sufficient"
 EVIDENCE_INSUFFICIENT = "insufficient"
 
-EXPECTED_PROTOCOL_VERSION = "architecture-comparison-v2"
+EXPECTED_PROTOCOL_VERSION = "architecture-comparison-v3"
 EXPECTED_SCHEMA_REFS = {
     "case": "dataset/research_case.schema.json",
     "evidence": "dataset/research_evidence.schema.json",
@@ -66,13 +67,33 @@ class ResearchContracts:
         self.repo_root = (repo_root or default_repo_root()).resolve()
         self.protocol = load_protocol(self.repo_root)
         self._validators: Dict[str, Draft202012Validator] = {}
+        self._schemas: Dict[str, Dict[str, Any]] = {}
+        self._schema_paths: Dict[str, Path] = {}
         for kind, relative_path in self.protocol["schema_refs"].items():
             schema_path = self.repo_root / relative_path
             if not schema_path.is_file():
                 raise FileNotFoundError(f"frozen {kind} schema is missing")
             schema = json.loads(schema_path.read_text(encoding="utf-8"))
             Draft202012Validator.check_schema(schema)
+            self._schemas[kind] = schema
+            self._schema_paths[kind] = schema_path
             self._validators[kind] = Draft202012Validator(schema)
+
+    def schema(self, kind: str) -> Dict[str, Any]:
+        """Return a defensive copy of one canonical research Schema."""
+        try:
+            schema = self._schemas[kind]
+        except KeyError as exc:
+            raise ValueError(f"unknown research contract: {kind}") from exc
+        return json.loads(json.dumps(schema))
+
+    def schema_sha256(self, kind: str) -> str:
+        """Hash the exact canonical Schema file bytes used for validation."""
+        try:
+            path = self._schema_paths[kind]
+        except KeyError as exc:
+            raise ValueError(f"unknown research contract: {kind}") from exc
+        return hashlib.sha256(path.read_bytes()).hexdigest()
 
     def validate(self, kind: str, payload: Dict[str, Any]) -> None:
         try:

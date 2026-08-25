@@ -1,11 +1,16 @@
 # GPU profile: includes API and MVP dependencies.
-# Install a PyTorch build matching the host CUDA version before this file.
+# Install matching PyTorch/torchvision builds from the official CUDA index first.
+# L20 validated pair: torch 2.11.0+cu130 with torchvision 0.26.0+cu130.
 -r requirements-api.txt
 
 accelerate>=0.25,<2
-transformers>=4.51,<5
+torchvision==0.26.0
+transformers>=4.57,<6
+lm-format-enforcer==0.11.3
+interegular==0.3.3
 qwen-vl-utils>=0.0.8,<1
 Pillow>=10,<13
+PyMuPDF>=1.24,<2
 modelscope>=1.20,<2
 sentence-transformers>=3,<6
 chromadb>=0.4,<2

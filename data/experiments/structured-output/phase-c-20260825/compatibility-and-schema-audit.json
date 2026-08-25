@@ -1,0 +1,140 @@
+{
+  "schema_version": "phase-c-compatibility-schema-audit-v1",
+  "created_at_utc": "2026-08-24T17:28:31Z",
+  "execution_boundary": {
+    "cpu_only": true,
+    "model_weights_loaded": false,
+    "cuda_called": false,
+    "gpu_smoke_run": false,
+    "pilot_run": false
+  },
+  "versions": {
+    "lm-format-enforcer": "0.11.3",
+    "interegular": "0.3.3",
+    "transformers": "5.15.1",
+    "tokenizers": "0.22.2",
+    "torch": "2.11.0+cu130",
+    "pydantic": "2.13.4",
+    "numpy": "2.2.6"
+  },
+  "upstream_integration": {
+    "usable": false,
+    "module": "lmformatenforcer.integrations.transformers",
+    "cause": "LMFE 0.11.3 imports PreTrainedTokenizerBase from transformers.tokenization_utils, which does not export it in Transformers 5.15.1",
+    "direct_import_error": "cannot import name 'PreTrainedTokenizerBase' from 'transformers.tokenization_utils'",
+    "resolution": "project-owned lazy prefix-token adapter using LMFE TokenEnforcer and TokenEnforcerTokenizerData",
+    "site_packages_modified": false,
+    "transformers_changed": false
+  },
+  "tokenizers": [
+    {
+      "model_dir": "Qwen3-VL-2B-Instruct",
+      "class": "Qwen2Tokenizer",
+      "length": 151669,
+      "fingerprint_sha256": "6a01ae49e88ff7a5df814b2f181da927ec93e212d4847c39cd53209d8245538a",
+      "load_ms": 338.919,
+      "fingerprint_ms": 295.523,
+      "tokenizer_data_init_ms": 2596.582,
+      "tokenizer_data_rss_delta_mb": 126.395,
+      "alphabet_size": 17805,
+      "cache_hit": false,
+      "chinese_json_roundtrip": true
+    },
+    {
+      "model_dir": "Qwen3-4B-Instruct-2507",
+      "class": "Qwen2Tokenizer",
+      "length": 151669,
+      "fingerprint_sha256": "6a01ae49e88ff7a5df814b2f181da927ec93e212d4847c39cd53209d8245538a",
+      "load_ms": 363.997,
+      "fingerprint_ms": 322.023,
+      "tokenizer_data_init_ms": 2596.582,
+      "tokenizer_data_rss_delta_mb": 126.395,
+      "alphabet_size": 17805,
+      "cache_hit": true,
+      "chinese_json_roundtrip": true
+    },
+    {
+      "model_dir": "Qwen3-VL-8B-Instruct",
+      "class": "Qwen2Tokenizer",
+      "length": 151669,
+      "fingerprint_sha256": "6a01ae49e88ff7a5df814b2f181da927ec93e212d4847c39cd53209d8245538a",
+      "load_ms": 380.088,
+      "fingerprint_ms": 322.09,
+      "tokenizer_data_init_ms": 2596.582,
+      "tokenizer_data_rss_delta_mb": 126.395,
+      "alphabet_size": 17805,
+      "cache_hit": true,
+      "chinese_json_roundtrip": true
+    }
+  ],
+  "process_peak_rss_mb": 1144.445,
+  "behavioral_checks": {
+    "chinese_json_roundtrip": "passed_for_all_three_tokenizers",
+    "f_dash_1_allowed": true,
+    "f1_blocked": true,
+    "supports_requires_array": true,
+    "deliverables_blocked_as_supports_value": true,
+    "metrics_blocked_as_supports_value": true,
+    "initial_delta_plan_decision_compile": true,
+    "valid_document_eos_allowed": true,
+    "consecutive_whitespace_bounded": true,
+    "unconstrained_fallback": false
+  },
+  "schema_correspondence": [
+    {
+      "projection_type": "evidence-initial-v1",
+      "canonical_schema_sha256": "ec778c6b2b0a85564165db83bb0ce0d6543bd18ecf60b39ed8d09c451823029e",
+      "decoding_schema_sha256": "eda2a8a2631cf618e943d4c69feb594e70bb5b9dd910066a11a91279e6e300a1",
+      "dynamic_enum_sources": {},
+      "compile_ms": 0.572,
+      "compile_rss_delta_mb": 0.133
+    },
+    {
+      "projection_type": "evidence-delta-v1",
+      "canonical_schema_sha256": "ec778c6b2b0a85564165db83bb0ce0d6543bd18ecf60b39ed8d09c451823029e",
+      "decoding_schema_sha256": "dcbf4aabd5971cb55ec1256bfea6f14ed96bdf6110c17ff90e6f346df5f2eead",
+      "dynamic_enum_sources": {
+        "request_id": "current_decision.request_id"
+      },
+      "compile_ms": 0.394,
+      "compile_rss_delta_mb": 0.004
+    },
+    {
+      "projection_type": "plan-structured-evidence-v1",
+      "canonical_schema_sha256": "66aff0060e4f1d5db27795cc50bfc493f40cc027bdd77c54df7f1c14c63a7b49",
+      "decoding_schema_sha256": "ea424e9bc0f49c106c52d83ff914a72fe91508db65368d124f838c8466902726",
+      "dynamic_enum_sources": {
+        "evidence_ref": "input_evidence.facts[*].evidence_id",
+        "knowledge_ids_used": "input_case.knowledge_snippets[*].knowledge_id"
+      },
+      "compile_ms": 1.948,
+      "compile_rss_delta_mb": 0.004
+    },
+    {
+      "projection_type": "plan-raw-media-v1",
+      "canonical_schema_sha256": "66aff0060e4f1d5db27795cc50bfc493f40cc027bdd77c54df7f1c14c63a7b49",
+      "decoding_schema_sha256": "5d3cfcfb5485e711bdef71ebf2b85f4ed59f5987e8c071caf1f6c52efcc19fb2",
+      "dynamic_enum_sources": {
+        "evidence_ref": "canonical_schema.evidence_ref.pattern",
+        "knowledge_ids_used": "input_case.knowledge_snippets[*].knowledge_id"
+      },
+      "compile_ms": 0.66,
+      "compile_rss_delta_mb": 0.0
+    },
+    {
+      "projection_type": "decision-v1",
+      "canonical_schema_sha256": "ed24335d6bfe994ba197a2b871e6bac372f3273908c194ab1fe449da21e340e8",
+      "decoding_schema_sha256": "e76c3f79497b1e7e90f5cd7baf91936039526b590d90d57e7ce8300820bdc7c0",
+      "dynamic_enum_sources": {},
+      "compile_ms": 0.292,
+      "compile_rss_delta_mb": 0.0
+    }
+  ],
+  "known_limitations": [
+    "Canonical prefixItems ordering is verified only after generation",
+    "Canonical numeric bounds are verified only after generation",
+    "Canonical uniqueItems is verified only after generation",
+    "Token prefix filtering guarantees format and constrained candidates, not semantic correctness",
+    "First tokenizer-data build costs about 2.6 seconds and 126.4 MB RSS; identical tokenizer vocabularies reuse the in-process cache"
+  ]
+}
