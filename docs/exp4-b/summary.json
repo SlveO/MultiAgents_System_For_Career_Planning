@@ -1,0 +1,18 @@
+{
+  "过短": {
+    "n": 10,
+    "uniform_mean_content_chars": 1174.2,
+    "adjusted_mean_content_chars": 2337.8,
+    "direction_match_rate": 1.0,
+    "failure_count": 0,
+    "failure_cases": []
+  },
+  "过于详细": {
+    "n": 10,
+    "uniform_mean_content_chars": 961.3,
+    "adjusted_mean_content_chars": 389.4,
+    "direction_match_rate": 1.0,
+    "failure_count": 0,
+    "failure_cases": []
+  }
+}

@@ -1,0 +1,142 @@
+[
+  {
+    "case_id": "exp4-01",
+    "user_goal": "获得数据分析实习",
+    "text_input": "希望制定 30、90、180 天职业计划。",
+    "follow_up_answers": {"education": "本科大三", "major": "统计学", "skills": "Python、SQL", "interests": "数据分析、互联网", "target_role": "数据分析师", "time_budget": "每周 10 小时", "preference": "上海互联网行业", "constraints": "项目经验不足"},
+    "feedback": "过短"
+  },
+  {
+    "case_id": "exp4-02",
+    "user_goal": "转岗后端开发",
+    "text_input": "希望制定分阶段学习与投递计划。",
+    "follow_up_answers": {"education": "本科大二", "major": "计算机", "skills": "Java", "interests": "服务端、分布式", "target_role": "后端开发", "time_budget": "每周 15 小时", "preference": "杭州互联网行业", "constraints": "只有课设项目"},
+    "feedback": "过短"
+  },
+  {
+    "case_id": "exp4-03",
+    "user_goal": "成为前端开发工程师",
+    "text_input": "请给我一个可执行的路线。",
+    "follow_up_answers": {"education": "本科大三", "major": "软件工程", "skills": "JavaScript、React", "interests": "界面交互、可视化", "target_role": "前端开发", "time_budget": "每周 12 小时", "preference": "深圳", "constraints": "作品集为空"},
+    "feedback": "过短"
+  },
+  {
+    "case_id": "exp4-04",
+    "user_goal": "获得算法工程师校招 offer",
+    "text_input": "帮我规划校招前的准备节奏。",
+    "follow_up_answers": {"education": "硕士研一", "major": "人工智能", "skills": "Python、PyTorch", "interests": "深度学习、推荐系统", "target_role": "算法工程师", "time_budget": "每周 20 小时", "preference": "北京大厂", "constraints": "无顶会论文"},
+    "feedback": "过短"
+  },
+  {
+    "case_id": "exp4-05",
+    "user_goal": "转岗测试开发",
+    "text_input": "希望从功能测试转向自动化方向。",
+    "follow_up_answers": {"education": "本科大三", "major": "计算机", "skills": "Python", "interests": "自动化、质量保障", "target_role": "测试开发", "time_budget": "每周 10 小时", "preference": "二线城市", "constraints": "只做过手工测试"},
+    "feedback": "过短"
+  },
+  {
+    "case_id": "exp4-06",
+    "user_goal": "进入嵌入式开发行业",
+    "text_input": "请帮我规划学习与项目路线。",
+    "follow_up_answers": {"education": "本科大四", "major": "电子信息", "skills": "C、单片机", "interests": "物联网、硬件", "target_role": "嵌入式开发", "time_budget": "每周 15 小时", "preference": "长三角硬件公司", "constraints": "缺少完整项目"},
+    "feedback": "过短"
+  },
+  {
+    "case_id": "exp4-07",
+    "user_goal": "转行新媒体运营",
+    "text_input": "想从零开始进入这个行业。",
+    "follow_up_answers": {"education": "本科大二", "major": "新闻学", "skills": "文案写作", "interests": "短视频、内容策划", "target_role": "新媒体运营", "time_budget": "每周 8 小时", "preference": "本地城市", "constraints": "无运营经验"},
+    "feedback": "过短"
+  },
+  {
+    "case_id": "exp4-08",
+    "user_goal": "成为产品经理",
+    "text_input": "非技术背景想转产品岗。",
+    "follow_up_answers": {"education": "本科大三", "major": "工商管理", "skills": "PPT、数据分析基础", "interests": "互联网产品、用户体验", "target_role": "产品经理", "time_budget": "每周 10 小时", "preference": "广深", "constraints": "无技术背景"},
+    "feedback": "过短"
+  },
+  {
+    "case_id": "exp4-09",
+    "user_goal": "进入游戏行业做策划",
+    "text_input": "希望规划作品集与求职路径。",
+    "follow_up_answers": {"education": "本科大三", "major": "数字媒体", "skills": "剧本写作、Excel 数值基础", "interests": "游戏设计、叙事", "target_role": "游戏策划", "time_budget": "每周 12 小时", "preference": "成都游戏公司", "constraints": "没有完整作品"},
+    "feedback": "过短"
+  },
+  {
+    "case_id": "exp4-10",
+    "user_goal": "成为运维开发工程师",
+    "text_input": "请帮我制定成长路线。",
+    "follow_up_answers": {"education": "本科大四", "major": "计算机", "skills": "Linux、Shell", "interests": "云原生、自动化运维", "target_role": "运维开发", "time_budget": "每周 15 小时", "preference": "北京", "constraints": "缺少生产环境经验"},
+    "feedback": "过短"
+  },
+  {
+    "case_id": "exp4-11",
+    "user_goal": "进入会计师事务所",
+    "text_input": "希望规划考证与实习节奏。",
+    "follow_up_answers": {"education": "本科大四", "major": "会计学", "skills": "Excel、初级会计实务", "interests": "审计、财务分析", "target_role": "审计助理", "time_budget": "每周 12 小时", "preference": "省会城市事务所", "constraints": "CPA 尚未通过科目"},
+    "feedback": "过于详细"
+  },
+  {
+    "case_id": "exp4-12",
+    "user_goal": "获得快消市场部实习",
+    "text_input": "帮我做一份清晰的准备计划。",
+    "follow_up_answers": {"education": "本科大三", "major": "市场营销", "skills": "调研、Excel", "interests": "品牌、消费者洞察", "target_role": "市场部实习生", "time_budget": "每周 10 小时", "preference": "上海快消外企", "constraints": "无快消实习经历"},
+    "feedback": "过于详细"
+  },
+  {
+    "case_id": "exp4-13",
+    "user_goal": "转岗人力资源",
+    "text_input": "从行政转 HR 需要怎么准备？",
+    "follow_up_answers": {"education": "本科大二", "major": "人力资源管理", "skills": "Office、沟通协调", "interests": "招聘、组织发展", "target_role": "HR 专员", "time_budget": "每周 8 小时", "preference": "本地企业", "constraints": "只有行政经验"},
+    "feedback": "过于详细"
+  },
+  {
+    "case_id": "exp4-14",
+    "user_goal": "进入券商研究部",
+    "text_input": "请给我一个精简务实的路线。",
+    "follow_up_answers": {"education": "本科大三", "major": "金融学", "skills": "财务建模、Wind 基础", "interests": "行业研究、股票", "target_role": "研究助理", "time_budget": "每周 15 小时", "preference": "上海券商", "constraints": "非清北复交背景"},
+    "feedback": "过于详细"
+  },
+  {
+    "case_id": "exp4-15",
+    "user_goal": "进入律所从事非诉业务",
+    "text_input": "希望规划法考后的一年。",
+    "follow_up_answers": {"education": "硕士研二", "major": "法学", "skills": "法律检索、文书", "interests": "公司法、知识产权", "target_role": "律师助理", "time_budget": "每周 12 小时", "preference": "北京律所", "constraints": "非法本升法硕"},
+    "feedback": "过于详细"
+  },
+  {
+    "case_id": "exp4-16",
+    "user_goal": "考编成为中学教师",
+    "text_input": "帮我规划备考与求职。",
+    "follow_up_answers": {"education": "本科大三", "major": "汉语言文学", "skills": "教学设计、普通话二甲", "interests": "语文教学、阅读", "target_role": "中学语文教师", "time_budget": "每周 15 小时", "preference": "老家县城编制", "constraints": "教资笔试未过"},
+    "feedback": "过于详细"
+  },
+  {
+    "case_id": "exp4-17",
+    "user_goal": "进入三甲医院做护士",
+    "text_input": "请帮我规划实习与入职。",
+    "follow_up_answers": {"education": "本科大四", "major": "护理学", "skills": "基础护理操作、急救证", "interests": "临床护理、重症", "target_role": "三甲医院护士", "time_budget": "每周 10 小时", "preference": "省内三甲", "constraints": "无三甲实习名额"},
+    "feedback": "过于详细"
+  },
+  {
+    "case_id": "exp4-18",
+    "user_goal": "进入建筑设计院",
+    "text_input": "希望规划毕业前的作品集。",
+    "follow_up_answers": {"education": "本科大五", "major": "建筑学", "skills": "CAD、SketchUp", "interests": "公共建筑、绿色建筑", "target_role": "助理建筑师", "time_budget": "每周 15 小时", "preference": "一线城市设计院", "constraints": "作品集不完整"},
+    "feedback": "过于详细"
+  },
+  {
+    "case_id": "exp4-19",
+    "user_goal": "成为机械设计工程师",
+    "text_input": "请给我一份精炼的求职计划。",
+    "follow_up_answers": {"education": "本科大四", "major": "机械工程", "skills": "SolidWorks、AutoCAD", "interests": "非标设计、结构", "target_role": "机械设计工程师", "time_budget": "每周 12 小时", "preference": "苏州制造业", "constraints": "缺少实习经历"},
+    "feedback": "过于详细"
+  },
+  {
+    "case_id": "exp4-20",
+    "user_goal": "进入电子硬件行业",
+    "text_input": "帮我规划从校园到入行的路径。",
+    "follow_up_answers": {"education": "本科大四", "major": "电子科学", "skills": "PCB 设计、示波器", "interests": "模拟电路、电源", "target_role": "硬件工程师", "time_budget": "每周 12 小时", "preference": "深圳硬件公司", "constraints": "无完整硬件项目"},
+    "feedback": "过于详细"
+  }
+]
