@@ -19,6 +19,8 @@ class JsonlRunLogger:
         *,
         feedback: str,
         model_name: str,
+        error: str = "",
+        feedback_adjusted: bool = False,
     ) -> dict:
         pipeline_events = ["input_received", "perception_completed"]
         if request.follow_up_answers and not request.skip_follow_up:
@@ -66,6 +68,10 @@ class JsonlRunLogger:
             "feedback": feedback,
             "latency_ms": response.latency_ms,
         }
+        if error:
+            record["error"] = error
+        if feedback_adjusted:
+            record["feedback_adjusted"] = True
         self.path.parent.mkdir(parents=True, exist_ok=True)
         with self.path.open("a", encoding="utf-8") as handle:
             handle.write(json.dumps(record, ensure_ascii=False) + "\n")

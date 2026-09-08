@@ -106,8 +106,15 @@ def main(
         response = orchestrator.run(request)
         output_fn(json.dumps(response.model_dump(), ensure_ascii=False, indent=2))
     feedback = collect_feedback(input_fn=input_fn)
-    orchestrator.submit_feedback(args.session_id, feedback)
-    output_fn(f"反馈已记录：{feedback}")
+    if feedback == "合适":
+        orchestrator.submit_feedback(args.session_id, feedback)
+        output_fn(f"反馈已记录：{feedback}")
+    else:
+        _adjusted, adjust_error = orchestrator.adjust_plan(args.session_id, feedback)
+        if adjust_error:
+            output_fn(f"按「{feedback}」调整失败，已保留原规划（{adjust_error}）")
+        else:
+            output_fn(f"已按「{feedback}」重新生成规划")
     return 0
 
 

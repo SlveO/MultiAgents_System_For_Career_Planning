@@ -96,6 +96,9 @@ class DeepSeekBrainClient(BrainClient):
         self.base_url = s.deepseek_base_url.rstrip("/")
         self.default_model = s.brain_default_model
         self.timeout = s.brain_timeout_seconds
+        # Token usage of the most recent successful call, for experiment
+        # metrics (manual 6.1 requires recording token usage).
+        self.last_usage: Dict[str, Any] = {}
 
     @property
     def model_name(self) -> str:
@@ -160,6 +163,7 @@ class DeepSeekBrainClient(BrainClient):
                     obj = response.json()
                 except ValueError as exc:
                     raise BrainResponseError("DeepSeek API 返回了无效 JSON") from exc
+                self.last_usage = obj.get("usage") or {}
         except httpx.TimeoutException as exc:
             raise BrainTimeoutError("DeepSeek API 请求超时") from exc
         except httpx.RequestError as exc:
@@ -198,6 +202,8 @@ class DeepSeekBrainClient(BrainClient):
                         if token:
                             yielded_content = True
                             yield token
+                        if obj.get("usage"):
+                            self.last_usage = obj["usage"]
         except httpx.TimeoutException as exc:
             raise BrainTimeoutError("DeepSeek API 流式请求超时") from exc
         except httpx.RequestError as exc:

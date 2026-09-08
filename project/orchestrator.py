@@ -21,6 +21,7 @@ try:
     from .core.privacy import redact_data
     from .core.run_logging import JsonlRunLogger
     from .core.planning_prompt import build_planning_prompt
+    from .core.feedback_prompt import build_feedback_prompt
 except ImportError:
     from project.core.schemas import CareerPlanResponse, Milestone, PerceptionResult, TaskRequest, UserProfile
     from project.core.brain_client import (
@@ -38,6 +39,7 @@ except ImportError:
     from project.core.privacy import redact_data
     from project.core.run_logging import JsonlRunLogger
     from project.core.planning_prompt import build_planning_prompt
+    from project.core.feedback_prompt import build_feedback_prompt
 from project.utils.fusion import MultiModalFusion
 
 
@@ -60,7 +62,12 @@ class CareerOrchestrator:
 
         self.cloud_brain = brain_client or DeepSeekBrainClient()
         self.run_logger = run_logger or JsonlRunLogger()
-        self._pending_runs: Dict[str, Tuple[TaskRequest, CareerPlanResponse, str]] = {}
+        # Pending tuple keeps the perception/knowledge context of the run so
+        # feedback adjustment can rebuild the prompt without re-running the
+        # pipeline.
+        self._pending_runs: Dict[
+            str, Tuple[TaskRequest, CareerPlanResponse, str, List[PerceptionResult], List[str], List[str]]
+        ] = {}
 
         self.image_model_path = image_model_path
 
@@ -69,6 +76,9 @@ class CareerOrchestrator:
         req: TaskRequest,
         response: CareerPlanResponse,
         model_name: str,
+        perception_results: List[PerceptionResult],
+        knowledge_hints: List[str],
+        knowledge_hit_ids: List[str],
     ) -> None:
         self.memory.upsert_profile(req.session_id, redact_data(response.profile.model_dump()))
         self.memory.append_interaction(
@@ -76,7 +86,14 @@ class CareerOrchestrator:
             redact_data(req.model_dump()),
             redact_data(response.model_dump()),
         )
-        self._pending_runs[req.session_id] = (req, response, model_name)
+        self._pending_runs[req.session_id] = (
+            req,
+            response,
+            model_name,
+            perception_results,
+            knowledge_hints,
+            knowledge_hit_ids,
+        )
 
     def submit_feedback(self, session_id: str, feedback: str) -> bool:
         if feedback not in FEEDBACK_OPTIONS:
@@ -85,7 +102,7 @@ class CareerOrchestrator:
         pending = self._pending_runs.pop(session_id, None)
         if pending is None:
             return False
-        req, response, model_name = pending
+        req, response, model_name, *_ = pending
         self.run_logger.log_run(
             req,
             response,
@@ -93,6 +110,122 @@ class CareerOrchestrator:
             model_name=model_name,
         )
         return True
+
+    @staticmethod
+    def _response_to_plan_json(response: CareerPlanResponse) -> str:
+        """Serialize the effective plan fields for the feedback prompt."""
+        return json.dumps(
+            {
+                "user_facing_advice": response.user_facing_advice,
+                "target_roles": response.target_roles,
+                "gap_analysis": response.gap_analysis,
+                "roadmap_30_90_180": [
+                    item.model_dump() for item in response.roadmap_30_90_180
+                ],
+                "learning_resources": response.learning_resources,
+                "next_actions": response.next_actions,
+                "risk_flags": response.risk_flags,
+                "follow_up_questions": response.follow_up_questions,
+                "confidence": response.confidence,
+            },
+            ensure_ascii=False,
+        )
+
+    def adjust_plan(
+        self, session_id: str, feedback: str
+    ) -> Tuple[Optional[CareerPlanResponse], Optional[str]]:
+        """Regenerate the plan for 过短/过于详细 feedback (manual 工作项5).
+
+        - 合适: no regeneration; the original plan is recorded and returned.
+        - 过短/过于详细: rebuild the feedback prompt from the saved pipeline
+          context, regenerate with the same retry policy, and persist/log the
+          adjusted plan. On failure the ORIGINAL plan stays effective (manual
+          3.2 保留原结果并记录失败): the error is recorded and returned with
+          the original response.
+        - No pending run: records the feedback and returns (None, None).
+
+        Returns (effective_response, adjust_error).
+        """
+        if feedback not in FEEDBACK_OPTIONS:
+            raise ValueError(f"unsupported feedback: {feedback}")
+
+        pending = self._pending_runs.get(session_id)
+        if pending is None:
+            self.memory.append_feedback(session_id, feedback, None)
+            return None, None
+
+        req, original, model_name, perception_results, knowledge_hints, knowledge_hit_ids = pending
+        if feedback == "合适":
+            self.submit_feedback(session_id, feedback)
+            return original, None
+
+        started = time.time()
+        used_model = req.brain_model or self.settings.brain_default_model
+        prompt = build_feedback_prompt(
+            original_plan_json=self._response_to_plan_json(original),
+            feedback=feedback,
+            user_goal=req.user_goal,
+            constraints_json=req.constraints.model_dump_json(ensure_ascii=False),
+            profile_json=original.profile.model_dump_json(ensure_ascii=False),
+            knowledge_hints=knowledge_hints,
+        )
+
+        retries = max(0, int(self.settings.brain_retry_times))
+        errors: List[str] = []
+        attempts = 0
+        for i in range(retries + 1):
+            attempts = i + 1
+            try:
+                raw = self.cloud_brain.plan(prompt, model=used_model)
+                model_obj = self._extract_json(raw)
+                if not model_obj:
+                    raise BrainResponseError("反馈调整模型未返回有效 JSON")
+                if not self._valid_roadmap(model_obj.get('roadmap_30_90_180')):
+                    raise BrainResponseError("反馈调整模型缺少完整的 30/90/180 天路线")
+                adjusted = self._compose_from_model_obj(
+                    req,
+                    original.intent,
+                    original.profile,
+                    perception_results,
+                    knowledge_hints,
+                    knowledge_hit_ids,
+                    model_obj,
+                    served_by='cloud_brain',
+                    retry_count=i,
+                    model_name=used_model,
+                )
+                adjusted.latency_ms = int((time.time() - started) * 1000)
+                adjusted = self._sanitize_for_user(adjusted, req.debug_trace)
+                self._persist_response(
+                    req, adjusted, used_model, perception_results, knowledge_hints, knowledge_hit_ids
+                )
+                self.run_logger.log_run(
+                    req,
+                    adjusted,
+                    feedback=feedback,
+                    model_name=used_model,
+                    feedback_adjusted=True,
+                )
+                self._pending_runs.pop(session_id, None)
+                return adjusted, None
+            except BrainClientError as exc:
+                errors.append(exc.code)
+                if not exc.retryable:
+                    break
+            except Exception as exc:
+                errors.append(type(exc).__name__)
+
+        error_text = "; ".join(errors) or "feedback adjustment failed"
+        self.memory.append_feedback(session_id, feedback, None)
+        self.run_logger.log_run(
+            req,
+            original,
+            feedback=feedback,
+            model_name=model_name,
+            error=error_text,
+        )
+        self._pending_runs.pop(session_id, None)
+        return original, error_text
 
     def _get_image_agent(self) -> ImagePerceptionAgent:
         if self.image_agent is None:
@@ -402,7 +535,7 @@ class CareerOrchestrator:
             )
             resp.latency_ms = int((time.time() - t0) * 1000)
             resp = self._sanitize_for_user(resp, req.debug_trace)
-            self._persist_response(req, resp, "local-template")
+            self._persist_response(req, resp, "local-template", perception_results, knowledge_hints, knowledge_hit_ids)
             return resp, 0
 
         prompt = self._build_planning_prompt(req, intent, profile, perception_results, knowledge_hints)
@@ -434,7 +567,7 @@ class CareerOrchestrator:
                 )
                 resp.latency_ms = int((time.time() - t0) * 1000)
                 resp = self._sanitize_for_user(resp, req.debug_trace)
-                self._persist_response(req, resp, used_model)
+                self._persist_response(req, resp, used_model, perception_results, knowledge_hints, knowledge_hit_ids)
                 return resp, i
             except BrainClientError as exc:
                 errors.append(exc.code)
@@ -459,7 +592,7 @@ class CareerOrchestrator:
                 8,
             )
         resp = self._sanitize_for_user(resp, req.debug_trace)
-        self._persist_response(req, resp, "local-template")
+        self._persist_response(req, resp, "local-template", perception_results, knowledge_hints, knowledge_hit_ids)
         return resp, resp.retry_count
 
     def run(self, req: TaskRequest) -> CareerPlanResponse:
@@ -492,7 +625,7 @@ class CareerOrchestrator:
             )
             fallback.latency_ms = int((time.time() - start) * 1000)
             fallback = self._sanitize_for_user(fallback, req.debug_trace)
-            self._persist_response(req, fallback, "local-template")
+            self._persist_response(req, fallback, "local-template", perception_results, knowledge_hints, knowledge_hit_ids)
             yield {'event': 'stage_end', 'data': {'stage': 'brain_planning', 'served_by': 'local_fallback'}}
             yield {'event': 'final_result', 'data': fallback.model_dump()}
             return
@@ -523,7 +656,7 @@ class CareerOrchestrator:
                 )
                 resp.latency_ms = int((time.time() - start) * 1000)
                 resp = self._sanitize_for_user(resp, req.debug_trace)
-                self._persist_response(req, resp, used_model)
+                self._persist_response(req, resp, used_model, perception_results, knowledge_hints, knowledge_hit_ids)
                 yield {'event': 'stage_end', 'data': {'stage': 'brain_planning', 'retry': i}}
                 yield {'event': 'final_result', 'data': resp.model_dump()}
                 return
@@ -555,6 +688,6 @@ class CareerOrchestrator:
         )
         fallback.latency_ms = int((time.time() - start) * 1000)
         fallback = self._sanitize_for_user(fallback, req.debug_trace)
-        self._persist_response(req, fallback, "local-template")
+        self._persist_response(req, fallback, "local-template", perception_results, knowledge_hints, knowledge_hit_ids)
         yield {'event': 'stage_end', 'data': {'stage': 'brain_planning', 'served_by': 'local_fallback'}}
         yield {'event': 'final_result', 'data': fallback.model_dump()}
