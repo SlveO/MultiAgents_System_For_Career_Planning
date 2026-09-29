@@ -1,104 +1,41 @@
-# 多模态职业规划助手
+# 面向大学生职业发展规划的多模态智能体
 
-本项目研究一个明确问题：在职业规划场景中，由多个专注单一模态的感知 Agent 与文本推理 Agent 组成的模块化系统，能否达到或超过单体多模态模型。职业规划是应用和评测场景，系统架构对比才是主研究变量。
+本项目只按原版立项申报书完成职业规划系统，不再开展大小模型、单体/群体或单轮/多轮对照研究。
 
-当前已完成的结题 MVP 是：
+## 运行方式
 
-```text
-文本或文档输入
--> 8 个固定追问
--> 结构化用户画像
--> 65 条职业知识检索
--> DeepSeek 规划或明确标记的模板降级
--> 30/90/180 天路线
--> 过短/合适/过于详细反馈
--> 脱敏 SQLite 与 JSONL 记录
-```
+唯一入口为服务器Ubuntu终端CLI。最终规划推理由DeepSeek API完成；其他需要模型的模块使用服务器本地GPU模型，禁止CPU模型加载、自动CPU回退和运行时自动下载权重。文件解析、规则与关键词检索不属于模型加载。
 
-当前感知流程是一次性的。推理 Agent 主动向感知 Agent 多轮索取证据，以及与单体多模态模型的正式对照实验，属于后续研究阶段，不能视为已实现。
-
-## 安装
-
-依赖按设备逐层包含：
-
-```text
-requirements.txt        核心文本/文档 MVP
-    -> requirements-api.txt    MVP + FastAPI/Web
-        -> requirements-gpu.txt    API + 本地视觉/语音/向量实验
-```
-
-默认环境：
-
-```powershell
+```bash
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+source .venv/bin/activate
+# 先按服务器现有CUDA环境安装匹配的torch和torchvision；已有验证环境不要重装。
+pip install -r requirements-gpu.txt
+export DEEPSEEK_API_KEY='YOUR_KEY'
+export LOCAL_MODEL_DEVICE=cuda:0
+export VISION_MODEL_PATH=/path/to/existing/Qwen3-VL-2B-Instruct
+python -m project.assistant_cli --goal "获得后端实习" --text "本科大三，会Python和SQL"
 ```
 
-API/Web 机器使用 `pip install -r requirements-api.txt`。独显或实验室 L20 机器应先安装与本机 CUDA 匹配的 PyTorch，再安装 `requirements-gpu.txt`。GPU 配置同时拥有 API 和 MVP 功能；模型权重只放在已忽略的 `models/`。主研究模型只在可联网的 L20 Ubuntu 主机下载和运行，当前开发机器不下载这些权重。
+上面的模型路径是占位符，必须改为服务器既有权重目录；密钥仅存环境变量或本地.env，不提交Git。非模型开发/离线测试只需 `pip install -r requirements.txt`，这不是CPU模型部署方案。GPU依赖包含基础依赖，不再需要API/Web依赖文件。
 
-## CLI 演示
+文档：`python -m project.assistant_cli --goal "职业规划" --docs examples/sample_profile.txt`。
+图片：`python -m project.assistant_cli --goal "分析岗位要求" --images /path/to/poster.png`。
+支持txt、md、csv、tsv、pdf、docx、xlsx；扫描PDF暂未实现自动视觉解析。音频为可选本地GPU功能，需已有Whisper权重及对应运行依赖。
 
-交互执行 8 个追问：
+## 当前能力与缺口
 
-```powershell
-python -m project.assistant_cli --session-id demo-1 --goal "六个月内转岗数据分析" --text "我会 Python 和 SQL"
-python -m project.assistant_cli --goal "获得后端实习" --docs .\examples\sample_profile.txt
-```
+已保留：文本/文档提取、图片代理、固定八题画像、65条职业知识、DeepSeek规划、三档反馈记录、SQLite与脱敏JSONL日志。
+尚待服务器完成：按缺失信息引导学生、通过本地模型执行引导/输出适配、反馈后修改并显示规划、真实GPU与API联合验收。不能把固定问卷或反馈记录称为已完成这两个智能体。
 
-支持 `txt`、`md`、`csv`、`tsv`、`pdf`、`docx`、`xlsx`，不声明支持旧式 `.doc` 或 `.xls`。可用 `--answers-json` 固定追问答案，或用 `--no-follow-up` 运行消融。`project/main.py` 和仓库根 `main.py` 仅作兼容入口，新代码统一使用 `project.assistant_cli`。
+DeepSeek失败时CLI返回非零状态，不把内部诊断模板当作最终规划。现有模型名配置保留为 `deepseek-v4-flash`，实际可用性需要服务器用真实API核验；本机不代跑API。
 
-将 `DEEPSEEK_API_KEY` 写入本地 `.env` 后使用 `deepseek-v4-flash`；请求明确发送 `thinking={"type":"disabled"}`。没有密钥、响应无效或服务失败时会降级为 `local_fallback`。模板和离线假模型结果不得计入真实模型实验。
+## 验证与文档
 
-## 测试与实验
-
-```powershell
-python -m compileall -q project
-python -m unittest discover -s project/tests -v
+```bash
 python -m project.assistant_cli --help
-python -m project.experiments.run_completion_experiments --output-dir data/experiments
-python -m project.experiments.run_architecture_experiments --round-cap 2 --output-dir data/experiments/architecture
+python -m compileall -q project scripts/models
+python -m unittest discover -s project/tests -v
 ```
 
-默认实验使用确定性的 Fake DeepSeek，只验证四组结题对照的流程和结果文件，共输出 8 行；真实 API、GPU、前端与 Docker 的手工步骤和验收标准见 [验证指南](docs/verification.md)。主研究实验设计见 [实验设计](docs/experiments.md)。
-
-架构实验命令使用六个版本化匿名素材和三组 Fake Adapter，共输出18行，只验证
-案例哈希、Schema、适配器接口、2/3轮控制及结果文件，不能作为模型质量结论。
-L20 的真实下载、适配器返工和预实验必须按
-[成员 B L20 交接](docs/member-b-l20-agent-handoff.md)执行。
-
-主研究案例、证据、协作决策和规划输出由 `dataset/research_*.schema.json`
-统一约束；模型、提示词、生成参数和失败策略固定在
-`dataset/research_protocol.json`。五维盲评见
-[评分量表](docs/evaluation-rubric.md)，已确认策略及后续调整见
-[研究决策记录](docs/research-decisions.md)。成员实现不得自行改名或另建平行契约。
-
-启动可选 API：
-
-```powershell
-pip install -r requirements-api.txt
-python -m project.api.run_api
-```
-
-前端位于 `web/`，修改后运行 `npm install` 和 `npm run build`。Docker 使用 `requirements-api.txt`：`docker compose up --build`。
-
-## 目录与协作
-
-- `project/`：唯一正式 Python 实现和测试。
-- `dataset/`：应版本化的知识库与匿名案例。
-- `data/`：本地日志、数据库、上传和实验输出，不提交。
-- `models/`：本地模型权重，不提交。
-- `corwork/`：本地成员成果审查区，不作为第二套源码。
-- `docs/`：架构、接口、实验、验证及中英文进度。
-
-不得提交 API Key、原始简历、姓名、学号、电话、邮箱、账号、私人路径、缓存或生成日志。当前阶段和四人交接任务见 [团队进度](docs/progress.zh-CN.md)；Agent 执行状态见 [Project Progress](docs/progress.md)。
-
-当前团队统一基线为 `origin/integration/week1-results`。每位成员先同步该分支，再创建自己的任务分支；不要直接向共享整合分支并发提交：
-
-```powershell
-git fetch origin
-git switch -c work/<role>-<task> origin/integration/week1-results
-```
-
-当前负责人、交付物、依赖和验收标准见[团队进度](docs/progress.zh-CN.md)。
-`main` 暂不自动合并，待差异和测试报告审阅后再单独决定。
+离线测试使用Fake或mock，不加载真实模型。详见[当前计划](docs/completion-plan.md)、[验证说明](docs/verification.md)、[接管说明](docs/server-handoff.md)和[整理报告](docs/cleanup-report-20260929.zh-CN.md)。

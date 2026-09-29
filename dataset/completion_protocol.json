@@ -1,0 +1,28 @@
+{
+  "version": "original-proposal-cli-v1",
+  "effective_date": "2026-09-29",
+  "scope": "original-approved-career-planning-proposal",
+  "entrypoint": "project.assistant_cli",
+  "deployment": "ubuntu-gpu-server",
+  "reasoning_backend": "deepseek-api",
+  "other_model_backend": "local-cuda",
+  "allow_cpu_model_loading": false,
+  "allow_implicit_model_download": false,
+  "allow_rule_based_tools": true,
+  "accepted_server_commit": "7995c628595300bd67b122b19df7571ec57e138b",
+  "accept_other_unmerged_branches": false,
+  "architecture_comparison_enabled": false,
+  "paper_project_in_scope": false,
+  "web_api_in_scope": false,
+  "required_capabilities": [
+    "multimodal_perception",
+    "student_requirement_clarification",
+    "knowledge_grounded_planning",
+    "feedback_driven_output_adaptation"
+  ],
+  "implementation_gaps": [
+    "local_model_requirement_clarification",
+    "local_model_feedback_adaptation",
+    "server_gpu_and_api_acceptance"
+  ]
+}

@@ -31,7 +31,7 @@ class TestCompletionMvpFoundation(unittest.TestCase):
             second = get_settings()
 
         self.assertEqual(id(first), id(second))
-        self.assertEqual(first.jwt_secret_key, second.jwt_secret_key)
+        self.assertEqual(first.local_model_device, second.local_model_device)
 
     def test_document_router_only_claims_formats_the_parser_supports(self) -> None:
         supported = InputClassifier.DOCUMENT_EXTENSIONS
@@ -81,7 +81,7 @@ class TestCompletionMvpFoundation(unittest.TestCase):
         self.assertTrue(CareerOrchestrator._valid_roadmap(complete))
         self.assertFalse(CareerOrchestrator._valid_roadmap(incomplete))
 
-    def test_image_processor_loads_on_cpu_when_cuda_is_unavailable(self) -> None:
+    def test_image_processor_rejects_loading_when_cuda_is_unavailable(self) -> None:
         from project.agents import image as image_module
 
         class FakeCuda:
@@ -127,14 +127,10 @@ class TestCompletionMvpFoundation(unittest.TestCase):
             torch_module=FakeTorch(),
             model_class=FakeModelClass,
             processor_class=FakeProcessorClass,
-            vision_info_fn=lambda _messages: ([], []),
-            vram_manager=object(),
         )
-        loaded_model, loaded_processor, _ = processor._load()
-
-        self.assertIs(loaded_model, fake_model)
-        self.assertIs(loaded_processor, fake_processor)
-        self.assertEqual(fake_model.device, "cpu")
+        with self.assertRaisesRegex(RuntimeError, "CUDA is unavailable"):
+            processor._load()
+        self.assertIsNone(fake_model.device)
 
 
 if __name__ == "__main__":

@@ -36,7 +36,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--financial-budget", type=int, default=None)
     parser.add_argument("--brain-model", default=None)
     parser.add_argument("--answers-json", help="八项追问答案的 JSON 对象，用于可重复演示")
-    parser.add_argument("--no-follow-up", action="store_true", help="实验模式：跳过追问")
+    parser.add_argument("--no-follow-up", action="store_true", help="已有画像时跳过固定追问")
     parser.add_argument("--stream", action="store_true")
     parser.add_argument("--debug-trace", action="store_true")
     return parser
@@ -100,11 +100,14 @@ def main(
                 sys.stdout.flush()
             elif event_name == "final_result":
                 final_result = data
-        if final_result is not None:
-            output_fn(json.dumps(final_result, ensure_ascii=False, indent=2))
+        result = final_result or {}
     else:
         response = orchestrator.run(request)
-        output_fn(json.dumps(response.model_dump(), ensure_ascii=False, indent=2))
+        result = response.model_dump()
+    if result.get("served_by") != "cloud_brain":
+        output_fn("DeepSeek 未完成规划，请检查配置或运行错误；不以模板输出冒充最终规划。")
+        return 1
+    output_fn(json.dumps(result, ensure_ascii=False, indent=2))
     feedback = collect_feedback(input_fn=input_fn)
     orchestrator.submit_feedback(args.session_id, feedback)
     output_fn(f"反馈已记录：{feedback}")

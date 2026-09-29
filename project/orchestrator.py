@@ -42,7 +42,7 @@ from project.utils.fusion import MultiModalFusion
 class CareerOrchestrator:
     def __init__(
         self,
-        image_model_path: str = './models/Qwen3-VL-2B-Instruct',
+        image_model_path: Optional[str] = None,
         db_path: str = './data/session_memory.db',
         brain_client: Optional[BrainClient] = None,
         run_logger: Optional[JsonlRunLogger] = None,
@@ -60,7 +60,7 @@ class CareerOrchestrator:
         self.run_logger = run_logger or JsonlRunLogger()
         self._pending_runs: Dict[str, Tuple[TaskRequest, CareerPlanResponse, str]] = {}
 
-        self.image_model_path = image_model_path
+        self.image_model_path = image_model_path or self.settings.vision_model_path
 
     def _persist_response(
         self,
@@ -104,7 +104,10 @@ class CareerOrchestrator:
 
     def _get_audio_agent(self) -> AudioPerceptionAgent:
         if self.audio_agent is None:
-            self.audio_agent = AudioPerceptionAgent()
+            self.audio_agent = AudioPerceptionAgent(
+                model_path=self.settings.audio_model_path,
+                device=self.settings.local_model_device,
+            )
         return self.audio_agent
 
     def _get_video_agent(self) -> VideoPerceptionAgent:

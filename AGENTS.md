@@ -1,27 +1,25 @@
 # Repository Guidelines
 
-## Project Structure
+## Scope and Structure
 
-The canonical Python implementation is under `project/`. Use `project/assistant_cli.py` for the MVP CLI, `project/orchestrator.py` for the planning flow, `project/core/` for schemas, retrieval, settings, privacy, and persistence, and `project/agents/` for optional perception modules. Tests belong in `project/tests/`; versioned knowledge and anonymized cases belong in `dataset/`; React source is in `web/src/`. Runtime logs, databases, uploads, and experiments go in ignored `data/`; model weights go in ignored `models/`. `corwork/` is an ignored local review area for member submissions, not a second source tree.
+The original approved career-planning proposal is the sole scope. Use `project/assistant_cli.py` as the only product entry, `project/orchestrator.py` for orchestration, `project/core/` for contracts, retrieval and persistence, and `project/agents/` for perception. Tests live in `project/tests/`; small anonymized inputs and career knowledge belong in `dataset/`. Runtime data and model weights remain in ignored `data/` and `models/`.
 
-## Build, Test, and Development Commands
+Do not restore the cancelled architecture comparisons, pilot matrices, paper research, Web/API stack or independent member branches. The accepted sources are the existing local baseline and server snapshot `7995c628595300bd67b122b19df7571ec57e138b`.
 
-Install the text/document MVP with `pip install -r requirements.txt`. Use `requirements-api.txt` for FastAPI/Web. For GPU work, first install a CUDA-matched PyTorch build, then run `pip install -r requirements-gpu.txt`; this profile includes API and MVP dependencies.
+## Runtime and Commands
 
-Run `python -m project.assistant_cli --help`, `python -m unittest discover -s project/tests -v`, and `python -m compileall -q project` before handoff. Run the deterministic four-group harness with `python -m project.experiments.run_completion_experiments --output-dir data/experiments`. Frontend changes require `cd web; npm run build`.
+Deploy the CLI on the Ubuntu GPU server. Only the final reasoning agent uses DeepSeek API. Other model-based components must use existing local weights on an explicitly configured CUDA device. Never load models on CPU, fall back to CPU, or download weights implicitly. Parsing and rule-only tests may run without a GPU.
 
-Validate the six-case research plumbing with `python -m project.experiments.run_architecture_experiments --round-cap 2 --output-dir data/experiments/architecture`. Its Fake output is interface evidence only; real model execution follows `docs/member-b-l20-agent-handoff.md` on the L20.
+Install `requirements.txt` for offline development. For the server, install a CUDA-matched torch/torchvision pair first, then `requirements-gpu.txt`. Do not replace a validated server environment merely to match local development.
 
-## Style and Testing
+Run `python -m project.assistant_cli --help`, `python -m compileall -q project scripts/models`, and `python -m unittest discover -s project/tests -v`. Mock network and model calls. Report real GPU/API verification separately.
 
-Use four-space Python indentation, `snake_case` for Python symbols, `PascalCase` for React components, and `camelCase` for TypeScript variables. Keep canonical Pydantic fields defined in `project/core/schemas.py`; adapt incoming legacy fields at boundaries instead of creating parallel schemas. Tests use `unittest`; name files and methods `test_*`. Mock network/model calls in automated tests. Keep optional GPU imports lazy so the core profile remains runnable without `torch`.
+## Style and Tests
 
-## Data, Security, and Collaboration
+Use four spaces, snake_case symbols, and unittest files and methods named `test_*`. Reuse Pydantic contracts in `project/core/schemas.py`. Keep GPU imports lazy. Add focused regression tests for changed behavior; do not remove failing product tests to report success.
 
-Never commit `.env`, keys, weights, raw uploads, generated databases, logs, caches, or private local paths. Redact names, student IDs, phones, emails, and account data from outward-facing artifacts. Download research model weights and run the primary architecture experiment only on the L20 Ubuntu host, not on the current Windows checkout. Member work must be selectively ported into `project/` and covered by regression tests; do not merge legacy `src/` trees wholesale. Handoffs must state owner, deliverable, dependency or deadline, acceptance criteria, and next action.
+## Collaboration and Handoff
 
-Use focused conventional commits such as `feat:`, `fix:`, `test:`, and `docs:`. Do not commit, push, merge, publish, or modify remote systems without explicit approval after the final diff and test report are reviewed.
+Read current guidance and Git status before edits. Preserve unrelated changes and runtime data. Never commit credentials, raw personal inputs, private paths, weights or caches. Commit, push, merge and remote operations need explicit lead authorization after diff and test review.
 
-Team tasks start from `origin/integration/week1-results`. Create a personal `work/<role>-<task>` branch and do not push task commits directly to the shared integration branch.
-
-After the project lead confirms a research strategy, update `docs/research-decisions.md`, the applicable machine-readable contract, related documentation, and contract tests in the same reviewed change. Preserve superseded decisions in the log instead of deleting their history.
+Use focused conventional commits and a `codex/` branch. The effective task list is `docs/progress.zh-CN.md`; scope is in `docs/completion-plan.md` and `dataset/completion_protocol.json`. Handoffs must name owner, deliverable, deadline or dependency, acceptance criteria and next action. Record confirmed strategy changes with their corresponding contracts and tests. Server takeover is not complete until the receiving agent acknowledges the final published commit and first task.

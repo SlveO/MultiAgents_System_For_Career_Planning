@@ -5,6 +5,7 @@ from typing import Any
 
 
 _DROP_KEYS = {
+    "source",
     "raw_output",
     "quote",
     "document_paths",

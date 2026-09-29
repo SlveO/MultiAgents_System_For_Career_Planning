@@ -1,93 +1,15 @@
-# Interfaces
+# 当前接口
 
-## Canonical Data Contracts
+权威Python合同：project/core/schemas.py；执行边界：dataset/completion_protocol.json。
 
-`TaskRequest` in `project/core/schemas.py` is the only planning request
-contract. It contains `session_id`, `user_goal`, optional text/modality paths,
-constraints, `follow_up_answers`, `planner_mode`, and `use_knowledge`.
+- TaskRequest：会话ID、用户目标、输入材料、约束、追问回答。CLI只走DeepSeek规划。
+- PerceptionResult：模态、摘要、事实、证据、置信度、缺失信息。不能把置信度当效果评分。
+- UserProfile：学历、专业、技能、兴趣、岗位目标、预算、偏好、限制。
+- CareerPlanResponse：目标岗位、差距、30/90/180天路线、资源、行动、风险和建议。
+- submit_feedback：当前只记录过短/合适/过于详细，不生成新规划。输出适配需后续新增明确接口与回归测试。
 
-`UserProfile` uses these canonical fields:
+图片代理调用GPU本地ImageProcessor；CUDA/权重校验失败不触发CPU加载。
+DeepSeek失败可在内部产生明确标注的诊断模板，但CLI拒绝将其报告为成功规划，退出码为1。
+请求与响应入库时删除原文、证据路径和引文等字段；真实隐私边界仍需案例验证。
 
-```text
-education_stage, major, skills[], interests[], target_role,
-preference, main_constraints[], constraints
-```
-
-`CareerPlanResponse` returns target roles, gap analysis, three milestones
-(`30d`, `90d`, `180d`), resources, next actions, risks, knowledge IDs,
-backend, retry count, and latency. Feedback is exactly `过短`, `合适`, or
-`过于详细`.
-
-Incoming legacy fields must be normalized at the boundary:
-
-| Incoming field | Canonical field |
-|---|---|
-| `grade` | `education_stage` and `current_stage` |
-| `career_goal` / `career_goals` | `target_role` |
-| string `interests` | list `interests` |
-| `output_preference` | post-plan three-level feedback |
-
-Do not add a parallel `src/` schema or keep Chinese and English variants of
-the same field.
-
-## Component Contracts
-
-| Component | Input | Output | Failure behavior |
-|---|---|---|---|
-| Text/document perceiver | text or supported path | `PerceptionResult` | readable missing/unsupported result |
-| Optional media perceiver | media path and goal | `PerceptionResult` | lazy dependency error; core remains usable |
-| `CareerKnowledgeBase` | query, `top_k` | ranked IDs and hints | keyword default; vector fallback optional |
-| `DeepSeekBrainClient` | prompt and model | text or stream | typed, non-secret `BrainClientError` |
-| `CareerOrchestrator` | `TaskRequest` | `CareerPlanResponse` | retryable retry, then labeled template fallback |
-| `JsonlRunLogger` | request, response, feedback | one redacted JSONL run | drops raw paths/content and identifiers |
-
-Run records include timestamp, session ID, status, pipeline events, redacted
-input/profile/output, knowledge IDs, model, feedback, and latency. The record
-is written after feedback, so `feedback_recorded` is a real completed event.
-
-## Future Internal Dialogue
-
-Reasoner-to-perceiver clarification uses an experiment-only protocol and must
-not replace the eight user follow-ups in the MVP. A planner decision is either
-final output or an evidence request:
-
-```json
-{
-  "schema_version": "research-decision-v1",
-  "action": "final",
-  "reason_code": "evidence_sufficient"
-}
-```
-
-```json
-{
-  "schema_version": "research-decision-v1",
-  "action": "request_evidence",
-  "reason_code": "missing_decisive_evidence",
-  "request_id": "r-1",
-  "target": "vision",
-  "question": "Which requirement is stated in the highlighted region?",
-  "required_fields": ["requirement", "location"]
-}
-```
-
-The initial perceiver response is an `initial` evidence packet. A clarification
-response is a `delta` packet with the matching `request_id`; it contains only
-new facts, missing fields, and conflicts and is appended without replacing old
-evidence. Each request plus one perceiver response counts as one round; the
-reasoner's decision call does not. Every turn logs the case ID, round index,
-request, response, latency, and error without raw private content.
-
-Pilot runs may cap collaboration at two or three rounds. Freeze one cap before
-the 20-case architecture comparison; a later `0/1/2/3`-round experiment studies
-turn depth separately. At the cap or after a perception failure, the reasoner
-must finalize using available evidence rather than retrying without limit. It
-sets `evidence_status=insufficient` and adds a corresponding `risk_flags` item
-only when decisive evidence is still missing.
-
-Machine-readable case, evidence, decision, and plan contracts are versioned in
-the four `dataset/research_*.schema.json` files. Prompt, model, generation,
-runtime, and failure policies are versioned in
-`dataset/research_protocol.json`; confirmed changes are retained in
-`docs/research-decisions.md`. Experiment code must consume these contracts
-instead of defining different field names in a parallel source tree.
+后续本地引导和适配智能体应复用这些字段，不恢复旧research-*架构比较Schema。

@@ -66,8 +66,15 @@ class CareerKnowledgeBase:
         if self._embedder is not None or self._embedder_failed:
             return
         try:
+            from project.core.gpu import require_cuda
+            from project.core.settings import get_settings
+            device = require_cuda(get_settings().local_model_device)
+            if not Path(self.embedding_model_path).is_dir():
+                raise RuntimeError("Embedding model must exist locally")
             from sentence_transformers import SentenceTransformer
-            self._embedder = SentenceTransformer(self.embedding_model_path)
+            self._embedder = SentenceTransformer(
+                self.embedding_model_path, device=device, local_files_only=True,
+            )
         except Exception:
             self._embedder_failed = True
 

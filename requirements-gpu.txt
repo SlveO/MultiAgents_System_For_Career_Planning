@@ -1,12 +1,9 @@
-# GPU profile: includes API and MVP dependencies.
-# Install a PyTorch build matching the host CUDA version before this file.
--r requirements-api.txt
-
+# Server CLI: install the CUDA-matched torch/torchvision pair separately first.
+# Server snapshot validated torch 2.11.0+cu130 / torchvision 0.26.0+cu130.
+-r requirements.txt
 accelerate>=0.25,<2
-transformers>=4.51,<5
+transformers>=4.57,<6
 qwen-vl-utils>=0.0.8,<1
 Pillow>=10,<13
-modelscope>=1.20,<2
-sentence-transformers>=3,<6
-chromadb>=0.4,<2
+# Optional video support. Model weights are not downloaded during installation.
 opencv-python-headless>=4.8,<5

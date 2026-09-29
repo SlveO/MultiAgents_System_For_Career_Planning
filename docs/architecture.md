@@ -1,68 +1,24 @@
-# Architecture
+# 系统架构
 
-## Research Position
+## 已实现
 
-The project tests whether specialized single-modality perceivers coordinated
-with a text reasoner can match or exceed one monolithic multimodal model in a
-career-planning task. Career planning is the application and evaluation
-domain; the independent variable is the system architecture.
+CLI → 固定八题/预置回答 → 文本规则及文档解析/本地GPU图片感知 → 用户画像 → 关键词职业检索 → DeepSeek API → 30/90/180天规划 → 三档反馈记录。
 
-## Implemented Completion MVP
+图片加载方式参考服务器快照7995c62：AutoProcessor、Qwen3VL、local_files_only、明确CUDA设备及BF16。旧实验的三组控制器和LMFE研究Schema没有产品消费者，因此未移植。重组后的图片路径仍需服务器真实验证，不能借用旧冒烟结论称其已通过。
 
-```text
-text or TXT/MD/CSV/TSV/PDF/DOCX/XLSX
-  -> text/document perception
-  -> eight fixed user follow-ups
-  -> canonical UserProfile
-  -> keyword retrieval over 65 career records
-  -> DeepSeek-compatible planner or labeled template fallback
-  -> 30/90/180-day plan
-  -> three-level feedback
-  -> redacted SQLite history and JSONL run record
-```
+## 目标分工
 
-`project/assistant_cli.py` is the canonical CLI. `CareerOrchestrator` owns the
-flow; `project/core/` owns schemas, retrieval, settings, privacy, logs, and
-persistence. Image, audio, video, vector retrieval, FastAPI, and Web remain
-optional. Their imports and model loading must not block text/document use.
+- 本地多模态感知：只提取材料信息，不把缺失内容编造成事实。
+- 本地需求引导：识别学生信息缺口并提问，回答进入画像；尚未实现，固定八题只是基础。
+- 最终推理：唯一远程模型调用，使用DeepSeek API。
+- 本地输出适配：根据反馈改变详略与表达，保持事实和职业方向；尚未实现，目前仅保存反馈。
+- 检索/解析/存储：本地确定性工具，不要求为每个工具再加载模型。
 
-The DeepSeek client sends `deepseek-v4-flash` with
-`thinking={"type":"disabled"}`. Typed errors distinguish configuration,
-authentication, balance, rate-limit, timeout, server, HTTP, and invalid
-response failures. Only retryable failures are retried.
+本地模型只允许CUDA执行；没有CUDA或缺少权重时清晰失败，不回退CPU。
+文本规则和普通文档解析尚不是本地语言模型理解。下一阶段据原版需求接通已有服务器模型，不能声称已完成。
 
-## Target Research System
+## 保留的可选功能
 
-```text
-raw modality -> specialized perceiver -> coordinator -> text reasoner
-     ^                                                |
-     +------ bounded evidence clarification ----------+
-  -> shared career retrieval -> final plan and evidence trace
-```
+音频/视频代理保留但不作为当前结题验收必需。音频权重必须本地已有；视频复用GPU图片处理器。向量检索代码保留为可选，默认使用关键词；如启用，需要单独准备依赖和本地GPU向量模型。
 
-The controlled comparison has three groups: `Qwen3-VL-8B-Instruct` as the
-monolithic baseline, `Qwen3-VL-2B-Instruct` plus
-`Qwen3-4B-Instruct-2507` as the one-shot modular system, and the same modular
-pair with bounded evidence clarification. DeepSeek remains an external
-engineering reference rather than a primary controlled group.
-
-The current system performs one-shot perception. The monolithic adapter and
-reasoner-to-perceiver protocol are specified but not implemented. They must
-remain behind an experiment entry point and must not change the completion-MVP
-default flow.
-
-## Hardware Profiles
-
-- Core MVP: CPU or GPU machine; no local model is required.
-- API/Web: core plus FastAPI, authentication, and SSE.
-- Team GPU: optional Qwen/Whisper/BGE development with device-aware VRAM
-  thresholds rather than a fixed 6GB assumption.
-- Laboratory L20 (48 GB, networked Ubuntu): the only target for downloading
-  the three research models and running the primary architecture comparison.
-  Record the exact Ubuntu, driver, CUDA, Python, PyTorch, and disk state before
-  setup because the Ubuntu version is not yet known.
-
-Weights remain under ignored `models/`; runtime artifacts remain under ignored
-`data/`. No research weights are downloaded on the current development
-machine. Incoming member work under ignored `corwork/` is review material and
-must be adapted into the canonical layout.
+网页、API、JWT及另一条聊天管线已移除，避免维护两个不一致流程。

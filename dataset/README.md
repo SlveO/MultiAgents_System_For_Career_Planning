@@ -1,43 +1,11 @@
-# Dataset Layout
+# 数据目录
 
-`dataset/` contains small, versioned, reviewable inputs. Local databases,
-uploads, logs, and experiment outputs belong in ignored `data/`.
+- career_knowledge_base.json：65条岗位知识，运行时按稳定顺序分配ID。
+- career_retrieval_cases.json：匿名检索功能案例。
+- career_source_leads.json：职业来源线索，不等于逐项核实的事实。
+- completion_protocol.json：CLI、模型分工和功能验收范围。
+- research_cases/：历史自制的3张图片和3份单页PDF及素材描述，保留作演示输入；目录名为兼容保留，不再意味着pilot或三组对照。
+- career.json、career_coaching_dataset.jsonl：暂无活动消费者，不作为已验证数据或训练任务；本次不启动训练。
 
-- `career_knowledge_base.json`: 65 unique career records used by keyword or
-  optional vector retrieval. The loader assigns `career-NNN` IDs from the
-  append-only file order. Records may include skills, suitable majors,
-  transition paths, salary hints, and source leads.
-- `career_retrieval_cases.json`: three anonymized profiles used to check that
-  retrieval returns the intended target role.
-- `research_case.schema.json`: frozen fields for image/PDF-page research cases,
-  including asset hashes, licenses, fixed profiles, knowledge, and evidence.
-- `research_evidence.schema.json`: initial and clarification-delta evidence
-  packets exchanged by the modular perceiver.
-- `research_decision.schema.json`: bounded `final` or `request_evidence`
-  decisions made by the modular reasoner.
-- `research_plan.schema.json`: common final-plan output for all three research
-  groups, including traceable evidence use and insufficiency fields.
-- `research_protocol.json`: frozen models, deterministic settings, shared
-  prompts and hashes, collaboration caps, strict failure policy, and scoring
-  thresholds. Human-readable decision history is in
-  `docs/research-decisions.md`.
-- `research_cases/pilot_cases.json`: six Schema-valid pilot cases (three PNG
-  images and three single-page PDFs) with project-created anonymous assets,
-  fixed profiles, fixed knowledge, licenses, hashes, and expected evidence.
-- `career_source_leads.json`: normalized source leads from member research.
-  Candidate skills and paths remain unverified until a reviewer records a
-  field-level excerpt or source location; this file is not experiment truth.
-- `career_coaching_dataset.jsonl`: anonymized coaching conversations, one JSON
-  object per line, retained for later experiments.
-- `career.json`: legacy career conversations retained until their consumers
-  and research value are reviewed.
-
-Source labels added from team research are provenance leads, not proof that
-facts or salary ranges have been independently verified. Verify sources and
-record field-level excerpts before using them as formal experimental ground
-truth. Append new roles instead of reordering existing entries so generated
-IDs remain stable. Cases under `dataset/research_cases/` must follow the case
-schema; only the project lead may approve protocol changes.
-
-Do not store API keys, raw resumes, names, student IDs, phone numbers, emails,
-accounts, or private local paths here.
+data/存运行日志、会话数据库及历史真实结果；models/存权重，两者不入Git。
+不把来源线索、模拟输出或固定问卷当作真实用户研究结论。
