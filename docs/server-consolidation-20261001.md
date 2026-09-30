@@ -10,6 +10,14 @@
 
 初始 main 为 c30a0e71222f674f65354e4c5592d28ce04e4e58，是已接收基线的祖先；本轮 fetch 后未发现 main 独有提交。GitHub 默认分支为 main。最终发布完整哈希和清理回执以推送后核验记录为准。
 
+### 执行检查点：认证阻塞，尚未完成清理
+
+有效成果已提交为 a3e490fa5c48cfd4ae4fbfaa743af6e39b672b84，本地 main 已正常快进到该提交。本记录的后续文档提交同样尚待发布。执行 `git push origin main` 时返回 `could not read Username for 'https://github.com': No such device or address`（环境显示本地化错误）；未能建立写入认证，不能据此判断分支保护是否允许直接推送。
+
+未配置可用的 credential helper，未发现 gh 安装或本地 SSH 密钥目录。需负责人在服务器配置 GitHub 认证，不要将 token 发到对话或提交 Git。认证就绪后先重新 fetch，复核远端差异，再正常推送；如保护规则要求 PR 则遵循 PR 流程。
+
+尚未删除任何远端分支、工作区或文件。主仓库原 41 项修改、环境和数据原样保留；接收工作区的 .env、数据库和四组真实验证记录亦原位保留。迁移和清理须等待 main 推送核验成功。本机暂不可把未发布的新 main 当作恢复来源，也不应据此删除本机仓库。
+
 ## 本轮离线测试
 
 使用既有 .venv-l20/bin/python（Python 3.10 环境），不安装/更新依赖：
