@@ -2,6 +2,8 @@
 
 更新：2026-10-01。服务器已接管；后续以服务器仓库和 GitHub main 为准。唯一任务表见[完成计划](completion-plan.md)。
 
+代码归一已正常发布到 main，12 个已放弃远端分支及两个旧 worktree 已清理；唯一开发工作区为 MultiAgents_System_For_Career_Planning。运行资料已迁移校验，原 41 项修改保存在 Git stash。迁移后 help、compileall 与 61 项离线测试通过，无新增 GPU/API 调用。
+
 - 已接收清理基线 a092c045dd02c835e991796ab3140d034c2e7ca7。旧快照 7995c62 仅作来源核对，不整体合并。
 - 旧架构实验、论文、Web/API 和成员分支不恢复。本次只归一现有成果，不开发新功能。
 - DeepSeek 客户端有效代理选择修复及六项回归测试纳入源码，提示词与推理参数未改。
