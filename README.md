@@ -2,6 +2,8 @@
 
 本项目只按原版立项申报书完成职业规划系统，不再开展大小模型、单体/群体或单轮/多轮对照研究。
 
+服务器已接管，后续代码与进度以服务器仓库及 GitHub main 为准，本机不再作为开发端。
+
 ## 运行方式
 
 唯一入口为服务器Ubuntu终端CLI。最终规划推理由DeepSeek API完成；其他需要模型的模块使用服务器本地GPU模型，禁止CPU模型加载、自动CPU回退和运行时自动下载权重。文件解析、规则与关键词检索不属于模型加载。
@@ -12,7 +14,7 @@ source .venv/bin/activate
 # 先按服务器现有CUDA环境安装匹配的torch和torchvision；已有验证环境不要重装。
 pip install -r requirements-gpu.txt
 export DEEPSEEK_API_KEY='YOUR_KEY'
-export LOCAL_MODEL_DEVICE=cuda:0
+export LOCAL_MODEL_DEVICE=cuda:1
 export VISION_MODEL_PATH=/path/to/existing/Qwen3-VL-2B-Instruct
 python -m project.assistant_cli --goal "获得后端实习" --text "本科大三，会Python和SQL"
 ```
@@ -28,7 +30,9 @@ python -m project.assistant_cli --goal "获得后端实习" --text "本科大三
 已保留：文本/文档提取、图片代理、固定八题画像、65条职业知识、DeepSeek规划、三档反馈记录、SQLite与脱敏JSONL日志。
 尚待服务器完成：按缺失信息引导学生、通过本地模型执行引导/输出适配、反馈后修改并显示规划、真实GPU与API联合验收。不能把固定问卷或反馈记录称为已完成这两个智能体。
 
-DeepSeek失败时CLI返回非零状态，不把内部诊断模板当作最终规划。现有模型名配置保留为 `deepseek-v4-flash`，实际可用性需要服务器用真实API核验；本机不代跑API。
+DeepSeek失败时CLI返回非零状态，不把内部诊断模板当作最终规划。现有模型名配置保留为 `deepseek-v4-flash`，2026-09-30 单独 API 请求已返回可解析规划；此别名不保证固定服务端版本。同日图片在 L20 cuda:1 感知成功，但同次 CLI 请求失败，不能将分离验证视为完整链路通过。详见[真实验证记录](docs/deepseek-client-verification-20260930.md)。
+
+服务器已有模型：Qwen3-VL-2B-Instruct（2B）、Qwen3-4B-Instruct-2507（4B）、Qwen3-VL-8B-Instruct（8B）、Llama-3-8B-Instruct（8B）。目录存在不等于均已验证；当前图片链路使用 2B。权重不上传 GitHub。
 
 ## 验证与文档
 

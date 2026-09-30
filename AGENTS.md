@@ -4,7 +4,7 @@
 
 The original approved career-planning proposal is the sole scope. Use `project/assistant_cli.py` as the only product entry, `project/orchestrator.py` for orchestration, `project/core/` for contracts, retrieval and persistence, and `project/agents/` for perception. Tests live in `project/tests/`; small anonymized inputs and career knowledge belong in `dataset/`. Runtime data and model weights remain in ignored `data/` and `models/`.
 
-Do not restore the cancelled architecture comparisons, pilot matrices, paper research, Web/API stack or independent member branches. The accepted sources are the existing local baseline and server snapshot `7995c628595300bd67b122b19df7571ec57e138b`.
+Do not restore the cancelled architecture comparisons, pilot matrices, paper research, Web/API stack or independent member branches. The accepted cleanup baseline is `a092c045dd02c835e991796ab3140d034c2e7ca7`. Server snapshot `7995c628595300bd67b122b19df7571ec57e138b` is provenance only; never merge it wholesale. The server is the sole development endpoint; publish effective work to main and start subsequent work on short-lived codex/ branches.
 
 ## Runtime and Commands
 

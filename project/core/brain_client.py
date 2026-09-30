@@ -1,7 +1,11 @@
 from __future__ import annotations
 
 import json
+import os
+import ssl
 from typing import Any, Dict, Generator, Iterable, Optional
+from urllib.parse import urlsplit
+from urllib.request import getproxies, proxy_bypass
 
 import httpx
 
@@ -120,6 +124,32 @@ class DeepSeekBrainClient(BrainClient):
         # DeepSeek OpenAI-compatible endpoint
         return f"{self.base_url}/chat/completions"
 
+    def _http_client(self) -> httpx.Client:
+        """Select only the endpoint's proxy; never mutate process environment.
+
+        HTTPX otherwise eagerly parses ALL_PROXY even when HTTPS_PROXY wins.
+        Retain NO_PROXY and certificate settings; invalid effective proxies fail
+        closed instead of silently bypassing the user's network configuration.
+        """
+        try:
+            target = urlsplit(self._url())
+            proxies = getproxies()
+            proxy = None if proxy_bypass(target.netloc) else (
+                proxies.get(target.scheme) or proxies.get("all")
+            )
+            if proxy and urlsplit(proxy).scheme not in {"http", "https", "socks5", "socks5h"}:
+                raise BrainConfigError("DeepSeek 有效代理协议不受支持；请配置 HTTP(S) 或 SOCKS5 代理")
+            verify = True
+            if os.environ.get("SSL_CERT_FILE"):
+                verify = ssl.create_default_context(cafile=os.environ["SSL_CERT_FILE"])
+            elif os.environ.get("SSL_CERT_DIR"):
+                verify = ssl.create_default_context(capath=os.environ["SSL_CERT_DIR"])
+            return httpx.Client(
+                timeout=self.timeout, proxy=proxy, trust_env=False, verify=verify,
+            )
+        except (ValueError, ImportError, OSError) as exc:
+            raise BrainConfigError("DeepSeek 客户端初始化失败；请检查代理、SOCKS 依赖和 CA 配置") from None
+
     @staticmethod
     def _raise_for_status(response: httpx.Response) -> None:
         if response.status_code < 400:
@@ -149,7 +179,7 @@ class DeepSeekBrainClient(BrainClient):
             raise BrainConfigError("DEEPSEEK_API_KEY 未设置")
 
         try:
-            with httpx.Client(timeout=self.timeout) as client:
+            with self._http_client() as client:
                 response = client.post(
                     self._url(),
                     headers=self._headers(),
@@ -172,7 +202,7 @@ class DeepSeekBrainClient(BrainClient):
 
         yielded_content = False
         try:
-            with httpx.Client(timeout=self.timeout) as client:
+            with self._http_client() as client:
                 with client.stream(
                     "POST",
                     self._url(),
@@ -204,5 +234,4 @@ class DeepSeekBrainClient(BrainClient):
             raise BrainHTTPError("无法连接 DeepSeek API") from exc
         if not yielded_content:
             raise BrainResponseError("DeepSeek API 流式响应没有规划文本")
-
 

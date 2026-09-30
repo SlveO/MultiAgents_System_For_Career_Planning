@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import unittest
+import os
 from unittest.mock import patch
 
 import httpx
@@ -44,6 +45,51 @@ def build_client(api_key: str = "test-key") -> DeepSeekBrainClient:
 
 
 class TestDeepSeekBrainClient(unittest.TestCase):
+    def test_https_proxy_wins_over_invalid_all_proxy_without_mutation(self) -> None:
+        env = {"HTTPS_PROXY": "http://proxy.example:8080", "ALL_PROXY": "socks://unused:1080"}
+        with patch.dict(os.environ, env, clear=True):
+            before = dict(os.environ)
+            with patch("project.core.brain_client.httpx.Client") as constructor:
+                build_client()._http_client()
+            self.assertEqual(constructor.call_args.kwargs["proxy"], env["HTTPS_PROXY"])
+            self.assertFalse(constructor.call_args.kwargs["trust_env"])
+            self.assertIs(constructor.call_args.kwargs["verify"], True)
+            self.assertEqual(dict(os.environ), before)
+
+    def test_no_proxy_bypasses_invalid_all_proxy(self) -> None:
+        with patch.dict(os.environ, {"ALL_PROXY": "socks://unused:1080", "NO_PROXY": "api.deepseek.com"}, clear=True):
+            with patch("project.core.brain_client.httpx.Client") as constructor:
+                build_client()._http_client()
+            self.assertIsNone(constructor.call_args.kwargs["proxy"])
+
+    def test_invalid_effective_proxy_is_typed_and_redacted(self) -> None:
+        with patch.dict(os.environ, {"ALL_PROXY": "socks://private:secret@host:1080"}, clear=True):
+            with self.assertRaises(BrainConfigError) as captured:
+                build_client()._http_client()
+            self.assertNotIn("secret", str(captured.exception))
+            self.assertFalse(captured.exception.retryable)
+
+    def test_lowercase_proxy_and_direct_connection(self) -> None:
+        for env, expected in [({}, None), ({"https_proxy": "http://lower:8080", "HTTPS_PROXY": "http://upper:8080"}, "http://lower:8080")]:
+            with self.subTest(env=env), patch.dict(os.environ, env, clear=True):
+                with patch("project.core.brain_client.httpx.Client") as constructor:
+                    build_client()._http_client()
+                self.assertEqual(constructor.call_args.kwargs["proxy"], expected)
+
+    def test_ca_setting_is_preserved(self) -> None:
+        with patch.dict(os.environ, {"SSL_CERT_FILE": "test-ca.pem"}, clear=True):
+            with patch("project.core.brain_client.ssl.create_default_context") as context:
+                with patch("project.core.brain_client.httpx.Client") as constructor:
+                    build_client()._http_client()
+                context.assert_called_once_with(cafile="test-ca.pem")
+                self.assertIs(constructor.call_args.kwargs["verify"], context.return_value)
+
+    def test_stream_uses_same_proxy_client(self) -> None:
+        with patch.object(DeepSeekBrainClient, "_http_client", side_effect=BrainConfigError("configuration")) as factory:
+            with self.assertRaises(BrainConfigError):
+                list(build_client().plan_stream("prompt"))
+            factory.assert_called_once()
+
     def test_plan_sends_frozen_model_and_non_thinking_payload(self) -> None:
         response = httpx.Response(
             200,

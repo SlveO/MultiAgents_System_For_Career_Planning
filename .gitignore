@@ -15,6 +15,7 @@ __pycache__/
 .coverage
 htmlcov/
 .venv/
+.venv-l20/
 venv/
 
 # Runtime data and temporary test directories
