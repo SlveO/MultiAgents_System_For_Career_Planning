@@ -1,0 +1,67 @@
+[
+  {
+    "test_case_id": "tc1_tech_ai",
+    "description": "计算机专业大三学生，兴趣AI，目标成为算法工程师",
+    "user_profile": {
+      "major": "计算机科学与技术",
+      "grade": "大三",
+      "skills": ["Python", "Java", "SQL", "PyTorch"],
+      "interests": "人工智能、深度学习、自然语言处理",
+      "career_goal": "成为AI算法工程师，从事大模型或计算机视觉方向",
+      "output_preference": "适中",
+      "missing_fields": []
+    },
+    "expected_retrieval": {
+      "top_jobs": [
+        "大模型算法工程师",
+        "算法工程师",
+        "AI Agent工程师",
+        "AI科学家/负责人",
+        "Java软件工程师"
+      ],
+      "reason": "该生具备编程基础和AI相关技能，与AI算法类岗位高度匹配；同时Java能力也能胜任通用软件开发岗位。"
+    }
+  },
+  {
+    "test_case_id": "tc2_fintech",
+    "description": "金融工程硕士，熟练量化分析，目标金融科技风控",
+    "user_profile": {
+      "major": "金融工程",
+      "grade": "硕士一年级",
+      "skills": ["Python", "R", "SQL", "机器学习", "统计分析"],
+      "interests": "金融风险管理、量化投资、数据建模",
+      "career_goal": "进入金融机构或金融科技公司，从事风险控制或数据分析岗位",
+      "output_preference": "详细",
+      "missing_fields": []
+    },
+    "expected_retrieval": {
+      "top_jobs": [
+        "金融科技分析师/风控岗",
+        "人工智能专家（金融方向）",
+        "数据分析师"
+      ],
+      "reason": "该生兼具金融知识与数据分析能力，与金融科技及数据分析岗位高度契合。"
+    }
+  },
+  {
+    "test_case_id": "tc3_materials",
+    "description": "材料科学与工程专业本科生，希望从事新材料研发",
+    "user_profile": {
+      "major": "材料科学与工程",
+      "grade": "大四",
+      "skills": ["材料表征", "高分子合成", "力学性能测试", "CAD绘图"],
+      "interests": "高分子材料、新能源材料、复合材料",
+      "career_goal": "在新材料或新能源企业从事研发工作，参与高分子或储能材料开发",
+      "output_preference": "简略",
+      "missing_fields": []
+    },
+    "expected_retrieval": {
+      "top_jobs": [
+        "高分子材料工程师",
+        "储能结构工程师",
+        "医药研发管理岗"
+      ],
+      "reason": "材料专业背景与高分子材料工程师及储能结构工程师直接相关；医药研发管理岗也涉及材料化学知识，可作为关联选项。"
+    }
+  }
+]

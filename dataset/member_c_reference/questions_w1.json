@@ -1,0 +1,50 @@
+{
+  "rules": [
+    {
+      "id": "q1_career_goal",
+      "trigger": "缺失或字段为空：user_profile.career_goal",
+      "question": "您的职业目标是什么？比如希望从事的具体岗位、行业或长期方向（如“成为人工智能算法工程师”或“进入金融行业做风险管理”）。",
+      "priority": 1,
+      "max_rounds": 2,
+      "expected_answer_format": "文本描述"
+    },
+    {
+      "id": "q2_major",
+      "trigger": "缺失或字段为空：user_profile.major",
+      "question": "您目前所学的专业是什么？（如果已毕业，请填写毕业专业）",
+      "priority": 2,
+      "max_rounds": 1,
+      "expected_answer_format": "专业名称"
+    },
+    {
+      "id": "q3_skills",
+      "trigger": "缺失或字段为空：user_profile.skills 或列表长度 < 2",
+      "question": "请列出您掌握的硬技能（例如编程语言、设计工具、数据分析等）,至少2项。如果目前没有,可以回答“无”或“正在学习”。",
+      "priority": 3,
+      "max_rounds": 2,
+      "expected_answer_format": "逗号分隔的列表"
+    },
+    {
+      "id": "q4_interests",
+      "trigger": "缺失或字段为空：user_profile.interests",
+      "question": "您在职业上最感兴趣的方向是什么？（比如技术研发、市场营销、创意设计、数据分析等）",
+      "priority": 4,
+      "max_rounds": 1,
+      "expected_answer_format": "文本描述"
+    },
+    {
+      "id": "q5_clarify_goal",
+      "trigger": "user_profile.career_goal 存在但过于模糊（如“IT”“金融”“管理”等）,且缺少具体岗位或行业限定",
+      "question": "您刚才提到的目标比较宽泛。能否再具体一些？例如希望从事哪个细分领域或具体岗位？这能帮我们更精准地为您规划路径。",
+      "priority": 1,
+      "max_rounds": 2,
+      "expected_answer_format": "具体的岗位或行业描述"
+    }
+  ],
+  "stop_conditions": [
+    "当 user_profile 中 career_goal、major、skills 三个核心字段均非空且非空字符串时，立即停止追问。",
+    "若总追问轮数已达到 8 轮，强制停止追问，进入规划生成阶段。",
+    "若用户明确表示‘不清楚’或‘不想回答’某个问题，则跳过该字段，标记为缺失，继续下一规则。"
+  ],
+  "priority_execution": "按 priority 数值从小到大依次询问，相同优先级则按 id 顺序。"
+}
