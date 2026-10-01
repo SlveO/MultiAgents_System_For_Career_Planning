@@ -28,7 +28,7 @@ python -m project.assistant_cli --goal "获得后端实习" --text "本科大三
 ## 当前能力与缺口
 
 已保留：文本/文档提取、图片代理、固定八题画像、65条职业知识、DeepSeek规划、三档反馈记录、SQLite与脱敏JSONL日志。
-尚待服务器完成：按缺失信息引导学生、通过本地模型执行引导/输出适配、反馈后修改并显示规划、真实GPU与API联合验收。不能把固定问卷或反馈记录称为已完成这两个智能体。
+尚待服务器完成：按缺失信息引导学生、通过本地模型执行引导/输出适配、反馈后修改并显示规划。不能把固定问卷或反馈记录称为已完成这两个智能体。2026-10-01 已完成单次真实图片→GPU→DeepSeek→CLI展示及持久化验证，详见[验证报告](docs/cli-e2e-verification-20261001.md)；这不代表人工质量验收通过。
 
 DeepSeek失败时CLI返回非零状态，不把内部诊断模板当作最终规划。现有模型名配置保留为 `deepseek-v4-flash`，2026-09-30 单独 API 请求已返回可解析规划；此别名不保证固定服务端版本。同日图片在 L20 cuda:1 感知成功，但同次 CLI 请求失败，不能将分离验证视为完整链路通过。详见[真实验证记录](docs/deepseek-client-verification-20260930.md)。
 
@@ -42,4 +42,4 @@ python -m compileall -q project scripts/models
 python -m unittest discover -s project/tests -v
 ```
 
-离线测试使用Fake或mock，不加载真实模型。详见[当前计划](docs/completion-plan.md)、[验证说明](docs/verification.md)、[接管说明](docs/server-handoff.md)和[整理报告](docs/cleanup-report-20260929.zh-CN.md)。
+离线测试使用Fake或mock，不加载真实模型。详见[当前计划](docs/completion-plan.md)、[验证说明](docs/verification.md)、[新对话启动指令](docs/server-handoff.md)、[本次清理回执](docs/workspace-cleanup-20261001.md)和[整理报告](docs/cleanup-report-20260929.zh-CN.md)。
