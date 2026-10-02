@@ -122,13 +122,28 @@ def main(
         output_fn("DeepSeek 未完成规划，请检查配置或运行错误；不以模板输出冒充最终规划。")
         return 1
     display_result = dict(result)
+    if not args.debug_trace:
+        display_result.pop("plan_id", None)
+        display_result.pop("output_version", None)
     if not args.debug_trace and "profile" in display_result:
         display_result["profile"] = dict(display_result["profile"])
         display_result["profile"].pop("guidance", None)
     output_fn(json.dumps(display_result, ensure_ascii=False, indent=2))
     feedback = collect_feedback(input_fn=input_fn)
-    orchestrator.submit_feedback(args.session_id, feedback)
+    try:
+        adaptation = orchestrator.adapt_feedback(args.session_id, feedback)
+    except (OSError, ValueError):
+        output_fn("反馈或调整结果未能保存，原规划已保留。")
+        return 1
     output_fn(f"反馈已记录：{feedback}")
+    if adaptation.status == "adapted":
+        output_fn(f"调整后的规划（第 {adaptation.output_version.version} 版）：")
+        output_fn(adaptation.output_version.display_text)
+    elif adaptation.status == "failed":
+        output_fn("详略调整未完成，已保留原规划。")
+        return 1
+    elif adaptation.reason == "length_constraint":
+        output_fn("保留必要信息后无法进一步按此方向调整，继续使用原规划。")
     return 0
 
 

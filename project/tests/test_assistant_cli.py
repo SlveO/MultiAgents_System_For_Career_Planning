@@ -11,6 +11,7 @@ from project.core.run_logging import JsonlRunLogger
 from project.orchestrator import CareerOrchestrator
 from project.tests.test_completion_flow import FakeDeepSeekClient
 from project.tests.test_guidance import FakeGuidanceModel
+from project.tests.test_output_adaptation import FakeFeedbackModel
 
 
 class TestAssistantCli(unittest.TestCase):
@@ -19,7 +20,7 @@ class TestAssistantCli(unittest.TestCase):
             root = Path(tmp)
             orchestrator = CareerOrchestrator(
                 db_path=str(root / "sessions.db"), brain_client=FakeDeepSeekClient(),
-                guidance_model=model or FakeGuidanceModel(), run_logger=JsonlRunLogger(root / "runs.jsonl"),
+                guidance_model=model or FakeGuidanceModel(), feedback_model=FakeFeedbackModel(), run_logger=JsonlRunLogger(root / "runs.jsonl"),
             )
             orchestrator.settings = orchestrator.settings.model_copy(update={"guidance_max_rounds": 2})
             iterator = iter(inputs)

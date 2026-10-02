@@ -67,6 +67,12 @@ class LocalGuidanceModel:
             )},
             {"role": "user", "content": json.dumps(context, ensure_ascii=False)},
         ]
+        return self.generate_json(messages, GuidanceDecision)
+
+    def generate_json(self, messages: list[dict], schema):
+        """Share the validated CUDA loader and bounded generation with local tasks."""
+        if self._model is None:
+            self._load()
         inputs = self._tokenizer.apply_chat_template(
             messages, tokenize=True, add_generation_prompt=True,
             return_dict=True, return_tensors="pt",
@@ -79,7 +85,7 @@ class LocalGuidanceModel:
         text = self._tokenizer.decode(
             generated[0][inputs["input_ids"].shape[-1]:], skip_special_tokens=True,
         ).strip()
-        return GuidanceDecision.model_validate_json(text)
+        return schema.model_validate_json(text)
 
     def unload(self):
         self._model = None

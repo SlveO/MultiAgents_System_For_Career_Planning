@@ -14,6 +14,7 @@ class AppSettings(BaseSettings):
     local_model_device: str = "cuda:0"
     vision_model_path: str = "./models/Qwen3-VL-2B-Instruct"
     guidance_model_path: str = ""
+    feedback_model_path: str = ""
     guidance_max_rounds: int = Field(default=4, ge=0, le=16)
     audio_model_path: str = "./models/whisper-small"
 

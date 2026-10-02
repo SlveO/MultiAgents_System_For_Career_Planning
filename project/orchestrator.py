@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 import time
+import hashlib
+import uuid
 from dataclasses import dataclass
 from typing import Any, Dict, Generator, List, Optional, Tuple
 
@@ -42,6 +44,9 @@ from project.core.guidance import GuidanceModel, collect_evidence, merge_decisio
 from project.core.intake import add_evidence, field_value, initialize_fields
 from project.core.local_guidance import LocalGuidanceModel
 from project.core.schemas import GuidanceDecision, GuidanceObservation
+from project.core.local_feedback import LocalFeedbackModel
+from project.core.output_adaptation import FeedbackModel, adapt_output, original_version
+from project.core.schemas import FeedbackAdaptationResult
 
 
 @dataclass
@@ -59,6 +64,7 @@ class CareerOrchestrator:
         brain_client: Optional[BrainClient] = None,
         run_logger: Optional[JsonlRunLogger] = None,
         guidance_model: Optional[GuidanceModel] = None,
+        feedback_model: Optional[FeedbackModel] = None,
     ):
         self.settings = get_settings()
         self.memory = SessionMemory(db_path=db_path)
@@ -77,6 +83,10 @@ class CareerOrchestrator:
         self.guidance_model = guidance_model or LocalGuidanceModel(
             self.settings.guidance_model_path, self.settings.local_model_device,
         )
+        self.feedback_model = feedback_model or LocalFeedbackModel(
+            self.settings.feedback_model_path or self.settings.guidance_model_path,
+            self.settings.local_model_device,
+        )
 
     def _persist_response(
         self,
@@ -84,6 +94,9 @@ class CareerOrchestrator:
         response: CareerPlanResponse,
         model_name: str,
     ) -> None:
+        response.plan_id = uuid.uuid4().hex
+        response.output_version = original_version(response)
+        self.memory.save_output_version(req.session_id, redact_data(response.output_version.model_dump()))
         self.memory.upsert_profile(req.session_id, redact_data(response.profile.model_dump()))
         self.memory.append_interaction(
             req.session_id,
@@ -107,6 +120,42 @@ class CareerOrchestrator:
             model_name=model_name,
         )
         return True
+
+    def adapt_feedback(
+        self, session_id: str, feedback: str, *, request_id: Optional[str] = None,
+        plan_id: Optional[str] = None,
+    ) -> FeedbackAdaptationResult:
+        """One adaptation per active plan; identical requests replay durably."""
+        if feedback not in FEEDBACK_OPTIONS:
+            raise ValueError(f"unsupported feedback: {feedback}")
+        pending = self._pending_runs.get(session_id)
+        latest = self.memory.get_latest_output_version(session_id)
+        active_plan = pending[1].plan_id if pending else (latest or {}).get("plan_id")
+        plan_id = plan_id or active_plan
+        if not plan_id:
+            raise ValueError("No planning output is available for this session")
+        if request_id is None:
+            request_id = hashlib.sha256(f"{session_id}\n{plan_id}\n{feedback}".encode()).hexdigest()
+        cached = self.memory.get_feedback_result(request_id)
+        if cached:
+            result = FeedbackAdaptationResult.model_validate(cached)
+            if (result.session_id, result.plan_id, result.feedback) != (session_id, plan_id, feedback):
+                raise ValueError("Feedback request ID belongs to different input")
+            if pending and pending[1].plan_id == plan_id:
+                req, response, model_name = pending
+                self.run_logger.log_run(req, response, feedback=feedback, model_name=model_name, adaptation=result)
+                self._pending_runs.pop(session_id)
+            else:
+                self.run_logger.log_feedback_replay(result, self.memory.get_output_versions(session_id, plan_id))
+            return result
+        if not pending or pending[1].plan_id != plan_id:
+            raise ValueError("The plan is no longer active; only a saved feedback request can be replayed")
+        req, response, model_name = pending
+        result = adapt_output(response, feedback, request_id, self.feedback_model)
+        self.memory.save_feedback_result(redact_data(result.model_dump()))
+        self.run_logger.log_run(req, response, feedback=feedback, model_name=model_name, adaptation=result)
+        self._pending_runs.pop(session_id)
+        return result
 
     def _get_image_agent(self) -> ImagePerceptionAgent:
         if self.image_agent is None:

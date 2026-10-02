@@ -21,7 +21,6 @@
     "feedback_driven_output_adaptation"
   ],
   "implementation_gaps": [
-    "local_model_feedback_adaptation",
     "server_gpu_and_api_acceptance"
   ],
   "requirement_guidance": {
@@ -41,5 +40,27 @@
     "real_model_verified": true,
     "verification_scope": "three_anonymous_cases_with_rule_guards_and_mock_planner",
     "verification_date": "2026-10-02"
+  },
+  "feedback_adaptation": {
+    "status": "implemented_offline_and_small_sample_gpu_verified",
+    "model_candidate": "Qwen3-4B-Instruct-2507",
+    "model_path_setting": "FEEDBACK_MODEL_PATH",
+    "reuse_explicit_guidance_model_path": true,
+    "model_output": "references_and_layout_only",
+    "canonical_plan_immutable": true,
+    "version_storage": [
+      "sqlite",
+      "json_fallback",
+      "jsonl"
+    ],
+    "real_model_verified": true,
+    "real_model_cases_verified": [
+      "expand",
+      "compress",
+      "suitable"
+    ],
+    "remaining_gpu_cases": [],
+    "verification_date": "2026-10-02",
+    "verification_scope": "three_feedback_choices_with_two_local_generations_and_mock_planner_no_api"
   }
 }

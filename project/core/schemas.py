@@ -136,6 +136,48 @@ class Milestone(BaseModel):
     metrics: List[str] = Field(default_factory=list)
 
 
+DisplaySectionName = Literal[
+    "advice", "targets", "gaps", "roadmap", "actions", "resources",
+    "constraints", "risks", "questions",
+]
+
+
+class FeedbackDisplaySection(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    section: DisplaySectionName
+    item_ids: List[str] = Field(min_length=1, max_length=128)
+    style: Literal["paragraph", "bullets"] = "bullets"
+
+
+class FeedbackLayout(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    sections: List[FeedbackDisplaySection] = Field(min_length=1, max_length=9)
+
+
+class OutputVersion(BaseModel):
+    plan_id: str = Field(min_length=1)
+    version: int = Field(ge=1)
+    parent_version: Optional[int] = Field(default=None, ge=1)
+    display_text: str
+    facts_sha256: str
+    source_text_sha256: str
+    item_ids: List[str] = Field(default_factory=list)
+    created_at: str
+
+
+class FeedbackAdaptationResult(BaseModel):
+    request_id: str = Field(min_length=1, max_length=128)
+    session_id: str
+    plan_id: str
+    feedback: FeedbackChoice
+    status: Literal["adapted", "unchanged", "failed"]
+    output_version: OutputVersion
+    source_version: int = 1
+    reason: str = ""
+    model_used: bool = False
+    latency_ms: int = 0
+
+
 class CareerPlanResponse(BaseModel):
     session_id: str
     intent: IntentType
@@ -156,6 +198,8 @@ class CareerPlanResponse(BaseModel):
     served_by: Literal["cloud_brain", "local_fallback"] = "local_fallback"
     retry_count: int = 0
     latency_ms: int = 0
+    plan_id: str = ""
+    output_version: Optional[OutputVersion] = None
 
 
 class FeedbackRequest(BaseModel):

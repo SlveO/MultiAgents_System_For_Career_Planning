@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 import sqlite3
+import os
+import tempfile
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
@@ -63,6 +65,29 @@ class SessionMemory:
                 )
                 """
             )
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS output_versions (
+                    plan_id TEXT NOT NULL,
+                    version INTEGER NOT NULL,
+                    session_id TEXT NOT NULL,
+                    payload_json TEXT NOT NULL,
+                    created_at TEXT NOT NULL,
+                    PRIMARY KEY (plan_id, version)
+                )
+                """
+            )
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS feedback_adaptations (
+                    request_id TEXT PRIMARY KEY,
+                    session_id TEXT NOT NULL,
+                    plan_id TEXT NOT NULL,
+                    payload_json TEXT NOT NULL,
+                    created_at TEXT NOT NULL
+                )
+                """
+            )
             conn.commit()
 
     def _init_fallback(self) -> None:
@@ -75,7 +100,21 @@ class SessionMemory:
         return json.loads(self.fallback_json.read_text(encoding="utf-8"))
 
     def _save_fallback(self, payload: Dict[str, Any]) -> None:
-        self.fallback_json.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+        content = json.dumps(payload, ensure_ascii=False)
+        temporary = None
+        try:
+            with tempfile.NamedTemporaryFile(
+                mode="w", encoding="utf-8", dir=self.fallback_json.parent,
+                prefix=f".{self.fallback_json.name}.", delete=False,
+            ) as handle:
+                temporary = Path(handle.name)
+                handle.write(content)
+                handle.flush()
+                os.fsync(handle.fileno())
+            os.replace(temporary, self.fallback_json)
+        finally:
+            if temporary is not None:
+                temporary.unlink(missing_ok=True)
 
     @staticmethod
     def _now() -> str:
@@ -171,6 +210,110 @@ class SessionMemory:
                 (session_id, feedback, rating, self._now()),
             )
             conn.commit()
+
+    def save_output_version(self, session_id: str, version: Dict[str, Any]) -> None:
+        """Insert an immutable display version; never replace a stored version."""
+        if self.backend == "json":
+            data = self._load_fallback()
+            versions = data.setdefault("output_versions", [])
+            for row in versions:
+                payload = row["payload"]
+                if (payload["plan_id"], payload["version"]) == (version["plan_id"], version["version"]):
+                    if row["session_id"] != session_id or payload != version:
+                        raise ValueError("Output version already exists with different content")
+                    return
+            versions.append({"session_id": session_id, "payload": version})
+            self._save_fallback(data)
+            return
+        with self._connect() as conn:
+            self._insert_output_version(conn, session_id, version)
+
+    @staticmethod
+    def _insert_output_version(conn, session_id: str, version: Dict[str, Any]) -> None:
+        existing = conn.execute(
+            "SELECT session_id, payload_json FROM output_versions WHERE plan_id = ? AND version = ?",
+            (version["plan_id"], version["version"]),
+        ).fetchone()
+        if existing:
+            if existing["session_id"] != session_id or json.loads(existing["payload_json"]) != version:
+                raise ValueError("Output version already exists with different content")
+            return
+        conn.execute(
+            "INSERT INTO output_versions VALUES (?, ?, ?, ?, ?)",
+            (version["plan_id"], version["version"], session_id, json.dumps(version, ensure_ascii=False), version["created_at"]),
+        )
+
+    def get_output_versions(self, session_id: str, plan_id: str) -> List[Dict[str, Any]]:
+        if self.backend == "json":
+            rows = self._load_fallback().get("output_versions", [])
+            return sorted(
+                [row["payload"] for row in rows if row["session_id"] == session_id and row["payload"]["plan_id"] == plan_id],
+                key=lambda version: version["version"],
+            )
+        with self._connect() as conn:
+            rows = conn.execute(
+                "SELECT payload_json FROM output_versions WHERE session_id = ? AND plan_id = ? ORDER BY version",
+                (session_id, plan_id),
+            ).fetchall()
+        return [json.loads(row["payload_json"]) for row in rows]
+
+    def get_latest_output_version(self, session_id: str) -> Optional[Dict[str, Any]]:
+        if self.backend == "json":
+            rows = [row["payload"] for row in self._load_fallback().get("output_versions", []) if row["session_id"] == session_id]
+            return max(rows, key=lambda row: (row["created_at"], row["version"])) if rows else None
+        with self._connect() as conn:
+            row = conn.execute(
+                "SELECT payload_json FROM output_versions WHERE session_id = ? ORDER BY created_at DESC, version DESC LIMIT 1",
+                (session_id,),
+            ).fetchone()
+        return json.loads(row["payload_json"]) if row else None
+
+    def get_feedback_result(self, request_id: str) -> Optional[Dict[str, Any]]:
+        if self.backend == "json":
+            return self._load_fallback().get("feedback_adaptations", {}).get(request_id)
+        with self._connect() as conn:
+            row = conn.execute("SELECT payload_json FROM feedback_adaptations WHERE request_id = ?", (request_id,)).fetchone()
+        return json.loads(row["payload_json"]) if row else None
+
+    def save_feedback_result(self, result: Dict[str, Any]) -> bool:
+        """Atomically save feedback, outcome and a possible new display version."""
+        request_id, session_id = result["request_id"], result["session_id"]
+        if self.backend == "json":
+            data = self._load_fallback()
+            results = data.setdefault("feedback_adaptations", {})
+            if request_id in results:
+                if results[request_id] != result:
+                    raise ValueError("Feedback request already exists with different content")
+                return False
+            if result["status"] == "adapted":
+                version = result["output_version"]
+                versions = data.setdefault("output_versions", [])
+                if any((row["payload"]["plan_id"], row["payload"]["version"]) == (version["plan_id"], version["version"]) for row in versions):
+                    raise ValueError("Output version already exists")
+                versions.append({"session_id": session_id, "payload": version})
+            results[request_id] = result
+            data.setdefault("feedback", []).append({
+                "session_id": session_id, "feedback": result["feedback"], "rating": None, "created_at": self._now(),
+            })
+            self._save_fallback(data)
+            return True
+        with self._connect() as conn:
+            existing = conn.execute("SELECT payload_json FROM feedback_adaptations WHERE request_id = ?", (request_id,)).fetchone()
+            if existing:
+                if json.loads(existing["payload_json"]) != result:
+                    raise ValueError("Feedback request already exists with different content")
+                return False
+            if result["status"] == "adapted":
+                self._insert_output_version(conn, session_id, result["output_version"])
+            conn.execute(
+                "INSERT INTO feedback_adaptations VALUES (?, ?, ?, ?, ?)",
+                (request_id, session_id, result["plan_id"], json.dumps(result, ensure_ascii=False), self._now()),
+            )
+            conn.execute(
+                "INSERT INTO feedback (session_id, feedback, rating, created_at) VALUES (?, ?, ?, ?)",
+                (session_id, result["feedback"], None, self._now()),
+            )
+        return True
 
     def get_session_history(self, session_id: str, limit: int = 20) -> List[Dict[str, Any]]:
         if self.backend == "json":
