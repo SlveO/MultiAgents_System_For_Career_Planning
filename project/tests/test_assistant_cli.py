@@ -1,72 +1,97 @@
 from __future__ import annotations
 
 import json
+import tempfile
 import unittest
+from pathlib import Path
+from unittest.mock import patch
 
 from project import assistant_cli
-
-
-class FakeResponse:
-    def model_dump(self):
-        return {"target_roles": ["数据分析师"], "served_by": "cloud_brain"}
-
-
-class FakeOrchestrator:
-    def __init__(self) -> None:
-        self.request = None
-        self.feedback = None
-
-    def run(self, request):
-        self.request = request
-        return FakeResponse()
-
-    def submit_feedback(self, session_id, feedback):
-        self.feedback = (session_id, feedback)
+from project.core.run_logging import JsonlRunLogger
+from project.orchestrator import CareerOrchestrator
+from project.tests.test_completion_flow import FakeDeepSeekClient
+from project.tests.test_guidance import FakeGuidanceModel
 
 
 class TestAssistantCli(unittest.TestCase):
-    def test_default_cli_collects_all_follow_up_answers_before_planning(self) -> None:
-        fake = FakeOrchestrator()
-        inputs = iter(["本科大三", "统计学", "Python、SQL", "数据分析", "数据分析师", "10", "上海", "项目不足", "2"])
-        output: list[str] = []
+    def run_cli(self, args, inputs, model=None):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            orchestrator = CareerOrchestrator(
+                db_path=str(root / "sessions.db"), brain_client=FakeDeepSeekClient(),
+                guidance_model=model or FakeGuidanceModel(), run_logger=JsonlRunLogger(root / "runs.jsonl"),
+            )
+            orchestrator.settings = orchestrator.settings.model_copy(update={"guidance_max_rounds": 2})
+            iterator = iter(inputs)
+            prompts, output = [], []
+            with patch.object(orchestrator, 'run', wraps=orchestrator.run) as run:
+                code = assistant_cli.main(
+                    args, input_fn=lambda prompt: prompts.append(prompt) or next(iterator),
+                    output_fn=output.append, orchestrator_factory=lambda: orchestrator,
+                )
+            history = orchestrator.memory.get_session_history("default-session")
+            return code, prompts, output, history, run.call_count
 
-        exit_code = assistant_cli.main(
-            ["--goal", "获得数据分析实习", "--text", "会 Python"],
-            input_fn=lambda _prompt: next(inputs),
-            output_fn=output.append,
-            orchestrator_factory=lambda: fake,
+    def test_default_cli_collects_only_targeted_questions_before_planning(self):
+        code, prompts, output, history, calls = self.run_cli(
+            ["--goal", "求职", "--text", "会 Python"], ["数据分析师", "SQL", "2"],
         )
-
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(len(fake.request.follow_up_answers), 8)
-        self.assertEqual(fake.request.follow_up_answers["major"], "统计学")
-        self.assertEqual(fake.feedback, ("default-session", "合适"))
+        self.assertEqual(code, 0)
+        self.assertEqual(calls, 1)
+        self.assertEqual(len(prompts), 3)  # Two guidance questions and feedback.
+        self.assertEqual(history[-1]["request"]["follow_up_answers"], {"target_role": "数据分析师", "skills": "SQL"})
         self.assertTrue(any("数据分析师" in line for line in output))
+        self.assertNotIn("question_id", "".join(output))
+        self.assertIn("question_id", history[-1]["response"]["profile"]["guidance"]["answers"][0])
 
-    def test_answers_json_makes_cli_repeatable_without_prompts(self) -> None:
-        fake = FakeOrchestrator()
+    def test_complete_answers_json_needs_no_guidance_questions(self):
         answers = {
-            "education": "本科",
-            "major": "软件工程",
-            "skills": "Python",
-            "interests": "后端开发",
-            "target_role": "后端开发工程师",
-            "time_budget": "8",
-            "preference": "杭州互联网",
-            "constraints": "实习经历少",
+            "education": "本科", "major": "软件工程", "skills": "Python", "interests": "后端开发",
+            "target_role": "后端开发工程师", "time_budget": "8", "preference": "杭州互联网", "constraints": "实习经历少",
         }
-
-        exit_code = assistant_cli.main(
-            ["--goal", "求职", "--answers-json", json.dumps(answers, ensure_ascii=False)],
-            input_fn=lambda _prompt: "3",
-            output_fn=lambda _line: None,
-            orchestrator_factory=lambda: fake,
+        code, prompts, _, history, _ = self.run_cli(
+            ["--goal", "求职", "--answers-json", json.dumps(answers, ensure_ascii=False)], ["3"],
         )
+        self.assertEqual(code, 0)
+        self.assertEqual(len(prompts), 1)
+        self.assertEqual(history[-1]["request"]["follow_up_answers"], answers)
 
-        self.assertEqual(exit_code, 0)
-        self.assertEqual(fake.request.follow_up_answers, answers)
-        self.assertEqual(fake.feedback, ("default-session", "过于详细"))
+    def test_partial_json_does_not_skip_missing_questions(self):
+        code, prompts, _, history, _ = self.run_cli(
+            ["--goal", "求职", "--answers-json", '{"target_role":"数据分析师"}'], ["SQL", "2.5", "2"],
+        )
+        self.assertEqual(code, 0)
+        self.assertIn("技能", prompts[0])
+        self.assertEqual(history[-1]["response"]["profile"]["constraints"]["time_budget_hours_per_week"], 2.5)
 
+    def test_skip_preserves_provided_answers_without_local_calls(self):
+        model = FakeGuidanceModel()
+        code, prompts, _, history, _ = self.run_cli(
+            ["--goal", "求职", "--no-follow-up", "--answers-json", '{"skills":"无"}'], ["2"], model,
+        )
+        self.assertEqual(code, 0)
+        self.assertEqual(len(prompts), 1)
+        self.assertFalse(model.contexts)
+        self.assertEqual(history[-1]["response"]["profile"]["guidance"]["fields"]["skills"]["status"], "explicit_none")
 
-if __name__ == "__main__":
-    unittest.main(verbosity=2)
+    def test_model_failure_requires_explicit_continue_before_planning(self):
+        for choice, expected in [("退出", 1), ("继续", 0)]:
+            with self.subTest(choice=choice):
+                code, _, output, history, calls = self.run_cli(
+                    ["--goal", "求职"], [choice, "2"], FakeGuidanceModel([RuntimeError("secret-path")]),
+                )
+                self.assertEqual(code, expected)
+                self.assertEqual(calls, int(choice == "继续"))
+                self.assertNotIn("secret-path", "".join(output))
+                if history:
+                    self.assertEqual(history[-1]["response"]["profile"]["guidance"]["stop_reason"], "model_error")
+
+    def test_bad_answer_fields_and_invalid_hours_fail_before_orchestrator_creation(self):
+        for args in [["--answers-json", '{"unknown":"x"}'], ["--answers-json", '{"skills":null}'],
+                     ["--time-budget", "-1"], ["--time-budget", "nan"]]:
+            with self.subTest(args=args):
+                with patch.object(assistant_cli, 'CareerOrchestrator') as factory:
+                    code = assistant_cli.main(["--goal", "求职", *args],
+                                              orchestrator_factory=factory, output_fn=lambda _: None)
+                    self.assertEqual(code, 2)
+                    factory.assert_not_called()

@@ -21,8 +21,25 @@
     "feedback_driven_output_adaptation"
   ],
   "implementation_gaps": [
-    "local_model_requirement_clarification",
     "local_model_feedback_adaptation",
     "server_gpu_and_api_acceptance"
-  ]
+  ],
+  "requirement_guidance": {
+    "status": "implemented_offline_and_small_sample_gpu_verified",
+    "model_candidate": "Qwen3-4B-Instruct-2507",
+    "model_path_setting": "GUIDANCE_MODEL_PATH",
+    "default_max_rounds": 4,
+    "max_rounds_setting": "GUIDANCE_MAX_ROUNDS",
+    "field_statuses": [
+      "missing",
+      "known",
+      "unknown",
+      "refused",
+      "explicit_none",
+      "conflict"
+    ],
+    "real_model_verified": true,
+    "verification_scope": "three_anonymous_cases_with_rule_guards_and_mock_planner",
+    "verification_date": "2026-10-02"
+  }
 }

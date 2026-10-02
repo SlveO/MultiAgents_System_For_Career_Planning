@@ -16,6 +16,8 @@ pip install -r requirements-gpu.txt
 export DEEPSEEK_API_KEY='YOUR_KEY'
 export LOCAL_MODEL_DEVICE=cuda:1
 export VISION_MODEL_PATH=/path/to/existing/Qwen3-VL-2B-Instruct
+export GUIDANCE_MODEL_PATH=/path/to/existing/Qwen3-4B-Instruct-2507
+export GUIDANCE_MAX_ROUNDS=4
 python -m project.assistant_cli --goal "获得后端实习" --text "本科大三，会Python和SQL"
 ```
 
@@ -27,8 +29,10 @@ python -m project.assistant_cli --goal "获得后端实习" --text "本科大三
 
 ## 当前能力与缺口
 
-已保留：文本/文档提取、图片代理、固定八题画像、65条职业知识、DeepSeek规划、三档反馈记录、SQLite与脱敏JSONL日志。
-尚待服务器完成：按缺失信息引导学生、通过本地模型执行引导/输出适配、反馈后修改并显示规划。不能把固定问卷或反馈记录称为已完成这两个智能体。2026-10-01 已完成单次真实图片→GPU→DeepSeek→CLI展示及持久化验证，详见[验证报告](docs/cli-e2e-verification-20261001.md)；这不代表人工质量验收通过。
+已保留：文本/文档提取、图片代理、八维度画像、65条职业知识、DeepSeek规划、三档反馈记录、SQLite与脱敏JSONL日志。
+本地需求引导已实现并通过离线回归：先感知材料，针对缺失/矛盾单题追问，区分未知/拒答/明确没有，回答带来源进入规划；2026-10-02 已完成 Qwen3-4B/L20 三例真实引导验证（[结果与局限](docs/local-needs-guidance-gpu-20261002.md)）。反馈后修改并显示规划仍待实现，不能把离线模拟测试称为本地模型质量验收通过。2026-10-01 已完成单次真实图片→GPU→DeepSeek→CLI展示及持久化验证，详见[验证报告](docs/cli-e2e-verification-20261001.md)；这不代表人工质量验收通过。
+
+引导最多默认 4 轮（`GUIDANCE_MAX_ROUNDS` 可设 0–16）；输入“结束引导”可停止追问并继续规划。`--answers-json` 保留八维度键名，接受字符串答案，部分答案只补必要缺口；明确跳过引导用 `--no-follow-up`（仍会正常感知材料及请求最终规划，不是离线模式）。模型未配置、加载失败或输出无效时，须输入“继续”才会带未解决项进入规划，否则退出。现有服务器私有配置未自动写入新模型路径；真实运行前应按授权核对设备占用。
 
 DeepSeek失败时CLI返回非零状态，不把内部诊断模板当作最终规划。现有模型名配置保留为 `deepseek-v4-flash`，2026-09-30 单独 API 请求已返回可解析规划；此别名不保证固定服务端版本。同日图片在 L20 cuda:1 感知成功，但同次 CLI 请求失败，不能将分离验证视为完整链路通过。详见[真实验证记录](docs/deepseek-client-verification-20260930.md)。
 

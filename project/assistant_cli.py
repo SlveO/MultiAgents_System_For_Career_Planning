@@ -6,12 +6,12 @@ import sys
 from typing import Callable, Sequence
 
 try:
-    from .core.intake import collect_follow_up_answers
+    from .core.intake import FIELD_PATHS
     from .core.feedback import collect_feedback
     from .core.schemas import TaskRequest, UserConstraints
     from .orchestrator import CareerOrchestrator
 except ImportError:
-    from project.core.intake import collect_follow_up_answers
+    from project.core.intake import FIELD_PATHS
     from project.core.feedback import collect_feedback
     from project.core.schemas import TaskRequest, UserConstraints
     from project.orchestrator import CareerOrchestrator
@@ -32,11 +32,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--audio", nargs="*", default=[], help="可选音频路径")
     parser.add_argument("--city", default=None)
     parser.add_argument("--education", default=None)
-    parser.add_argument("--time-budget", type=int, default=None)
+    parser.add_argument("--time-budget", type=float, default=None)
     parser.add_argument("--financial-budget", type=int, default=None)
     parser.add_argument("--brain-model", default=None)
-    parser.add_argument("--answers-json", help="八项追问答案的 JSON 对象，用于可重复演示")
-    parser.add_argument("--no-follow-up", action="store_true", help="已有画像时跳过固定追问")
+    parser.add_argument("--answers-json", help="已有八维度答案的 JSON 对象；仅补问必要缺口")
+    parser.add_argument("--no-follow-up", action="store_true", help="跳过本地需求引导，保留未解决项")
     parser.add_argument("--stream", action="store_true")
     parser.add_argument("--debug-trace", action="store_true")
     return parser
@@ -48,7 +48,9 @@ def _parse_answers(raw: str | None) -> dict[str, str]:
     value = json.loads(raw)
     if not isinstance(value, dict):
         raise ValueError("--answers-json 必须是 JSON 对象")
-    return {str(key): str(item) for key, item in value.items()}
+    if any(key not in FIELD_PATHS or not isinstance(item, str) for key, item in value.items()):
+        raise ValueError("--answers-json 仅支持八个画像字段，答案必须是字符串")
+    return value
 
 
 def main(
@@ -65,9 +67,9 @@ def main(
         output_fn(f"参数错误: {exc}")
         return 2
 
-    if not answers and not args.no_follow_up:
-        output_fn("请完成 8 个固定追问，用于生成结构化用户画像。")
-        answers = collect_follow_up_answers(input_fn=input_fn)
+    if args.time_budget is not None and not 0 <= args.time_budget <= 168:
+        output_fn("参数错误: 每周时间须在 0 到 168 小时之间")
+        return 2
 
     request = TaskRequest(
         session_id=args.session_id,
@@ -90,9 +92,21 @@ def main(
     )
 
     orchestrator = orchestrator_factory()
+    prepared = orchestrator.prepare(request, input_fn=input_fn, output_fn=output_fn)
+    if prepared.profile.guidance.stop_reason == "model_error":
+        try:
+            choice = input_fn("本地引导未完成。输入‘继续’可带未解决项生成规划，其他输入退出。\n> ")
+        except (EOFError, KeyboardInterrupt):
+            return 1
+        if choice.strip() != "继续":
+            return 1
+    unresolved = [key for key, state in prepared.profile.guidance.fields.items()
+                  if state.status in {"missing", "unknown", "conflict"}]
+    if unresolved:
+        output_fn("部分信息仍未明确，规划会保留这些限制。")
     if args.stream:
         final_result = None
-        for event in orchestrator.run_stream(request):
+        for event in orchestrator.run_stream(request, prepared=prepared):
             event_name = event.get("event")
             data = event.get("data", {})
             if event_name == "token":
@@ -102,12 +116,16 @@ def main(
                 final_result = data
         result = final_result or {}
     else:
-        response = orchestrator.run(request)
+        response = orchestrator.run(request, prepared=prepared)
         result = response.model_dump()
     if result.get("served_by") != "cloud_brain":
         output_fn("DeepSeek 未完成规划，请检查配置或运行错误；不以模板输出冒充最终规划。")
         return 1
-    output_fn(json.dumps(result, ensure_ascii=False, indent=2))
+    display_result = dict(result)
+    if not args.debug_trace and "profile" in display_result:
+        display_result["profile"] = dict(display_result["profile"])
+        display_result["profile"].pop("guidance", None)
+    output_fn(json.dumps(display_result, ensure_ascii=False, indent=2))
     feedback = collect_feedback(input_fn=input_fn)
     orchestrator.submit_feedback(args.session_id, feedback)
     output_fn(f"反馈已记录：{feedback}")

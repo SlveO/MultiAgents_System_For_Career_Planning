@@ -60,7 +60,7 @@ class TestFollowUpIntake(unittest.TestCase):
         self.assertEqual(profile.main_constraints, ["英语薄弱", "预算有限"])
         self.assertEqual(profile.strengths, ["已有项目经历"])
 
-    def test_refused_answers_remain_missing_in_profile(self) -> None:
+    def test_unknown_refused_and_none_keep_distinct_states_with_empty_values(self) -> None:
         profile = apply_answers_to_profile(
             UserProfile(),
             {
@@ -75,6 +75,9 @@ class TestFollowUpIntake(unittest.TestCase):
         self.assertEqual(profile.skills, [])
         self.assertEqual(profile.interests, [])
         self.assertEqual(profile.target_role, "数据分析师")
+        self.assertEqual(profile.guidance.fields["major"].status, "refused")
+        self.assertEqual(profile.guidance.fields["skills"].status, "explicit_none")
+        self.assertEqual(profile.guidance.fields["interests"].status, "unknown")
 
 
 if __name__ == "__main__":

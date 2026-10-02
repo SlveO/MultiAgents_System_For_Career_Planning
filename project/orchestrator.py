@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import time
+from dataclasses import dataclass
 from typing import Any, Dict, Generator, List, Optional, Tuple
 
 try:
@@ -37,6 +38,17 @@ except ImportError:
     from project.core.privacy import redact_data
     from project.core.run_logging import JsonlRunLogger
 from project.utils.fusion import MultiModalFusion
+from project.core.guidance import GuidanceModel, collect_evidence, merge_decision, run_guidance
+from project.core.intake import add_evidence, field_value, initialize_fields
+from project.core.local_guidance import LocalGuidanceModel
+from project.core.schemas import GuidanceDecision, GuidanceObservation
+
+
+@dataclass
+class PreparedCareerInput:
+    request_json: str
+    perception_results: List[PerceptionResult]
+    profile: UserProfile
 
 
 class CareerOrchestrator:
@@ -46,6 +58,7 @@ class CareerOrchestrator:
         db_path: str = './data/session_memory.db',
         brain_client: Optional[BrainClient] = None,
         run_logger: Optional[JsonlRunLogger] = None,
+        guidance_model: Optional[GuidanceModel] = None,
     ):
         self.settings = get_settings()
         self.memory = SessionMemory(db_path=db_path)
@@ -61,6 +74,9 @@ class CareerOrchestrator:
         self._pending_runs: Dict[str, Tuple[TaskRequest, CareerPlanResponse, str]] = {}
 
         self.image_model_path = image_model_path or self.settings.vision_model_path
+        self.guidance_model = guidance_model or LocalGuidanceModel(
+            self.settings.guidance_model_path, self.settings.local_model_device,
+        )
 
     def _persist_response(
         self,
@@ -192,25 +208,67 @@ class CareerOrchestrator:
         return results
 
     def _build_profile(self, req: TaskRequest, perception_results: List[PerceptionResult]) -> UserProfile:
-        memory_profile = self.memory.get_profile(req.session_id)
-        facts: List[str] = []
-        for p in perception_results:
-            facts.extend(p.facts)
-
-        interests = [x for x in facts if any(k in x for k in ['兴趣', '喜欢', '方向', '岗位'])]
-        strengths = [x for x in facts if any(k in x for k in ['会', '熟悉', '掌握', '经验', '项目'])]
-        weaknesses = [x for x in facts if any(k in x for k in ['缺乏', '不足', '短板', '薄弱'])]
-
-        profile = UserProfile(
-            strengths=self._normalize_list(memory_profile.get('strengths', []) + strengths),
-            weaknesses=self._normalize_list(memory_profile.get('weaknesses', []) + weaknesses),
-            interests=self._normalize_list(memory_profile.get('interests', []) + interests),
-            current_stage=memory_profile.get('current_stage', ''),
-            constraints=req.constraints,
-        )
+        profile = UserProfile.model_validate(self.memory.get_profile(req.session_id))
+        initialize_fields(profile)
+        facts = [fact for result in perception_results for fact in result.facts]
+        profile.strengths = self._normalize_list(profile.strengths + [
+            fact for fact in facts if any(k in fact for k in ['会', '熟悉', '掌握', '经验', '项目'])
+        ])
+        profile.weaknesses = self._normalize_list(profile.weaknesses + [
+            fact for fact in facts if any(k in fact for k in ['缺乏', '不足', '短板', '薄弱'])
+        ])
+        supplied = req.constraints.model_dump(exclude_none=True)
+        observations = []
+        for key, field in [('education_level', 'education'), ('time_budget_hours_per_week', 'time_budget')]:
+            if key in supplied:
+                value = str(supplied[key])
+                ref = add_evidence(profile, f'cli_constraint:{field}', value)
+                observations.append(GuidanceObservation(field=field, value=value, evidence_ids=[ref]))
+        preference = '、'.join(filter(None, [supplied.get('city'), *supplied.get('preferred_industries', [])]))
+        if preference:
+            ref = add_evidence(profile, 'cli_constraint:preference', preference)
+            observations.append(GuidanceObservation(field='preference', value=preference, evidence_ids=[ref]))
+        profile = merge_decision(profile, GuidanceDecision(observations=observations))
+        if 'financial_budget_cny' in supplied:
+            profile.constraints.financial_budget_cny = supplied['financial_budget_cny']
+        if preference and profile.guidance.fields['preference'].status == 'known':
+            if supplied.get('city'):
+                profile.constraints.city = supplied['city']
+            if supplied.get('preferred_industries'):
+                profile.constraints.preferred_industries = supplied['preferred_industries']
         if req.follow_up_answers:
             profile = apply_answers_to_profile(profile, req.follow_up_answers)
         return profile
+
+    def prepare(self, req: TaskRequest, *, input_fn=input, output_fn=print) -> PreparedCareerInput:
+        results = self._collect_perception(req)
+        profile = self._build_profile(req, results)
+        profile = run_guidance(
+            req, profile, results, self.guidance_model,
+            max_rounds=self.settings.guidance_max_rounds,
+            input_fn=input_fn, output_fn=output_fn,
+        )
+        req.guidance = profile.guidance.model_copy(deep=True)
+        return PreparedCareerInput(req.model_dump_json(), results, profile)
+
+    def _planning_context(self, req: TaskRequest, prepared: Optional[PreparedCareerInput]):
+        if prepared is None:
+            results = self._collect_perception(req)
+            profile = self._build_profile(req, results)
+            collect_evidence(profile, req, results)
+            profile.guidance.stop_reason = 'skipped' if req.skip_follow_up else 'not_requested'
+            profile.guidance.model_used = False
+            req.guidance = profile.guidance.model_copy(deep=True)
+        else:
+            if prepared.request_json != req.model_dump_json():
+                raise ValueError('Prepared input does not match the planning request')
+            results, profile = prepared.perception_results, prepared.profile
+        query = '\n'.join(filter(None, [
+            req.user_goal, req.text_input,
+            *[field_value(profile, field) for field in ('target_role', 'skills', 'interests', 'major')
+              if profile.guidance.fields[field].status == 'known'],
+        ]))
+        return results, profile, query
 
     def _build_planning_prompt(
         self,
@@ -244,7 +302,9 @@ JSON schema:
 用户目标: {req.user_goal}
 用户文本: {req.text_input}
 意图: {intent}
-约束: {req.constraints.model_dump_json(ensure_ascii=False)}
+约束: {profile.constraints.model_dump_json(ensure_ascii=False)}
+画像中的 guidance 记录回答及证据。unknown/refused/missing/conflict 都不是已确认事实；
+explicit_none 表示用户明确没有。不要推断未解决项已补齐，规划须说明其限制。
 用户画像: {profile.model_dump_json(ensure_ascii=False)}
 多模态感知结构化结果:
 {perception_text}
@@ -404,12 +464,11 @@ JSON schema:
             retry_count=retry_count,
         )
 
-    def _run_core(self, req: TaskRequest) -> Tuple[CareerPlanResponse, int]:
+    def _run_core(self, req: TaskRequest, prepared: Optional[PreparedCareerInput] = None) -> Tuple[CareerPlanResponse, int]:
         t0 = time.time()
         query = f"{req.user_goal}\n{req.text_input}".strip()
         intent = self.detect_intent(query)
-        perception_results = self._collect_perception(req)
-        profile = self._build_profile(req, perception_results)
+        perception_results, profile, query = self._planning_context(req, prepared)
         knowledge_hints, knowledge_hit_ids = self._retrieve_knowledge(req, query)
 
         if req.planner_mode == "template":
@@ -483,11 +542,11 @@ JSON schema:
         self._persist_response(req, resp, "local-template")
         return resp, resp.retry_count
 
-    def run(self, req: TaskRequest) -> CareerPlanResponse:
-        resp, _ = self._run_core(req)
+    def run(self, req: TaskRequest, *, prepared: Optional[PreparedCareerInput] = None) -> CareerPlanResponse:
+        resp, _ = self._run_core(req, prepared)
         return resp
 
-    def run_stream(self, req: TaskRequest) -> Generator[Dict[str, Any], None, None]:
+    def run_stream(self, req: TaskRequest, *, prepared: Optional[PreparedCareerInput] = None) -> Generator[Dict[str, Any], None, None]:
         start = time.time()
         yield {'event': 'stage_start', 'data': {'stage': 'input_understanding'}}
 
@@ -496,10 +555,9 @@ JSON schema:
         yield {'event': 'stage_end', 'data': {'stage': 'input_understanding', 'intent': intent}}
 
         yield {'event': 'stage_start', 'data': {'stage': 'perception', 'model': 'rule-based-text'}}
-        perception_results = self._collect_perception(req)
+        perception_results, profile, query = self._planning_context(req, prepared)
         yield {'event': 'stage_end', 'data': {'stage': 'perception', 'count': len(perception_results)}}
 
-        profile = self._build_profile(req, perception_results)
         knowledge_hints, knowledge_hit_ids = self._retrieve_knowledge(req, query)
 
         if req.planner_mode == "template":

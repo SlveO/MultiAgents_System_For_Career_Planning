@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from functools import lru_cache
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -12,6 +13,8 @@ class AppSettings(BaseSettings):
     brain_retry_times: int = 2
     local_model_device: str = "cuda:0"
     vision_model_path: str = "./models/Qwen3-VL-2B-Instruct"
+    guidance_model_path: str = ""
+    guidance_max_rounds: int = Field(default=4, ge=0, le=16)
     audio_model_path: str = "./models/whisper-small"
 
     model_config = SettingsConfigDict(
