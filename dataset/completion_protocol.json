@@ -20,8 +20,28 @@
     "knowledge_grounded_planning",
     "feedback_driven_output_adaptation"
   ],
-  "implementation_gaps": [
-    "server_gpu_and_api_acceptance"
+  "implementation_gaps": [],
+  "server_acceptance": {
+    "status": "small_sample_gpu_and_api_verified",
+    "verification_date": "2026-10-05",
+    "evidence": [
+      "docs/cli-e2e-verification-20261001.md",
+      "docs/local-needs-guidance-gpu-20261002.md",
+      "docs/local-feedback-gpu-20261002.md",
+      "docs/final-cli-demo-verification-20261005.md"
+    ],
+    "verification_scope": "separate_image_api_chain_guidance_cases_feedback_choices_and_one_real_planning_feedback_chain",
+    "final_planning_feedback_checks_passed": 18,
+    "final_planning_feedback_api_calls": 1,
+    "final_planning_feedback_local_generations": 1,
+    "all_capabilities_in_one_run": false,
+    "human_quality_verified": false,
+    "school_report_finalized": false
+  },
+  "remaining_acceptance_items": [
+    "human_opinions_and_independent_ratings",
+    "school_template_deadline_and_required_deliverables",
+    "school_report_finalization"
   ],
   "requirement_guidance": {
     "status": "implemented_offline_and_small_sample_gpu_verified",
