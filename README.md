@@ -30,13 +30,15 @@ python -m project.assistant_cli --goal "获得后端实习" --text "本科大三
 ## 当前能力与缺口
 
 已保留：文本/文档提取、图片代理、八维度画像、65条职业知识、DeepSeek规划、三档反馈、独立展示版本、SQLite与脱敏JSONL日志。
-本地需求引导已实现并通过离线回归：先感知材料，针对缺失/矛盾单题追问，区分未知/拒答/明确没有，回答带来源进入规划；2026-10-02 已完成 Qwen3-4B/L20 三例真实引导验证（[结果与局限](docs/local-needs-guidance-gpu-20261002.md)）。反馈输出适配已通过 100 项离线回归和三档本地 GPU 小样本验收，并正常发布到 main `936929a4c42c0fb5406ab76531102503e1bbfab0`；两次真实生成、合适零模型，最终规划模拟、零 API（[三档结果与首轮停止记录](docs/local-feedback-gpu-20261002.md)）。2026-10-05 按授权完成[真实规划接本地反馈演示](docs/final-cli-demo-verification-20261005.md)：18 项检查通过、752→2204 字、一次 API 和一次本地生成，原规划及 CLI/SQLite/JSONL 版本一致；记录更新尚待发布。不能把小样本通过称为广泛模型质量或人工满意度验收。2026-10-01 已完成单次真实图片→GPU→DeepSeek→CLI展示及持久化验证，详见[验证报告](docs/cli-e2e-verification-20261001.md)；这不代表人工质量验收通过。
+本地需求引导已实现：先感知材料，针对缺失/矛盾单题追问，区分未知/拒答/明确没有，回答带来源进入规划。2026-10-02 已完成 Qwen3-4B/L20 三例真实引导验证；反馈输出适配已通过 100 项离线回归和三档本地 GPU 小样本验收。
+
+2026-10-05 按授权完成真实规划接本地反馈演示：18 项检查通过、752→2204 字、一次 API 和一次本地生成，原规划及 CLI/SQLite/JSONL 版本一致。此前单次图片→GPU→DeepSeek→CLI 展示及持久化验证也已通过。上述结果不代表广泛模型质量、长期稳定性或人工满意度验收。
 
 引导最多默认 4 轮（`GUIDANCE_MAX_ROUNDS` 可设 0–16）；输入“结束引导”可停止追问并继续规划。`--answers-json` 保留八维度键名，接受字符串答案，部分答案只补必要缺口；明确跳过引导用 `--no-follow-up`（仍会正常感知材料及请求最终规划，不是离线模式）。模型未配置、加载失败或输出无效时，须输入“继续”才会带未解决项进入规划，否则退出。现有服务器私有配置未自动写入新模型路径；真实运行前应按授权核对设备占用。
 
-反馈为“过短”时展开已有内容，为“过于详细”时压缩表达；成功后显示第 2 版。“合适”沿用原文且不调用模型。模型只选择原字段引用，原规划不覆盖；模型输出无效、加载失败或存储失败会提示并返回非零。保留必要内容后无法再缩短时明确继续使用原文。`FEEDBACK_MODEL_PATH` 可指定已有权重，留空时复用显式配置的 `GUIDANCE_MODEL_PATH`。详见[反馈实现与离线验收](docs/local-feedback-adaptation-implementation.md)。
+反馈为“过短”时展开已有内容，为“过于详细”时压缩表达；成功后显示第 2 版。“合适”沿用原文且不调用模型。模型只选择原字段引用，原规划不覆盖；模型输出无效、加载失败或存储失败会提示并返回非零。保留必要内容后无法再缩短时明确继续使用原文。`FEEDBACK_MODEL_PATH` 可指定已有权重，留空时复用显式配置的 `GUIDANCE_MODEL_PATH`。
 
-DeepSeek失败时CLI返回非零状态，不把内部诊断模板当作最终规划。现有模型名配置保留为 `deepseek-v4-flash`，2026-09-30 单独 API 请求已返回可解析规划；此别名不保证固定服务端版本。同日图片在 L20 cuda:1 感知成功，但同次 CLI 请求失败，不能将分离验证视为完整链路通过。详见[真实验证记录](docs/deepseek-client-verification-20260930.md)。
+DeepSeek失败时CLI返回非零状态，不把内部诊断模板当作最终规划。现有模型名配置保留为 `deepseek-v4-flash`；此别名不保证固定服务端版本。
 
 服务器已有模型：Qwen3-VL-2B-Instruct（2B）、Qwen3-4B-Instruct-2507（4B）、Qwen3-VL-8B-Instruct（8B）、Llama-3-8B-Instruct（8B）。目录存在不等于均已验证；当前图片链路使用 2B。权重不上传 GitHub。
 
@@ -48,4 +50,6 @@ python -m compileall -q project scripts/models
 python -m unittest discover -s project/tests -v
 ```
 
-离线测试使用Fake或mock，不加载真实模型。详见[当前计划](docs/completion-plan.md)、[验证说明](docs/verification.md)、[新对话启动指令](docs/server-handoff.md)、[本次清理回执](docs/workspace-cleanup-20261001.md)和[整理报告](docs/cleanup-report-20260929.zh-CN.md)。
+离线测试使用 Fake 或 mock，不加载真实模型。执行范围见 `dataset/completion_protocol.json`。
+
+`docs/` 为服务器本地计划、交接与验收文档目录，已加入 `.gitignore`，不提交 Git。运行证据位于同样忽略的 `data/`；本地文档和证据继续保留。

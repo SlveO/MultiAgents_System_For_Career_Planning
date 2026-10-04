@@ -19,6 +19,7 @@ htmlcov/
 venv/
 
 # Runtime data and temporary test directories
+/docs/
 /data/
 /logs/
 /corwork/
