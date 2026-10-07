@@ -121,6 +121,81 @@ class TestGuidance(unittest.TestCase):
         self.assertFalse(prompts)
         self.assertTrue(model.unloaded)
 
+    def test_partial_grounding_failure_keeps_confirmed_skill_and_applies_valid_fact(self):
+        def mixed(ctx):
+            ref = next(e["evidence_id"] for e in ctx["evidence"] if e["origin"] == "text_input")
+            return {"observations": [
+                {"field": "skills", "value": "Python、SQL", "evidence_ids": [ref]},
+                {"field": "interests", "value": "人工智能", "evidence_ids": ["invented-ref"]},
+                {"field": "major", "value": "统计学", "evidence_ids": [ref]},
+            ]}
+
+        request = TaskRequest(
+            session_id="t", user_goal="求职", text_input="熟悉Python和SQL；统计学专业",
+        )
+        result, prompts, _ = self.guide(
+            UserProfile(skills=["Python", "SQL"]), model=FakeGuidanceModel([mixed]), req=request,
+            inputs=["数据分析师"], max_rounds=1,
+        )
+        self.assertEqual(result.guidance.stop_reason, "round_limit")
+        self.assertEqual(result.skills, ["Python", "SQL"])
+        self.assertEqual(result.interests, [])
+        self.assertEqual(result.major, "统计学")
+        self.assertEqual(result.guidance.answers[0].raw_answer, "数据分析师")
+        self.assertTrue(prompts)
+
+    def test_partial_grounding_warning_does_not_echo_values_or_errors(self):
+        messages = []
+
+        def mixed(ctx):
+            ref = next(e["evidence_id"] for e in ctx["evidence"] if e["origin"] == "text_input")
+            return {"observations": [
+                {"field": "skills", "value": "敏感幻觉字段", "evidence_ids": [ref]},
+                {"field": "major", "value": "统计学", "evidence_ids": [ref]},
+            ]}
+
+        request = TaskRequest(session_id="t", user_goal="求职", text_input="统计学专业")
+        result = run_guidance(
+            request, UserProfile(), [], FakeGuidanceModel([mixed]), max_rounds=1,
+            input_fn=lambda _: "数据分析师", output_fn=messages.append,
+        )
+        self.assertEqual(result.guidance.stop_reason, "round_limit")
+        self.assertEqual(result.major, "统计学")
+        self.assertEqual(result.skills, [])
+        self.assertEqual(len(messages), 1)
+        self.assertNotIn("敏感幻觉字段", messages[0])
+        self.assertNotIn("ValueError", messages[0])
+
+    def test_invalid_question_reference_prevents_all_observation_merges(self):
+        def invalid_question(ctx):
+            ref = next(e["evidence_id"] for e in ctx["evidence"] if e["origin"] == "text_input")
+            return {
+                "observations": [{"field": "major", "value": "统计学", "evidence_ids": [ref]}],
+                "question": {"field": "major", "reason": "clarify", "prompt": "补充专业",
+                             "evidence_ids": ["invented-ref"]},
+            }
+
+        request = TaskRequest(session_id="t", user_goal="求职", text_input="统计学专业")
+        result, prompts, _ = self.guide(model=FakeGuidanceModel([invalid_question]), req=request)
+        self.assertEqual(result.guidance.stop_reason, "model_error")
+        self.assertEqual(result.major, "")
+        self.assertFalse(prompts)
+
+    def test_direct_merge_remains_atomic_for_mixed_valid_and_invalid_observations(self):
+        profile = UserProfile()
+        initialize_fields(profile)
+        request = TaskRequest(session_id="t", user_goal="求职", text_input="统计学专业")
+        collect_evidence(profile, request, [])
+        ref = next(e.evidence_id for e in profile.guidance.evidence if e.origin == "text_input")
+        decision = GuidanceDecision.model_validate({"observations": [
+            {"field": "major", "value": "统计学", "evidence_ids": [ref]},
+            {"field": "skills", "value": "不存在", "evidence_ids": [ref]},
+        ]})
+        with self.assertRaisesRegex(ValueError, "not an evidence excerpt"):
+            merge_decision(profile, decision)
+        self.assertEqual(profile.major, "")
+        self.assertEqual(profile.guidance.fields["major"].status, "missing")
+
     def test_conflict_requires_confirmation_and_stale_evidence_does_not_reopen_it(self):
         decisions = [lambda ctx: observation(ctx, "target_role", "后端工程师")] * 2
         result, prompts, _ = self.guide(

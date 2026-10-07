@@ -10,7 +10,8 @@ from .intake import (
     initialize_fields, record_answer, set_field,
 )
 from .schemas import (
-    FieldState, GuidanceDecision, GuidanceQuestion, PerceptionResult, TaskRequest, UserProfile,
+    FieldState, GuidanceDecision, GuidanceObservation, GuidanceQuestion, PerceptionResult,
+    TaskRequest, UserProfile,
 )
 
 
@@ -36,16 +37,24 @@ def collect_evidence(profile: UserProfile, req: TaskRequest, results: list[Perce
                 add_evidence(profile, f"{result.modality}:{index}:evidence:{number}", evidence.quote)
 
 
+def _validate_observation(evidence: dict[str, str], observation: GuidanceObservation) -> None:
+    if any(ref not in evidence for ref in observation.evidence_ids):
+        raise ValueError("Unknown observation evidence")
+    if not any(observation.value in evidence[ref] for ref in observation.evidence_ids):
+        raise ValueError("Observation is not an evidence excerpt")
+
+
+def _validate_question(evidence: dict[str, str], question: GuidanceQuestion | None) -> None:
+    if question and any(ref not in evidence for ref in question.evidence_ids):
+        raise ValueError("Unknown question evidence")
+
+
 def merge_decision(profile: UserProfile, decision: GuidanceDecision) -> UserProfile:
     """Validate all references before applying anything; never overwrite a conflict."""
     evidence = {e.evidence_id: e.excerpt for e in profile.guidance.evidence}
     for observation in decision.observations:
-        if any(ref not in evidence for ref in observation.evidence_ids):
-            raise ValueError("Unknown observation evidence")
-        if not any(observation.value in evidence[ref] for ref in observation.evidence_ids):
-            raise ValueError("Observation is not an evidence excerpt")
-    if decision.question and any(ref not in evidence for ref in decision.question.evidence_ids):
-        raise ValueError("Unknown question evidence")
+        _validate_observation(evidence, observation)
+    _validate_question(evidence, decision.question)
     updated = profile.model_copy(deep=True)
     for observation in decision.observations:
         field, value = observation.field, observation.value.strip()
@@ -168,8 +177,24 @@ def run_guidance(
                     )],
                     "round_number": round_number,
                 }))
-                profile = merge_decision(profile, decision)
+                evidence = {e.evidence_id: e.excerpt for e in profile.guidance.evidence}
+                _validate_question(evidence, decision.question)
+                valid_observations = []
+                rejected_observations = 0
+                for observation in decision.observations:
+                    try:
+                        _validate_observation(evidence, observation)
+                    except ValueError:
+                        rejected_observations += 1
+                    else:
+                        valid_observations.append(observation)
+                if decision.observations and not valid_observations:
+                    raise ValueError("No grounded observations")
+                filtered_decision = decision.model_copy(update={"observations": valid_observations})
+                profile = merge_decision(profile, filtered_decision)
                 profile.guidance.model_used = True
+                if rejected_observations:
+                    output_fn("部分补充信息未能与原文对应，已忽略；其余已确认信息已保留。")
             except Exception:
                 # Do not echo exception strings: loaders may include private local paths.
                 profile.guidance.stop_reason = "model_error"
