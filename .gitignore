@@ -1,6 +1,7 @@
 # Local tooling and secrets
 /.cache/
 /.claude/
+/.codex/config.toml
 /.codex/*.local.toml
 /.vscode/
 .env
