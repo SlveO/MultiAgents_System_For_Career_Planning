@@ -2,9 +2,42 @@ from __future__ import annotations
 
 import json
 import re
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Sequence
+from typing import Any, Dict, List, Mapping, Optional, Sequence
+
+
+def _source_metadata(sources: Sequence[str] | str) -> Dict[str, str]:
+    """A source link is a lead to check, never evidence of field verification."""
+    return {
+        "provenance_status": "source_lead_only" if sources else "unsourced",
+        "verification_status": "not_verified",
+        "source_notice": (
+            "来源链接仅为核验线索，条目字段尚未逐项核实；薪资参考不代表当前招聘行情。"
+            if sources else
+            "条目尚无来源链接，字段未经逐项核实；薪资参考不代表当前招聘行情。"
+        ),
+    }
+
+
+def format_knowledge_hint(hit: Mapping[str, Any]) -> str:
+    """Keep every retrieved knowledge field and its verification boundary."""
+    def content(field_name: str) -> str:
+        value = hit.get(field_name, "")
+        if isinstance(value, (list, tuple)):
+            return "、".join(str(item) for item in value) or "未提供"
+        return str(value or "未提供")
+
+    # Derive the notice here as well so callers cannot accidentally omit it or
+    # turn an arbitrary `verified` string in a retrieved dictionary into trust.
+    provenance = _source_metadata(hit.get("sources", []))
+    return (
+        f"[{content('item_id')}] {content('role')} | 核心技能: {content('skills')} | "
+        f"学习资源: {content('resources')} | 发展路径: {content('transition_paths')} | "
+        f"适合专业: {content('suitable_majors')} | 薪资参考: {content('salary_hint')} | "
+        f"来源: {content('sources')} | 核验状态: {provenance['verification_status']} | "
+        f"使用限制: {provenance['source_notice']}"
+    )
 
 
 @dataclass
@@ -260,14 +293,14 @@ class CareerKnowledgeBase:
         return token_overlap * 2 + role_bigram_overlap * 3 + exact_role_bonus + skill_bonus
 
     def search(self, query: str, top_k: int = 3) -> List[KnowledgeItem]:
+        if top_k <= 0:
+            return []
         scored = []
         for item in self.items:
             score = self._keyword_score(query, item)
             if score > 0:
                 scored.append((score, item))
         scored.sort(key=lambda x: x[0], reverse=True)
-        if not scored:
-            return self.items[:top_k]
         return [x[1] for x in scored[:top_k]]
 
     # ------------------------------------------------------------------
@@ -305,6 +338,8 @@ class CareerKnowledgeBase:
     # ------------------------------------------------------------------
 
     def retrieve(self, query: str, top_k: int = 4) -> List[Dict[str, str]]:
+        if top_k <= 0:
+            return []
         if not self.use_vector or not self.vector_available:
             return self._keyword_retrieve(query, top_k)
         return self._hybrid_retrieve(query, top_k)
@@ -312,26 +347,16 @@ class CareerKnowledgeBase:
     def _keyword_retrieve(self, query: str, top_k: int = 4) -> List[Dict[str, str]]:
         scored = []
         for item in self.items:
-            scored.append((self._keyword_score(query, item), item))
+            score = self._keyword_score(query, item)
+            if score > 0:
+                scored.append((score, item))
 
         scored.sort(key=lambda x: x[0], reverse=True)
         top = scored[:top_k] if scored else []
 
         references: List[Dict[str, str]] = []
         for score, item in top:
-            references.append(
-                {
-                    "item_id": item.item_id,
-                    "role": item.role,
-                    "skills": ", ".join(item.skills[:6]),
-                    "resources": ", ".join(item.resources[:4]),
-                    "transition_paths": ", ".join(item.transition_paths[:3]),
-                    "salary_hint": item.salary_hint,
-                    "suitable_majors": ", ".join(item.suitable_majors[:5]),
-                    "sources": "; ".join(item.sources),
-                    "match_score": str(score),
-                }
-            )
+            references.append({**self._reference(item), "match_score": str(score)})
         return references
 
     def _hybrid_retrieve(self, query: str, top_k: int = 4) -> List[Dict[str, str]]:
@@ -387,19 +412,11 @@ class CareerKnowledgeBase:
             item = item_by_role.get(role)
             if item is None:
                 continue
-            references.append(
-                {
-                    "item_id": item.item_id,
-                    "role": item.role,
-                    "skills": ", ".join(item.skills[:6]),
-                    "resources": ", ".join(item.resources[:4]),
-                    "transition_paths": ", ".join(item.transition_paths[:3]),
-                    "salary_hint": item.salary_hint,
-                    "suitable_majors": ", ".join(item.suitable_majors[:5]),
-                    "sources": "; ".join(item.sources),
+            if entry["score"] > 0:
+                references.append({
+                    **self._reference(item),
                     "match_score": f"{entry['score']:.2f} ({entry['source']})",
-                }
-            )
+                })
         return references
 
     # ------------------------------------------------------------------
@@ -407,29 +424,32 @@ class CareerKnowledgeBase:
     # ------------------------------------------------------------------
 
     def to_hints(self, query: str, top_k: int = 3) -> List[str]:
-        hints = []
-        for item in self.search(query, top_k=top_k):
-            hints.append(
-                f"{item.role} | 核心技能: {', '.join(item.skills[:4])} | 薪资参考: {item.salary_hint}"
-            )
-        return hints
+        return [format_knowledge_hint(hit) for hit in self.retrieve(query, top_k=top_k)]
+
+    @staticmethod
+    def _reference(item: KnowledgeItem) -> Dict[str, str]:
+        return {
+            "item_id": item.item_id,
+            "role": item.role,
+            "skills": ", ".join(item.skills),
+            "resources": ", ".join(item.resources),
+            "transition_paths": ", ".join(item.transition_paths),
+            "salary_hint": item.salary_hint,
+            "suitable_majors": ", ".join(item.suitable_majors),
+            "sources": "; ".join(item.sources),
+            **_source_metadata(item.sources),
+        }
+
+    def get_items_by_ids(self, item_ids: Sequence[str]) -> List[Dict[str, Any]]:
+        """Return full list-valued entries, in requested order, without models."""
+        by_id = {item.item_id: item for item in self.items}
+        return [
+            {**asdict(by_id[item_id]), **_source_metadata(by_id[item_id].sources)}
+            for item_id in dict.fromkeys(item_ids) if item_id in by_id
+        ]
 
     def as_dict_list(self) -> List[Dict[str, str]]:
-        out = []
-        for item in self.items:
-            out.append(
-                {
-                    "item_id": item.item_id,
-                    "role": item.role,
-                    "skills": ", ".join(item.skills),
-                    "resources": ", ".join(item.resources),
-                    "transition_paths": ", ".join(item.transition_paths),
-                    "salary_hint": item.salary_hint,
-                    "suitable_majors": ", ".join(item.suitable_majors),
-                    "sources": "; ".join(item.sources),
-                }
-            )
-        return out
+        return [self._reference(item) for item in self.items]
 
     def add_item(self, item: KnowledgeItem) -> None:
         self.items.append(item)

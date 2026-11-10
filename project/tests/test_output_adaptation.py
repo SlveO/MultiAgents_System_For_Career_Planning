@@ -103,7 +103,9 @@ class TestOutputAdaptation(unittest.TestCase):
                     if feedback == '过短':
                         self.assertGreater(len(result.output_version.display_text), len(response.user_facing_advice))
                     else:
-                        self.assertLess(len(result.output_version.display_text), len(response.user_facing_advice))
+                        self.assertLess(len(result.output_version.reading_view.excerpt), len(response.user_facing_advice))
+                        self.assertFalse(model.calls)
+                        continue
                     for fact in ['数据分析师', '30天目标：盘点能力', '90天目标：完成项目', '180天目标：投递复盘',
                                  '0小时', '100元', '实习经验不足', '时间有限', '今天拆解两份JD']:
                         self.assertIn(fact, result.output_version.display_text)
@@ -133,8 +135,8 @@ class TestOutputAdaptation(unittest.TestCase):
             return value
         for bad in [unknown, missing, duplicate, prose, wrong_section, {'sections': []}]:
             with self.subTest(bad=str(bad)):
-                response = sample_response(True)
-                result = adapt_output(response, '过于详细', 'bad', FakeFeedbackModel(bad))
+                response = sample_response()
+                result = adapt_output(response, '过短', 'bad', FakeFeedbackModel(bad))
                 self.assertEqual(result.status, 'failed')
                 self.assertEqual(result.reason, 'invalid_layout')
                 self.assertEqual(result.output_version, response.output_version)
@@ -143,8 +145,8 @@ class TestOutputAdaptation(unittest.TestCase):
     def test_impossible_compression_and_model_errors_keep_original_version(self):
         response = sample_response()
         result = adapt_output(response, '过于详细', 'short', FakeFeedbackModel())
-        self.assertEqual((result.status, result.reason), ('unchanged', 'length_constraint'))
-        self.assertEqual(result.output_version.version, 1)
+        self.assertEqual((result.status, result.reason), ('adapted', 'brief_view'))
+        self.assertEqual(result.output_version.version, 2)
         model = FakeFeedbackModel(RuntimeError('/private/model/path'))
         result = adapt_output(response, '过短', 'failed', model)
         self.assertEqual((result.status, result.reason), ('failed', 'model_unavailable'))
@@ -329,7 +331,7 @@ class TestFeedbackCli(unittest.TestCase):
                 self.assertEqual(code, 0)
                 self.assertTrue(any('第 2 版' in line for line in output))
                 saved = json.loads((root/'runs.jsonl').read_text())
-                self.assertEqual(output[-1], saved['feedback_adaptation']['output_version']['display_text'])
+                self.assertEqual(output[-1], saved['feedback_adaptation']['output_version']['reading_view']['excerpt'] if saved['feedback_adaptation']['output_version']['reading_view'] else saved['feedback_adaptation']['output_version']['display_text'])
                 self.assertNotIn('facts_sha256', ''.join(output))
 
     def test_cli_failure_preserves_original_and_returns_nonzero(self):

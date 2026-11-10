@@ -30,6 +30,19 @@ venv/
 /project/resources/image/
 *.db
 *.db-journal
+*.sqlite
+*.sqlite3
+*.sqlite*-journal
+*.sqlite*-wal
+*.sqlite*-shm
+*.db-wal
+*.db-shm
+
+# Private key material
+*.pem
+*.key
+*.p12
+*.pfx
 
 # Optional local models and downloaded material
 /models/

@@ -1,25 +1,25 @@
-# Repository Guidelines
+# Repository Guide
 
-## Scope and Structure
+## Current objective and entry points
 
-The original approved career-planning proposal is the sole scope. Use `project/assistant_cli.py` as the only product entry, `project/orchestrator.py` for orchestration, `project/core/` for contracts, retrieval and persistence, and `project/agents/` for perception. Tests live in `project/tests/`; small anonymized inputs and career knowledge belong in `dataset/`. Runtime data and model weights remain in ignored `data/` and `models/`.
+The Demo functionality validation is complete per the user's latest instruction. The active handoff is preparing the verified workspace for GitHub and handing the web app to ChatGPT Sites on the user's local desktop. Read [README.md](README.md) for operation, [DEMO_PLAN.md](DEMO_PLAN.md) for Demo scope, [AGENT_WORKLOG.md](AGENT_WORKLOG.md) for actual status, [WEB_CONTRACT.md](WEB_CONTRACT.md) for the Sites/API contract, and [SITES_HANDOFF.md](SITES_HANDOFF.md) for the GitHub-to-Sites steps.
 
-Do not restore the cancelled architecture comparisons, pilot matrices, paper research, Web/API stack or independent member branches. The accepted cleanup baseline is `a092c045dd02c835e991796ab3140d034c2e7ca7`. Server snapshot `7995c628595300bd67b122b19df7571ec57e138b` is provenance only; never merge it wholesale. The server is the sole development endpoint; publish effective work to main and start subsequent work on short-lived codex/ branches.
+The prior cleanup of obsolete runtime materials and aliases is complete and is not being repeated. This handoff only synchronizes the already verified workspace; do not infer new functional changes from the old cleanup records.
 
-## Runtime and Commands
+## Scope and collaboration
 
-Deploy the CLI on the Ubuntu GPU server. Only the final reasoning agent uses DeepSeek API. Other model-based components must use existing local weights on an explicitly configured CUDA device. Never load models on CPU, fall back to CPU, or download weights implicitly. Parsing and rule-only tests may run without a GPU.
+Keep the Demo's main flow working: material → follow-up → plan → feedback → graph/source → export → restore. The main agent owns scheduling, shared interfaces, integration, and the worklog. The main agent may schedule up to 3 subagents at once; assign disjoint files and never let agents write the same file concurrently.
 
-Install `requirements.txt` for offline development. For the server, install a CUDA-matched torch/torchvision pair first, then `requirements-gpu.txt`. Do not replace a validated server environment merely to match local development.
+Use `gpt-6-luna max` for broad reading or scanning and simple document/config edits. Use `gpt-6-sol xhigh` only for necessary cross-module reasoning, complex fixes, or difficult integration.
 
-Run `python -m project.assistant_cli --help`, `python -m compileall -q project scripts/models`, and `python -m unittest discover -s project/tests -v`. Mock network and model calls. Report real GPU/API verification separately.
+## Runtime constraints
 
-## Style and Tests
+On the server, reuse the existing GPU 1 environment and `LOCAL_MODEL_DEVICE=cuda:1`; do not download model weights, replace the validated environment, or move local model/runtime profiles to the desktop. The GitHub handoff does not authorize GPU/API/model calls. The user has confirmed Demo validation is complete, so do not repeat the functional trial as part of this handoff.
 
-Use four spaces, snake_case symbols, and unittest files and methods named `test_*`. Reuse Pydantic contracts in `project/core/schemas.py`. Keep GPU imports lazy. Add focused regression tests for changed behavior; do not remove failing product tests to report success.
+For a clean desktop clone, the web app may install dependencies from its committed lockfile with `npm run install:ci` and build with `npm run build`, using Node.js 22.13+ and npm. This allowance applies to the frontend clone only; it does not authorize changing the server GPU environment. The web build needs no Python, CUDA, model weights, or API keys. Do not copy the server's `.env` to the desktop or repository.
 
-## Collaboration and Handoff
+## Checks and publication
 
-Read current guidance and Git status before edits. Preserve unrelated changes and runtime data. Never commit credentials, raw personal inputs, private paths, weights or caches. Commit, push, merge and remote operations need explicit lead authorization after diff and test review.
+For this explicit delivery, the user authorizes committing and pushing the current branch `codex/proposal-expansion-20261105` to the existing `origin` GitHub repository. Do not force-push, merge into or push `main`, change repository visibility, or invent a commit hash; report the result actually returned by Git. A GitHub push prepares source only. Create and publish the Site later through the local desktop Sites workflow; the server does not publish it directly.
 
-Use focused conventional commits and a `codex/` branch. The effective task list is `docs/progress.zh-CN.md`; scope is in `docs/completion-plan.md` and `dataset/completion_protocol.json`. Handoffs must name owner, deliverable, deadline or dependency, acceptance criteria and next action. Record confirmed strategy changes with their corresponding contracts and tests. Server takeover is not complete until the receiving agent acknowledges the final published commit and first task.
+The document/configuration agent does not run tests, builds, or installs. The main agent owns any assigned server source preparation/build and the authorized Git operations. Do not repeat the Demo trial or make model/API calls for this handoff. Later Git actions must follow the user's authorization and current task scope.

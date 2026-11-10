@@ -40,6 +40,17 @@ def observation(context, field, value, origin="text_input"):
 
 
 class TestGuidance(unittest.TestCase):
+    def test_model_profile_uses_output_field_names_instead_of_internal_schema(self):
+        profile = apply_answers_to_profile(UserProfile(), {"education": "本科大三", "time_budget": "8", "constraints": "只能线上"})
+        model = FakeGuidanceModel()
+        self.guide(profile, model=model, inputs=["结束引导"], max_rounds=1)
+        context = model.contexts[0]["profile"]
+        self.assertEqual(context["education"], "本科大三")
+        self.assertEqual(context["time_budget"], "8")
+        self.assertEqual(context["constraints"], "只能线上")
+        self.assertNotIn("education_stage", context)
+        self.assertNotIn("time_budget_hours_per_week", json.dumps(context))
+
     def guide(self, profile=None, *, model=None, inputs=(), max_rounds=4, req=None):
         model = model or FakeGuidanceModel()
         prompts = []

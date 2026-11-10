@@ -275,6 +275,18 @@ class SessionMemory:
             row = conn.execute("SELECT payload_json FROM feedback_adaptations WHERE request_id = ?", (request_id,)).fetchone()
         return json.loads(row["payload_json"]) if row else None
 
+    @staticmethod
+    def _validate_feedback_parent(result: Dict[str, Any], latest: Optional[Dict[str, Any]]) -> None:
+        version = result["output_version"]
+        if (latest is None
+                or version["plan_id"] != result["plan_id"]
+                or result["source_version"] != latest["version"]
+                or version["parent_version"] != latest["version"]
+                or version["version"] != latest["version"] + 1
+                or version["facts_sha256"] != latest["facts_sha256"]
+                or version["source_text_sha256"] != latest["source_text_sha256"]):
+            raise ValueError("Feedback must extend the latest version of the same plan and source")
+
     def save_feedback_result(self, result: Dict[str, Any]) -> bool:
         """Atomically save feedback, outcome and a possible new display version."""
         request_id, session_id = result["request_id"], result["session_id"]
@@ -288,6 +300,11 @@ class SessionMemory:
             if result["status"] == "adapted":
                 version = result["output_version"]
                 versions = data.setdefault("output_versions", [])
+                own_versions = [row["payload"] for row in versions
+                                if row["session_id"] == session_id
+                                and row["payload"]["plan_id"] == result["plan_id"]]
+                latest = max(own_versions, key=lambda item: item["version"]) if own_versions else None
+                self._validate_feedback_parent(result, latest)
                 if any((row["payload"]["plan_id"], row["payload"]["version"]) == (version["plan_id"], version["version"]) for row in versions):
                     raise ValueError("Output version already exists")
                 versions.append({"session_id": session_id, "payload": version})
@@ -304,6 +321,12 @@ class SessionMemory:
                     raise ValueError("Feedback request already exists with different content")
                 return False
             if result["status"] == "adapted":
+                row = conn.execute(
+                    "SELECT payload_json FROM output_versions WHERE session_id = ? AND plan_id = ? "
+                    "ORDER BY version DESC LIMIT 1",
+                    (session_id, result["plan_id"]),
+                ).fetchone()
+                self._validate_feedback_parent(result, json.loads(row["payload_json"]) if row else None)
                 self._insert_output_version(conn, session_id, result["output_version"])
             conn.execute(
                 "INSERT INTO feedback_adaptations VALUES (?, ?, ?, ?, ?)",
@@ -351,6 +374,43 @@ class SessionMemory:
                 }
             )
         return history
+
+    def get_plan_interaction(self, session_id: str, plan_id: str) -> Optional[Dict[str, Any]]:
+        """Find a plan's original request/response within the owning session.
+
+        The payload is the persisted (possibly redacted) canonical interaction,
+        not an output display version. Unlike history(), this lookup does not
+        lose older plans after the most recent twenty interactions.
+        """
+        if self.backend == "json":
+            rows = reversed(self._load_fallback().get("interactions", []))
+            for row in rows:
+                if row.get("session_id") != session_id:
+                    continue
+                response = row.get("response_json", {})
+                if isinstance(response, dict) and response.get("plan_id") == plan_id:
+                    return {
+                        "created_at": row.get("created_at"),
+                        "request": row.get("request_json", {}),
+                        "response": response,
+                    }
+            return None
+
+        with self._connect() as conn:
+            rows = conn.execute(
+                "SELECT request_json, response_json, created_at FROM interactions "
+                "WHERE session_id = ? ORDER BY id DESC",
+                (session_id,),
+            )
+            for row in rows:
+                response = json.loads(row["response_json"])
+                if isinstance(response, dict) and response.get("plan_id") == plan_id:
+                    return {
+                        "created_at": row["created_at"],
+                        "request": json.loads(row["request_json"]),
+                        "response": response,
+                    }
+        return None
 
     def clear_session_history(self, session_id: str) -> None:
         if self.backend == "json":

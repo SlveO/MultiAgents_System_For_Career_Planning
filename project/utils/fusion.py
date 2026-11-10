@@ -27,10 +27,15 @@ class MultiModalFusion:
             if r.confidence <= 0.0:
                 continue
 
-            unique_facts = [f for f in r.facts if f not in seen_facts]
-            seen_facts.update(unique_facts)
+            identity = (r.subject, r.verification, r.source_id)
+            unique_facts = [f for f in r.facts if (*identity, f) not in seen_facts]
+            seen_facts.update((*identity, fact) for fact in unique_facts)
 
-            parts = [f"[{r.modality}] confidence={r.confidence:.2f}"]
+            parts = [f"[{r.modality}] confidence={r.confidence:.2f} subject={r.subject} verification={r.verification}"]
+            if r.subject in {"job", "reference", "unknown"}:
+                parts.append("  主体不是已确认的学生能力；仅作岗位或参考信息。")
+            if r.requires_confirmation:
+                parts.append("  以下为模型识别的待核实内容，不能当作用户已确认事实；应先向用户确认。")
             if r.summary:
                 parts.append(f"  summary: {r.summary}")
             if unique_facts:
@@ -39,13 +44,6 @@ class MultiModalFusion:
                 parts.append(f"  missing: {'; '.join(r.missing_info[:4])}")
 
             blocks.append("\n".join(parts))
-
-        merged_facts = sorted(seen_facts)[:15]
-        if merged_facts:
-            blocks.insert(
-                0,
-                f"[merged_facts] {'; '.join(merged_facts)}",
-            )
 
         return "\n\n".join(blocks)
 
@@ -56,17 +54,23 @@ class MultiModalFusion:
         all_facts: List[str] = []
         all_missing: List[str] = []
         modalities: List[str] = []
+        material_facts = []
 
         for r in sorted_results:
             if r.confidence <= 0.0:
                 continue
             modalities.append(r.modality)
-            all_facts.extend(r.facts)
+            if r.subject == "student" and r.verification != "unverified" and not r.requires_confirmation:
+                all_facts.extend(r.facts)
+            material_facts.append({"subject": r.subject, "verification": r.verification,
+                                   "source_id": r.source_id, "facts": r.facts,
+                                   "requires_confirmation": r.requires_confirmation})
             all_missing.extend(r.missing_info)
 
         return {
             "modalities": list(dict.fromkeys(modalities)),
             "facts": list(dict.fromkeys(all_facts))[:12],
+            "material_facts": material_facts,
             "missing": list(dict.fromkeys(all_missing))[:6],
             "top_confidence": sorted_results[0].confidence if sorted_results else 0.0,
         }

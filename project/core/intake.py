@@ -94,11 +94,15 @@ def set_field(profile: UserProfile, field: str, value: str) -> None:
             profile.constraints.preferred_industries = []
 
 
-def add_evidence(profile: UserProfile, origin: str, excerpt: str) -> str:
+def add_evidence(
+    profile: UserProfile, origin: str, excerpt: str, *, subject="unknown",
+    verification="unverified", source_id="",
+) -> str:
     evidence_id = hashlib.sha256(f"{origin}\n{excerpt}".encode()).hexdigest()[:20]
     if not any(e.evidence_id == evidence_id for e in profile.guidance.evidence):
         profile.guidance.evidence.append(GuidanceEvidence(
             evidence_id=evidence_id, origin=origin, excerpt=excerpt,
+            subject=subject, verification=verification, source_id=source_id,
         ))
     return evidence_id
 
@@ -125,7 +129,7 @@ def record_answer(
     initialize_fields(profile)
     value = raw.strip()
     status = answer_status(field, value)
-    ref = add_evidence(profile, f"{origin}:{field}", raw)
+    ref = add_evidence(profile, f"{origin}:{field}", raw, subject="student", verification="user_confirmed")
     profile.guidance.answers.append(AnswerRecord(
         field=field, question_id=question_id, prompt=prompt, raw_answer=raw,
         status=status, round_number=round_number, origin=origin, evidence_id=ref,

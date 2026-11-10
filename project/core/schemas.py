@@ -2,7 +2,10 @@ from __future__ import annotations
 
 from typing import Dict, List, Literal, Optional
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+
+from .privacy import session_key
+from .output_preferences import OutputPreferences
 
 
 IntentType = Literal["qa", "diagnosis", "planning", "review"]
@@ -15,12 +18,17 @@ GuidanceField = Literal[
     "time_budget", "preference", "constraints",
 ]
 AnswerStatus = Literal["missing", "known", "unknown", "refused", "explicit_none", "conflict"]
+SourceSubject = Literal["student", "job", "reference", "unknown"]
+VerificationStatus = Literal["unverified", "user_confirmed", "source_verified"]
 
 
 class GuidanceEvidence(BaseModel):
     evidence_id: str
     origin: str
     excerpt: str
+    subject: SourceSubject = "unknown"
+    verification: VerificationStatus = "unverified"
+    source_id: str = ""
 
 
 class FieldState(BaseModel):
@@ -97,11 +105,20 @@ class TaskRequest(BaseModel):
     planner_mode: Literal["deepseek", "template"] = "deepseek"
     use_knowledge: bool = True
     metadata: Dict[str, str] = Field(default_factory=dict)
+    output_preferences: Optional[OutputPreferences] = None
+
+    @field_validator("session_id")
+    @classmethod
+    def normalize_session_id(cls, value: str) -> str:
+        return session_key(value)
 
 
 class EvidenceItem(BaseModel):
     source: str
     quote: str
+    subject: SourceSubject = "unknown"
+    verification: VerificationStatus = "unverified"
+    source_id: str = ""
 
 
 class PerceptionResult(BaseModel):
@@ -112,6 +129,10 @@ class PerceptionResult(BaseModel):
     confidence: float = Field(default=0.5, ge=0.0, le=1.0)
     missing_info: List[str] = Field(default_factory=list)
     raw_output: str = ""
+    requires_confirmation: bool = False
+    subject: SourceSubject = "unknown"
+    verification: VerificationStatus = "unverified"
+    source_id: str = ""
 
 
 class UserProfile(BaseModel):
@@ -154,6 +175,14 @@ class FeedbackLayout(BaseModel):
     sections: List[FeedbackDisplaySection] = Field(min_length=1, max_length=9)
 
 
+class ReadingView(BaseModel):
+    mode: Literal["brief"] = "brief"
+    strategy_version: Literal["1"] = "1"
+    item_ids: List[str] = Field(default_factory=list)
+    excerpt: str
+    notice: str = ""
+
+
 class OutputVersion(BaseModel):
     plan_id: str = Field(min_length=1)
     version: int = Field(ge=1)
@@ -163,6 +192,7 @@ class OutputVersion(BaseModel):
     source_text_sha256: str
     item_ids: List[str] = Field(default_factory=list)
     created_at: str
+    reading_view: Optional[ReadingView] = None
 
 
 class FeedbackAdaptationResult(BaseModel):
@@ -200,6 +230,7 @@ class CareerPlanResponse(BaseModel):
     latency_ms: int = 0
     plan_id: str = ""
     output_version: Optional[OutputVersion] = None
+    knowledge_snapshot: Optional[dict] = None
 
 
 class FeedbackRequest(BaseModel):

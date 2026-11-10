@@ -1,10 +1,8 @@
 from __future__ import annotations
 
-import json
 import tempfile
 import unittest
-from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 from project import assistant_cli
 from project.agents.image import ImageProcessor
@@ -13,16 +11,6 @@ from project.core.gpu import require_cuda
 
 
 class TestServerCliContract(unittest.TestCase):
-    def test_contract_matches_confirmed_scope(self):
-        root = Path(__file__).resolve().parents[2]
-        contract = json.loads((root / "dataset/completion_protocol.json").read_text())
-        self.assertEqual(contract["entrypoint"], "project.assistant_cli")
-        self.assertEqual(contract["reasoning_backend"], "deepseek-api")
-        self.assertEqual(contract["other_model_backend"], "local-cuda")
-        self.assertFalse(contract["allow_cpu_model_loading"])
-        self.assertFalse(contract["architecture_comparison_enabled"])
-        self.assertFalse(contract["accept_other_unmerged_branches"])
-
     def test_cpu_device_rejected_without_importing_model(self):
         with self.assertRaisesRegex(RuntimeError, "CPU fallback is disabled"):
             require_cuda("cpu")

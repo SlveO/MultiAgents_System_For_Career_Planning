@@ -8,7 +8,8 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Protocol
 
-from .schemas import CareerPlanResponse, FeedbackAdaptationResult, FeedbackLayout, OutputVersion
+from .privacy import redact_data, redact_text
+from .schemas import CareerPlanResponse, FeedbackAdaptationResult, FeedbackLayout, OutputVersion, ReadingView
 
 
 class FeedbackModel(Protocol):
@@ -37,14 +38,17 @@ def text_hash(text: str) -> str:
 
 
 def facts_hash(response: CareerPlanResponse) -> str:
-    facts = response.model_dump(exclude={"plan_id", "output_version", "user_facing_advice"})
+    # Hash the same privacy-safe projection that survives persistence/restart.
+    # Raw quotes and paths are deliberately absent from this representation.
+    facts = redact_data(response.model_dump(exclude={"plan_id", "output_version", "user_facing_advice"}))
     return text_hash(json.dumps(facts, ensure_ascii=False, sort_keys=True, separators=(",", ":")))
 
 
 def original_version(response: CareerPlanResponse) -> OutputVersion:
+    source_text = redact_text(response.user_facing_advice)
     return OutputVersion(
-        plan_id=response.plan_id, version=1, display_text=response.user_facing_advice,
-        facts_sha256=facts_hash(response), source_text_sha256=text_hash(response.user_facing_advice),
+        plan_id=response.plan_id, version=1, display_text=source_text,
+        facts_sha256=facts_hash(response), source_text_sha256=text_hash(source_text),
         created_at=datetime.now(timezone.utc).isoformat(),
     )
 
@@ -132,20 +136,90 @@ def render_layout(layout: FeedbackLayout, catalog: list[DisplayItem], required: 
     return "\n\n".join(parts), selected
 
 
-def adapt_output(response: CareerPlanResponse, feedback: str, request_id: str, model: FeedbackModel) -> FeedbackAdaptationResult:
-    baseline = response.output_version
+def brief_reading_view(response: CareerPlanResponse, full_text: str) -> ReadingView:
+    """Select whole source items deterministically, with a 500-code-point soft cap."""
+    catalog = build_catalog(response)
+    by_id = {item.item_id: item for item in catalog}
+    if not any(item.section != "advice" for item in catalog):
+        return ReadingView(excerpt=full_text, notice="缺少结构化内容，无法安全摘选，已保留完整正文。")
+    required = ["target_roles:0", "next_actions:0", "constraints:time_budget_hours_per_week",
+                "constraints:financial_budget_cny", "constraints:city"]
+    optional = ["risk_flags:0", "next_actions:1"] + [f"roadmap:{period}:objective" for period in ("30d", "90d", "180d")]
+    selected: list[str] = []
+
+    def render(ids: list[str]) -> tuple[str, list[str]]:
+        parts, actual = [], []
+        for section in ("targets", "actions", "constraints", "risks", "roadmap"):
+            texts = set()
+            lines = []
+            # Preserve source order within a section.
+            for item in catalog:
+                if item.item_id in ids and item.section == section and item.text not in texts:
+                    texts.add(item.text)
+                    actual.append(item.item_id)
+                    lines.append(f"- {redact_text(item.text)}")
+            if lines:
+                parts.append(_LABELS[section] + "\n" + "\n".join(lines))
+        return "\n\n".join(parts), actual
+
+    selected.extend(item_id for item_id in required if item_id in by_id)
+    for item_id in optional:
+        if item_id in by_id and len(render(selected + [item_id])[0]) <= 500:
+            selected.append(item_id)
+    excerpt, actual = render(selected)
+    # A structured report without any eligible fields cannot safely be summarized.
+    if not excerpt:
+        return ReadingView(excerpt=full_text, notice="缺少可摘选的结构化内容，已保留完整正文。")
+    notice = "必要原文较长，简要正文超过 500 字符。" if len(excerpt) > 500 else ""
+    return ReadingView(excerpt=excerpt, item_ids=actual, notice=notice)
+
+
+def adapt_output(
+    response: CareerPlanResponse,
+    feedback: str,
+    request_id: str,
+    model: FeedbackModel,
+    *,
+    baseline: OutputVersion | None = None,
+) -> FeedbackAdaptationResult:
+    """Adapt the latest display while retaining the canonical planning response.
+
+    Callers may supply a persisted later display as ``baseline``. Its hashes
+    must still identify the original plan, never a rewritten planning object.
+    """
+    baseline = baseline or response.output_version
     if baseline is None:
         raise ValueError("Original output version is required")
     started = time.perf_counter()
     result = FeedbackAdaptationResult(
         request_id=request_id, session_id=response.session_id, plan_id=response.plan_id,
         feedback=feedback, status="unchanged", output_version=baseline.model_copy(deep=True),
-        reason="suitable",
+        source_version=baseline.version, reason="suitable",
     )
-    if baseline.facts_sha256 != facts_hash(response) or baseline.source_text_sha256 != text_hash(response.user_facing_advice):
+    if (baseline.plan_id != response.plan_id
+            or baseline.facts_sha256 != facts_hash(response)
+            or baseline.source_text_sha256 != text_hash(redact_text(response.user_facing_advice))):
         result.status, result.reason = "failed", "source_changed"
         return result
     if feedback == "合适":
+        return result
+    if feedback == "过于详细":
+        view = brief_reading_view(response, baseline.display_text)
+        if baseline.reading_view == view:
+            result.reason = "already_brief"
+            return result
+        result.status, result.reason = "adapted", "brief_view"
+        result.output_version = baseline.model_copy(update={
+            "version": baseline.version + 1, "parent_version": baseline.version,
+            "reading_view": view, "created_at": datetime.now(timezone.utc).isoformat(),
+        }, deep=True)
+        return result
+    if feedback == "过短" and baseline.reading_view is not None:
+        result.status, result.reason = "adapted", "full_view"
+        result.output_version = baseline.model_copy(update={
+            "version": baseline.version + 1, "parent_version": baseline.version,
+            "reading_view": None, "created_at": datetime.now(timezone.utc).isoformat(),
+        }, deep=True)
         return result
     catalog = build_catalog(response)
     required = {item.item_id for item in catalog if feedback == "过短" or item.essential}
@@ -157,11 +231,14 @@ def adapt_output(response: CareerPlanResponse, feedback: str, request_id: str, m
             "feedback": feedback,
             "catalog": [item.__dict__ for item in catalog],
             "required_ids": sorted(required),
+            "source_version": baseline.version,
+            "current_display_text": baseline.display_text,
         }))
         result.model_used = True
         text, selected = render_layout(layout, catalog, required)
+        text = redact_text(text)
         if (baseline.facts_sha256 != facts_hash(response)
-                or baseline.source_text_sha256 != text_hash(response.user_facing_advice)):
+                or baseline.source_text_sha256 != text_hash(redact_text(response.user_facing_advice))):
             raise ValueError("source_changed")
         shorter = len(text.strip()) < len(baseline.display_text.strip())
         longer = len(text.strip()) > len(baseline.display_text.strip())

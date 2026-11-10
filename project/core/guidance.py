@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from dataclasses import dataclass
 from typing import Callable, Protocol
 
 from .intake import (
@@ -13,6 +14,7 @@ from .schemas import (
     FieldState, GuidanceDecision, GuidanceObservation, GuidanceQuestion, PerceptionResult,
     TaskRequest, UserProfile,
 )
+from .coaching_policy import build_coaching_context
 
 
 class GuidanceModel(Protocol):
@@ -26,15 +28,21 @@ _TEMPLATES = {q.key: q.prompt for q in FOLLOW_UP_QUESTIONS}
 
 def collect_evidence(profile: UserProfile, req: TaskRequest, results: list[PerceptionResult]) -> None:
     for origin, text in [("user_goal", req.user_goal), ("text_input", req.text_input)]:
+        if origin == "text_input" and req.metadata.get("text_subject", "student") != "student":
+            continue
         if text.strip():
-            add_evidence(profile, origin, text)
+            add_evidence(profile, origin, text, subject="student", verification="user_confirmed")
     for index, result in enumerate(results):
+        if result.requires_confirmation or result.subject in {"job", "reference"}:
+            continue
         if result.modality == "document" and result.raw_output.strip():
-            add_evidence(profile, f"document:{index}:parsed_text", result.raw_output)
+            add_evidence(profile, f"document:{index}:parsed_text", result.raw_output,
+                         subject=result.subject, verification=result.verification, source_id=result.source_id)
         # Use quotations, not keyword matches or generated summaries as user claims.
         for number, evidence in enumerate(result.evidence):
             if evidence.quote.strip():
-                add_evidence(profile, f"{result.modality}:{index}:evidence:{number}", evidence.quote)
+                add_evidence(profile, f"{result.modality}:{index}:evidence:{number}", evidence.quote,
+                             subject=result.subject, verification=result.verification, source_id=result.source_id)
 
 
 def _validate_observation(evidence: dict[str, str], observation: GuidanceObservation) -> None:
@@ -54,6 +62,9 @@ def merge_decision(profile: UserProfile, decision: GuidanceDecision) -> UserProf
     evidence = {e.evidence_id: e.excerpt for e in profile.guidance.evidence}
     for observation in decision.observations:
         _validate_observation(evidence, observation)
+        if any(item.subject in {"job", "reference"} and item.evidence_id in observation.evidence_ids
+               for item in profile.guidance.evidence):
+            raise ValueError("A reference requirement is not a student attribute")
     _validate_question(evidence, decision.question)
     updated = profile.model_copy(deep=True)
     for observation in decision.observations:
@@ -146,6 +157,138 @@ def choose_question(profile: UserProfile, suggested: GuidanceQuestion | None) ->
     return None
 
 
+@dataclass
+class GuidanceStep:
+    profile: UserProfile
+    question: GuidanceQuestion | None = None
+    question_id: str = ""
+
+
+def advance_guidance(
+    req: TaskRequest, profile: UserProfile, model: GuidanceModel, *,
+    round_number: int, max_rounds: int, output_fn: Callable[[str], None] = print,
+    unload: bool = True,
+) -> GuidanceStep:
+    """Generate at most one grounded question; never read input or re-perceive."""
+    profile = profile.model_copy(deep=True)
+    initialize_fields(profile)
+    if req.skip_follow_up:
+        profile.guidance.stop_reason = "skipped"
+        return GuidanceStep(profile)
+    if max_rounds == 0 or round_number > max_rounds:
+        profile.guidance.stop_reason = "round_limit"
+        return GuidanceStep(profile)
+    policy_events = json.loads(req.metadata.get("coaching_trace", "[]"))
+    try:
+        try:
+            policy_before = build_coaching_context(profile, round_number=round_number, max_rounds=max_rounds)
+            # Use the same field names as the output contract. Internal names
+            # such as education_stage previously leaked into model responses.
+            model_profile = {field: field_value(profile, field) for field in _PRIORITY}
+            model_profile["guidance"] = {"fields": {
+                field: state.model_dump(exclude={"resolved_evidence_ids"})
+                for field, state in profile.guidance.fields.items()
+            }}
+            decision = GuidanceDecision.model_validate(model.analyze({
+                "user_goal": req.user_goal,
+                "profile": model_profile,
+                "evidence": [e.model_dump() for e in sorted(
+                    profile.guidance.evidence,
+                    key=lambda item: item.origin.startswith(("answers_json:", "stored_profile:", "interactive:")),
+                )],
+                "round_number": round_number,
+                "coaching_policy": {
+                    key: policy_before[key]
+                    for key in ("policy_kind", "action", "focus_field", "metrics", "limitations")
+                },
+            }))
+            evidence = {e.evidence_id: e.excerpt for e in profile.guidance.evidence}
+            _validate_question(evidence, decision.question)
+            valid_observations = []
+            discarded = getattr(model, "last_discarded_observations", 0)
+            rejected_observations = discarded if isinstance(discarded, int) else 0
+            for observation in decision.observations:
+                try:
+                    _validate_observation(evidence, observation)
+                except ValueError:
+                    rejected_observations += 1
+                else:
+                    valid_observations.append(observation)
+            if decision.observations and not valid_observations:
+                raise ValueError("No grounded observations")
+            filtered_decision = decision.model_copy(update={"observations": valid_observations})
+            profile = merge_decision(profile, filtered_decision)
+            profile.guidance.model_used = True
+            if rejected_observations:
+                output_fn("部分补充信息未通过结构或原文校验，已忽略；其余已确认信息已保留。")
+        except Exception:
+            # Do not echo exception strings: loaders may include private local paths.
+            profile.guidance.stop_reason = "model_error"
+            output_fn("本地需求引导不可用或输出未通过校验；已保留已知信息与未解决项。")
+            return GuidanceStep(profile)
+        policy = build_coaching_context(profile, round_number=round_number, max_rounds=max_rounds)
+        goal_clarification = (
+            decision.question is not None and decision.question.field == "target_role"
+            and decision.question.reason == "clarify" and eligible(profile, decision.question)
+            and not any(state.status == "conflict" for state in profile.guidance.fields.values())
+        )
+        # A grounded model can recognize a vague goal outside a finite rule
+        # vocabulary. Retain that clarification before collecting background.
+        if goal_clarification:
+            policy = dict(policy, action="clarify_goal", focus_field="target_role",
+                          question=decision.question.model_dump(), stop_reason=None,
+                          selection_reason="grounded_model_clarification")
+        policy_events.append({
+            "round": round_number, "action": policy["action"], "focus_field": policy["focus_field"],
+            "metrics": policy["metrics"], "stop_reason": policy["stop_reason"],
+            "selection_reason": policy["selection_reason"],
+        })
+        req.metadata["coaching_trace"] = json.dumps(policy_events, ensure_ascii=False)
+        if policy["stop_reason"]:
+            profile.guidance.stop_reason = (
+                "no_eligible_question" if policy["stop_reason"] == "complete" else policy["stop_reason"]
+            )
+            return GuidanceStep(profile)
+        suggested = GuidanceQuestion.model_validate(policy["question"]) if policy["question"] else None
+        if (decision.question is not None and suggested is not None
+                and decision.question.field == suggested.field
+                and decision.question.reason == suggested.reason
+                and eligible(profile, decision.question)):
+            suggested = decision.question
+        question = suggested if suggested is not None and eligible(profile, suggested) else choose_question(profile, None)
+        if question is None:
+            profile.guidance.stop_reason = "no_eligible_question"
+            return GuidanceStep(profile)
+        key = question_key(profile, question)
+        profile.guidance.stop_reason = "awaiting_answer"
+        return GuidanceStep(profile, question, key)
+    finally:
+        if unload:
+            model.unload()
+
+
+def submit_guidance_answer(
+    req: TaskRequest, profile: UserProfile, question: GuidanceQuestion, question_id: str,
+    answer: str, *, round_number: int,
+) -> UserProfile:
+    """Apply an answer to its saved question without any model invocation."""
+    profile = profile.model_copy(deep=True)
+    if question_id != question_key(profile, question) or question_id in profile.guidance.asked_keys:
+        raise ValueError("Question is stale")
+    profile.guidance.asked_keys.append(question_id)
+    if answer.strip() == "结束引导":
+        profile.guidance.stop_reason = "user_stopped"
+        return profile
+    req.follow_up_answers[question.field] = answer
+    record_answer(
+        profile, question.field, answer, question_id=question_id, prompt=question.prompt,
+        round_number=round_number, origin="interactive",
+    )
+    if profile.guidance.fields[question.field].status == "conflict":
+        profile.guidance.asked_keys.append(question_key(profile, question))
+    return profile
+
+
 def run_guidance(
     req: TaskRequest, profile: UserProfile, results: list[PerceptionResult], model: GuidanceModel,
     *, max_rounds: int, input_fn: Callable[[str], str], output_fn: Callable[[str], None],
@@ -154,6 +297,8 @@ def run_guidance(
     initialize_fields(profile)
     collect_evidence(profile, req, results)
     profile.guidance.model_used = False
+    # A CLI invocation starts a new trace; web steps preserve the saved trace.
+    req.metadata.pop("coaching_trace", None)
     if req.skip_follow_up:
         profile.guidance.stop_reason = "skipped"
         return profile
@@ -162,66 +307,23 @@ def run_guidance(
         return profile
     try:
         for round_number in range(1, max_rounds + 1):
-            try:
-                model_profile = profile.model_dump(exclude={"guidance"})
-                model_profile["guidance"] = {"fields": {
-                    field: state.model_dump(exclude={"resolved_evidence_ids"})
-                    for field, state in profile.guidance.fields.items()
-                }}
-                decision = GuidanceDecision.model_validate(model.analyze({
-                    "user_goal": req.user_goal,
-                    "profile": model_profile,
-                    "evidence": [e.model_dump() for e in sorted(
-                        profile.guidance.evidence,
-                        key=lambda item: item.origin.startswith(("answers_json:", "stored_profile:", "interactive:")),
-                    )],
-                    "round_number": round_number,
-                }))
-                evidence = {e.evidence_id: e.excerpt for e in profile.guidance.evidence}
-                _validate_question(evidence, decision.question)
-                valid_observations = []
-                rejected_observations = 0
-                for observation in decision.observations:
-                    try:
-                        _validate_observation(evidence, observation)
-                    except ValueError:
-                        rejected_observations += 1
-                    else:
-                        valid_observations.append(observation)
-                if decision.observations and not valid_observations:
-                    raise ValueError("No grounded observations")
-                filtered_decision = decision.model_copy(update={"observations": valid_observations})
-                profile = merge_decision(profile, filtered_decision)
-                profile.guidance.model_used = True
-                if rejected_observations:
-                    output_fn("部分补充信息未能与原文对应，已忽略；其余已确认信息已保留。")
-            except Exception:
-                # Do not echo exception strings: loaders may include private local paths.
-                profile.guidance.stop_reason = "model_error"
-                output_fn("本地需求引导不可用或输出未通过校验；已保留已知信息与未解决项。")
+            step = advance_guidance(
+                req, profile, model, round_number=round_number, max_rounds=max_rounds,
+                output_fn=output_fn, unload=False,
+            )
+            profile = step.profile
+            if step.question is None:
                 return profile
-            question = choose_question(profile, decision.question)
-            if question is None:
-                profile.guidance.stop_reason = "no_eligible_question"
-                return profile
-            key = question_key(profile, question)
             try:
-                answer = input_fn(f"{question.prompt}\n（可回答不知道、不想回答；输入‘结束引导’停止）\n> ")
+                answer = input_fn(f"{step.question.prompt}\n（可回答不知道、不想回答；输入‘结束引导’停止）\n> ")
             except (EOFError, KeyboardInterrupt):
                 profile.guidance.stop_reason = "user_stopped"
                 return profile
-            profile.guidance.asked_keys.append(key)
-            if answer.strip() == "结束引导":
-                profile.guidance.stop_reason = "user_stopped"
-                return profile
-            req.follow_up_answers[question.field] = answer
-            record_answer(
-                profile, question.field, answer, question_id=key, prompt=question.prompt,
-                round_number=round_number, origin="interactive",
+            profile = submit_guidance_answer(
+                req, profile, step.question, step.question_id, answer, round_number=round_number,
             )
-            # The conflict signature can change after a refusal; also suppress that signature.
-            if profile.guidance.fields[question.field].status == "conflict":
-                profile.guidance.asked_keys.append(question_key(profile, question))
+            if profile.guidance.stop_reason == "user_stopped":
+                return profile
         profile.guidance.stop_reason = "round_limit"
         return profile
     finally:

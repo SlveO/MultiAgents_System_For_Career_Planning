@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from .privacy import redact_data
-from .schemas import CareerPlanResponse, FeedbackAdaptationResult, TaskRequest
+from .schemas import CareerPlanResponse, FeedbackAdaptationResult, OutputVersion, TaskRequest
 
 
 class JsonlRunLogger:
@@ -24,6 +24,23 @@ class JsonlRunLogger:
                         return saved
         return None
 
+    @staticmethod
+    def _version_chain(versions: list[dict], adaptation: FeedbackAdaptationResult) -> list[dict]:
+        """Validate and order a complete, immutable display history."""
+        chain = sorted((OutputVersion.model_validate(item) for item in versions), key=lambda item: item.version)
+        if not chain or [item.version for item in chain] != list(range(1, len(chain) + 1)):
+            raise ValueError("Output version history must be complete and unique")
+        expected = adaptation.output_version
+        for index, item in enumerate(chain):
+            if (item.plan_id != adaptation.plan_id
+                    or item.facts_sha256 != expected.facts_sha256
+                    or item.source_text_sha256 != expected.source_text_sha256
+                    or item.parent_version != (index if index else None)):
+                raise ValueError("Output version history belongs to a different plan or source")
+        if expected.version > len(chain) or redact_data(chain[expected.version - 1].model_dump()) != redact_data(expected.model_dump()):
+            raise ValueError("Feedback output is absent from version history")
+        return [redact_data(item.model_dump()) for item in chain]
+
     def log_feedback_replay(self, adaptation: FeedbackAdaptationResult, versions: list[dict]) -> dict:
         """Repair a missing log after restart without generating or overwriting data."""
         saved = self._feedback_record(adaptation.request_id)
@@ -33,7 +50,8 @@ class JsonlRunLogger:
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "session_id": adaptation.session_id, "plan_id": adaptation.plan_id,
             "status": "recovered_feedback", "feedback": adaptation.feedback,
-            "feedback_adaptation": adaptation.model_dump(), "output_versions": versions,
+            "feedback_adaptation": adaptation.model_dump(),
+            "output_versions": self._version_chain(versions, adaptation),
             "pipeline_events": ["feedback_recovered"],
         })
         self.path.parent.mkdir(parents=True, exist_ok=True)
@@ -49,6 +67,7 @@ class JsonlRunLogger:
         feedback: str,
         model_name: str,
         adaptation: FeedbackAdaptationResult | None = None,
+        output_versions: list[dict] | None = None,
     ) -> dict:
         if adaptation:
             # A retry after SQLite succeeded must not append a second feedback event.
@@ -104,9 +123,12 @@ class JsonlRunLogger:
         if adaptation:
             record["plan_id"] = response.plan_id
             record["feedback_adaptation"] = redact_data(adaptation.model_dump())
-            record["output_versions"] = [redact_data(response.output_version.model_dump())]
-            if adaptation.output_version.version != response.output_version.version:
-                record["output_versions"].append(redact_data(adaptation.output_version.model_dump()))
+            versions = output_versions
+            if versions is None:
+                versions = [response.output_version.model_dump()]
+                if adaptation.output_version.version != response.output_version.version:
+                    versions.append(adaptation.output_version.model_dump())
+            record["output_versions"] = self._version_chain(versions, adaptation)
             if adaptation.status == "adapted":
                 record["pipeline_events"].append("output_adapted")
             elif adaptation.status == "failed":

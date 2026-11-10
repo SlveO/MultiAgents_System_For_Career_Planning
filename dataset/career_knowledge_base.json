@@ -1,5 +1,6 @@
 [
   {
+    "id": "career-001",
     "role": "算法工程师",
     "skills": [
       "Python",
@@ -26,6 +27,7 @@
     "sources": ["智联招聘《2025年四季度人才市场热点快报》"]
   },
   {
+    "id": "career-002",
     "role": "数据分析师",
     "skills": [
       "SQL",
@@ -53,6 +55,7 @@
     "sources": ["百融云创及杭州顺网科技 2025 届招聘信息"]
   },
   {
+    "id": "career-003",
     "role": "产品经理",
     "skills": [
       "需求分析",
@@ -73,6 +76,7 @@
     "salary_hint": "一线城市应届约12k-25k/月"
   },
   {
+    "id": "career-004",
     "role": "嵌入式工程师",
     "skills": [
       "C/C++",
@@ -93,6 +97,7 @@
     "salary_hint": "一线城市应届约12k-22k/月"
   },
   {
+    "id": "career-005",
     "role": "测试开发工程师",
     "skills": [
       "Python",
@@ -113,6 +118,7 @@
     "salary_hint": "一线城市应届约10k-20k/月"
   },
   {
+    "id": "career-006",
     "role": "光学设计工程师",
     "skills": [
       "Zemax",
@@ -137,6 +143,7 @@
     "salary_hint": "一线城市应届约15k-28k/月"
   },
   {
+    "id": "career-007",
     "role": "激光算法工程师",
     "skills": [
       "信号处理",
@@ -159,6 +166,7 @@
     "salary_hint": "一线城市应届约18k-35k/月"
   },
   {
+    "id": "career-008",
     "role": "光电工艺工程师",
     "skills": [
       "半导体工艺",
@@ -180,6 +188,7 @@
     "salary_hint": "一线城市应届约12k-22k/月"
   },
   {
+    "id": "career-009",
     "role": "模拟IC设计工程师",
     "skills": [
       "Cadence Virtuoso",
@@ -202,6 +211,7 @@
     "salary_hint": "一线城市应届约20k-40k/月（IC行业偏高）"
   },
   {
+    "id": "career-010",
     "role": "嵌入式系统工程师",
     "skills": [
       "C/C++",
@@ -227,6 +237,7 @@
     "salary_hint": "一线城市应届约12k-25k/月"
   },
   {
+    "id": "career-011",
     "role": "射频工程师",
     "skills": [
       "HFSS",
@@ -251,6 +262,7 @@
     "salary_hint": "一线城市应届约18k-35k/月"
   },
   {
+    "id": "career-012",
     "role": "医学影像算法工程师",
     "skills": [
       "Python",
@@ -274,6 +286,7 @@
     "salary_hint": "一线城市应届约18k-30k/月"
   },
   {
+    "id": "career-013",
     "role": "计算机视觉算法工程师",
     "skills": [
       "Python",
@@ -298,6 +311,7 @@
     "salary_hint": "一线城市应届约20k-40k/月（竞争激烈）"
   },
   {
+    "id": "career-014",
     "role": "封装设计工程师",
     "skills": [
       "Ansys",
@@ -321,6 +335,7 @@
     "salary_hint": "一线城市应届约15k-28k/月"
   },
   {
+    "id": "career-015",
     "role": "通信算法工程师",
     "skills": [
       "MATLAB",
@@ -345,6 +360,7 @@
     "salary_hint": "一线城市应届约18k-35k/月"
   },
   {
+    "id": "career-016",
     "role": "嵌入式软件开发工程师",
     "skills": [
       "C语言",
@@ -373,6 +389,7 @@
     "sources": ["智联招聘 2025 年四季度报告"]
   },
   {
+    "id": "career-017",
     "role": "DSP算法工程师",
     "skills": [
       "MATLAB",
@@ -396,6 +413,7 @@
     "salary_hint": "一线城市应届约16k-30k/月"
   },
   {
+    "id": "career-018",
     "role": "物联网系统工程师",
     "skills": [
       "Python",
@@ -419,6 +437,7 @@
     "salary_hint": "一线城市应届约12k-23k/月"
   },
   {
+    "id": "career-019",
     "role": "FAE现场应用工程师",
     "skills": [
       "技术沟通",
@@ -442,6 +461,7 @@
     "salary_hint": "一线城市应届约10k-18k/月+绩效"
   },
   {
+    "id": "career-020",
     "role": "软硬件协同设计工程师",
     "skills": [
       "C/C++",
@@ -464,6 +484,7 @@
     "salary_hint": "一线城市应届约18k-32k/月"
   },
   {
+    "id": "career-021",
     "role": "云计算工程师",
     "skills": [
       "Linux",
@@ -487,6 +508,7 @@
     "salary_hint": "一线城市应届约15k-30k/月"
   },
   {
+    "id": "career-022",
     "role": "后端开发工程师",
     "skills": ["Python/Java/Go", "数据库", "REST API", "缓存", "系统设计"],
     "resources": ["MDN HTTP", "Designing Data-Intensive Applications", "后端项目实战"],
@@ -494,6 +516,7 @@
     "salary_hint": "一线城市应届约12k-25k/月"
   },
   {
+    "id": "career-023",
     "role": "前端开发工程师",
     "skills": ["HTML/CSS", "JavaScript", "TypeScript", "React/Vue", "浏览器调试"],
     "resources": ["MDN Web Docs", "JavaScript.info", "React官方文档"],
@@ -501,6 +524,7 @@
     "salary_hint": "一线城市应届约10k-22k/月"
   },
   {
+    "id": "career-024",
     "role": "全栈开发工程师",
     "skills": ["前端框架", "后端框架", "SQL", "部署", "接口设计"],
     "resources": ["Full Stack Open", "Docker入门", "系统设计基础"],
@@ -508,6 +532,7 @@
     "salary_hint": "一线城市应届约12k-25k/月"
   },
   {
+    "id": "career-025",
     "role": "Java开发工程师",
     "skills": ["Java", "Spring Boot", "MySQL", "Redis", "JVM"],
     "resources": ["Java核心技术", "Spring官方指南", "JavaGuide"],
@@ -515,6 +540,7 @@
     "salary_hint": "一线城市应届约12k-24k/月"
   },
   {
+    "id": "career-026",
     "role": "Python开发工程师",
     "skills": ["Python", "FastAPI/Django", "SQL", "自动化", "Linux"],
     "resources": ["Python官方教程", "FastAPI文档", "Django教程"],
@@ -522,6 +548,7 @@
     "salary_hint": "一线城市应届约11k-23k/月"
   },
   {
+    "id": "career-027",
     "role": "数据工程师",
     "skills": ["SQL", "Python", "ETL", "Spark", "数据仓库"],
     "resources": ["Data Engineering Zoomcamp", "Spark权威指南", "数据仓库工具箱"],
@@ -529,6 +556,7 @@
     "salary_hint": "一线城市应届约13k-26k/月"
   },
   {
+    "id": "career-028",
     "role": "数据科学家",
     "skills": ["统计学", "Python", "机器学习", "实验设计", "业务分析"],
     "resources": ["统计学习方法", "Kaggle", "Practical Statistics for Data Scientists"],
@@ -536,6 +564,7 @@
     "salary_hint": "一线城市应届约15k-30k/月"
   },
   {
+    "id": "career-029",
     "role": "BI工程师",
     "skills": ["SQL", "Power BI/Tableau", "数据建模", "指标体系", "报表开发"],
     "resources": ["Power BI官方学习", "Tableau Public", "数据化管理"],
@@ -543,6 +572,7 @@
     "salary_hint": "一线城市应届约10k-20k/月"
   },
   {
+    "id": "career-030",
     "role": "NLP算法工程师",
     "skills": ["Python", "自然语言处理", "Transformer", "PyTorch", "模型评估"],
     "resources": ["CS224N", "Hugging Face课程", "NLP项目实战"],
@@ -550,6 +580,7 @@
     "salary_hint": "一线城市应届约16k-32k/月"
   },
   {
+    "id": "career-031",
     "role": "大模型应用工程师",
     "skills": ["Python", "LLM API", "提示词", "RAG", "评测"],
     "resources": ["DeepLearning.AI LLM课程", "LangChain文档", "RAG评测实践"],
@@ -557,6 +588,7 @@
     "salary_hint": "一线城市应届约15k-30k/月"
   },
   {
+    "id": "career-032",
     "role": "DevOps工程师",
     "skills": ["Linux", "CI/CD", "Docker", "Kubernetes", "自动化脚本"],
     "resources": ["DevOps实践指南", "GitHub Actions文档", "Kubernetes文档"],
@@ -564,6 +596,7 @@
     "salary_hint": "一线城市应届约12k-24k/月"
   },
   {
+    "id": "career-033",
     "role": "SRE工程师",
     "skills": ["Linux", "可观测性", "容量规划", "故障处理", "自动化"],
     "resources": ["Google SRE Book", "Prometheus文档", "Site Reliability Workbook"],
@@ -571,6 +604,7 @@
     "salary_hint": "一线城市应届约14k-28k/月"
   },
   {
+    "id": "career-034",
     "role": "网络安全工程师",
     "skills": ["网络协议", "Linux", "安全基线", "日志分析", "应急响应"],
     "resources": ["OWASP", "网络安全基础", "CTF入门"],
@@ -578,6 +612,7 @@
     "salary_hint": "一线城市应届约11k-23k/月"
   },
   {
+    "id": "career-035",
     "role": "渗透测试工程师",
     "skills": ["Web安全", "Burp Suite", "Python", "漏洞复现", "安全报告"],
     "resources": ["PortSwigger Academy", "OWASP Web Security Testing Guide", "靶场实践"],
@@ -585,6 +620,7 @@
     "salary_hint": "一线城市应届约10k-22k/月"
   },
   {
+    "id": "career-036",
     "role": "数据库工程师",
     "skills": ["MySQL/PostgreSQL", "SQL优化", "备份恢复", "高可用", "监控"],
     "resources": ["高性能MySQL", "PostgreSQL文档", "数据库内核课程"],
@@ -592,6 +628,7 @@
     "salary_hint": "一线城市应届约12k-24k/月"
   },
   {
+    "id": "career-037",
     "role": "软件测试工程师",
     "skills": ["测试设计", "接口测试", "缺陷管理", "SQL", "业务分析"],
     "resources": ["软件测试的艺术", "Postman学习中心", "测试用例设计"],
@@ -599,6 +636,7 @@
     "salary_hint": "一线城市应届约8k-16k/月"
   },
   {
+    "id": "career-038",
     "role": "Android开发工程师",
     "skills": ["Kotlin", "Android SDK", "Jetpack", "网络编程", "性能优化"],
     "resources": ["Android Developers", "Kotlin官方教程", "Jetpack Compose课程"],
@@ -606,6 +644,7 @@
     "salary_hint": "一线城市应届约11k-23k/月"
   },
   {
+    "id": "career-039",
     "role": "iOS开发工程师",
     "skills": ["Swift", "UIKit/SwiftUI", "网络编程", "App生命周期", "性能优化"],
     "resources": ["Apple Developer文档", "Swift官方教程", "SwiftUI教程"],
@@ -613,6 +652,7 @@
     "salary_hint": "一线城市应届约12k-24k/月"
   },
   {
+    "id": "career-040",
     "role": "游戏开发工程师",
     "skills": ["C#/C++", "Unity/Unreal", "计算机图形学", "性能优化", "游戏数学"],
     "resources": ["Unity Learn", "Unreal Online Learning", "游戏编程模式"],
@@ -620,6 +660,7 @@
     "salary_hint": "一线城市应届约11k-24k/月"
   },
   {
+    "id": "career-041",
     "role": "UI设计师",
     "skills": ["Figma", "视觉设计", "设计规范", "原型", "交付协作"],
     "resources": ["Figma Learn", "Material Design", "优秀界面临摹"],
@@ -627,6 +668,7 @@
     "salary_hint": "一线城市应届约8k-16k/月"
   },
   {
+    "id": "career-042",
     "role": "UX研究员",
     "skills": ["用户访谈", "可用性测试", "问卷设计", "数据分析", "研究报告"],
     "resources": ["用户体验要素", "NN/g文章", "用户研究方法"],
@@ -634,6 +676,7 @@
     "salary_hint": "一线城市应届约9k-18k/月"
   },
   {
+    "id": "career-043",
     "role": "技术产品经理",
     "skills": ["需求分析", "API理解", "原型设计", "项目协调", "数据分析"],
     "resources": ["启示录", "API设计基础", "PRD案例"],
@@ -641,6 +684,7 @@
     "salary_hint": "一线城市应届约12k-24k/月"
   },
   {
+    "id": "career-044",
     "role": "项目经理",
     "skills": ["计划管理", "风险管理", "沟通", "资源协调", "复盘"],
     "resources": ["PMBOK", "敏捷项目管理", "项目复盘模板"],
@@ -648,6 +692,7 @@
     "salary_hint": "一线城市应届约10k-20k/月"
   },
   {
+    "id": "career-045",
     "role": "机器人算法工程师",
     "skills": ["C++", "Python", "ROS", "路径规划", "传感器融合", "仿真环境搭建", "VLM"],
     "resources": ["ROS Wiki", "机器人学导论", "SLAM十四讲"],
@@ -657,6 +702,7 @@
     "sources": ["36氪具身智能领域分析及北京浪潮电子信息招聘信息"]
   },
   {
+    "id": "career-046",
     "role": "自动化控制工程师",
     "skills": ["PLC", "控制理论", "MATLAB/Simulink", "工业通信", "现场调试"],
     "resources": ["自动控制原理", "西门子学习平台", "Simulink教程"],
@@ -664,6 +710,7 @@
     "salary_hint": "一线城市应届约9k-18k/月"
   },
   {
+    "id": "career-047",
     "role": "FPGA开发工程师",
     "skills": ["Verilog", "FPGA", "时序分析", "数字电路", "仿真验证"],
     "resources": ["FPGA Prototyping by Verilog Examples", "Vivado文档", "数字设计实验"],
@@ -671,6 +718,7 @@
     "salary_hint": "一线城市应届约14k-28k/月"
   },
   {
+    "id": "career-048",
     "role": "数字IC设计工程师",
     "skills": ["Verilog/SystemVerilog", "数字电路", "RTL设计", "时序", "EDA工具"],
     "resources": ["数字集成电路", "芯片设计流程课程", "EDA工具教程"],
@@ -678,6 +726,7 @@
     "salary_hint": "一线城市应届约18k-35k/月"
   },
   {
+    "id": "career-049",
     "role": "芯片验证工程师",
     "skills": ["SystemVerilog", "UVM", "验证计划", "覆盖率", "脚本语言"],
     "resources": ["UVM实战", "SystemVerilog验证", "芯片验证项目"],
@@ -685,6 +734,7 @@
     "salary_hint": "一线城市应届约16k-32k/月"
   },
   {
+    "id": "career-050",
     "role": "硬件工程师",
     "skills": ["模拟/数字电路", "原理图", "PCB", "器件选型", "硬件调试", "EDA工具", "白盒测试", "储能机种维护"],
     "resources": ["电子技术基础", "Altium Designer教程", "硬件项目实战"],
@@ -694,6 +744,7 @@
     "sources": ["2025 无锡市百企千才高校行招聘信息"]
   },
   {
+    "id": "career-051",
     "role": "大模型算法工程师",
     "skills": ["深度学习", "PyTorch/TensorFlow", "Transformer架构", "数据开发", "Python/C++"],
     "resources": [],
@@ -703,6 +754,7 @@
     "sources": ["脉脉《2025春招职场安全感洞察》"]
   },
   {
+    "id": "career-052",
     "role": "AI Agent工程师",
     "skills": ["LangChain/AutoGen/LiteLLM", "Python", "AI应用构建与系统集成", "MES/ERP数据对接"],
     "resources": [],
@@ -712,6 +764,7 @@
     "sources": ["2025 无锡市百企千才高校行厦门大学专场招聘会"]
   },
   {
+    "id": "career-053",
     "role": "AI科学家/负责人",
     "skills": ["AI前沿研究", "大模型训练与优化", "团队管理", "跨模态理解"],
     "resources": [],
@@ -721,6 +774,7 @@
     "sources": ["36氪《2025年职场红利盘点》"]
   },
   {
+    "id": "career-054",
     "role": "运维工程师",
     "skills": ["云平台运维", "Kubernetes", "Jenkins", "Grafana", "网络VPN运维"],
     "resources": [],
@@ -730,6 +784,7 @@
     "sources": ["2025 无锡市百企千才高校行招聘信息"]
   },
   {
+    "id": "career-055",
     "role": "Java软件工程师",
     "skills": ["Java", "Spring Boot", "多线程编程", "设计模式"],
     "resources": [],
@@ -739,6 +794,7 @@
     "sources": ["集团本部信息技术岗招聘信息"]
   },
   {
+    "id": "career-056",
     "role": "AI产品经理",
     "skills": ["AI技术理解", "产品规划", "Axure/MasterGo", "市场洞察", "数据分析"],
     "resources": [],
@@ -748,6 +804,7 @@
     "sources": ["脉脉《2025年度人才迁徙报告》"]
   },
   {
+    "id": "career-057",
     "role": "金融科技分析师/风控岗",
     "skills": ["逻辑回归/决策树", "Python/R/SQL", "数据分析与建模"],
     "resources": [],
@@ -757,6 +814,7 @@
     "sources": ["交大高金《金融科技人才求职红宝书2025》"]
   },
   {
+    "id": "career-058",
     "role": "人工智能专家（金融方向）",
     "skills": ["人工智能项目实践", "团队管理", "金融场景AI落地", "信息安全"],
     "resources": [],
@@ -766,6 +824,7 @@
     "sources": ["浦发银行人工智能专家招聘信息"]
   },
   {
+    "id": "career-059",
     "role": "高分子材料工程师",
     "skills": ["高分子材料研发", "材料分析与测试", "系统科研训练"],
     "resources": [],
@@ -775,6 +834,7 @@
     "sources": ["智联招聘《2025年四季度人才市场热点快报》"]
   },
   {
+    "id": "career-060",
     "role": "无人机工程师",
     "skills": ["无人机系统设计", "飞控算法", "巡检/安防/农业应用场景开发"],
     "resources": [],
@@ -784,6 +844,7 @@
     "sources": ["智联招聘 2025 年四季度人才市场报告"]
   },
   {
+    "id": "career-061",
     "role": "储能结构工程师",
     "skills": ["电池储能产品结构设计", "机械设计", "钣金/塑料材料工艺", "电池PACK/集装箱设计"],
     "resources": [],
@@ -793,6 +854,7 @@
     "sources": ["格力钛新能源股份有限公司招聘信息"]
   },
   {
+    "id": "career-062",
     "role": "骨科医师",
     "skills": ["中医骨伤科学", "临床诊断与治疗", "住院医师规范化培训"],
     "resources": [],
@@ -802,6 +864,7 @@
     "sources": ["佛山市中医院三水医院 2025 年度招聘信息"]
   },
   {
+    "id": "career-063",
     "role": "妇产科医师",
     "skills": ["妇产科临床诊疗", "遗传学知识", "科研论文发表", "医师资格证"],
     "resources": [],
@@ -811,6 +874,7 @@
     "sources": ["重庆医科大学附属第二医院 2025 年度招聘信息"]
   },
   {
+    "id": "career-064",
     "role": "AI素养方向信息技术教师",
     "skills": ["人工智能教学", "学科竞赛指导", "信息技术课程设计"],
     "resources": [],
@@ -820,6 +884,7 @@
     "sources": ["长三角师资招聘会"]
   },
   {
+    "id": "career-065",
     "role": "医药研发管理岗",
     "skills": ["药物合成研发", "医药研发项目管理", "团队协调"],
     "resources": [],

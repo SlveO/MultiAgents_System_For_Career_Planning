@@ -15,7 +15,7 @@ try:
         BrainResponseError,
         DeepSeekBrainClient,
     )
-    from .core.career_knowledge import CareerKnowledgeBase
+    from .core.career_knowledge import CareerKnowledgeBase, format_knowledge_hint
     from .agents.perception import AudioPerceptionAgent, DocumentPerceptionAgent, ImagePerceptionAgent, TextPerceptionAgent, VideoPerceptionAgent
     from .core.session_memory import SessionMemory
     from .core.settings import get_settings
@@ -31,7 +31,7 @@ except ImportError:
         BrainResponseError,
         DeepSeekBrainClient,
     )
-    from project.core.career_knowledge import CareerKnowledgeBase
+    from project.core.career_knowledge import CareerKnowledgeBase, format_knowledge_hint
     from project.agents.perception import AudioPerceptionAgent, DocumentPerceptionAgent, ImagePerceptionAgent, TextPerceptionAgent, VideoPerceptionAgent
     from project.core.session_memory import SessionMemory
     from project.core.settings import get_settings
@@ -46,7 +46,9 @@ from project.core.local_guidance import LocalGuidanceModel
 from project.core.schemas import GuidanceDecision, GuidanceObservation
 from project.core.local_feedback import LocalFeedbackModel
 from project.core.output_adaptation import FeedbackModel, adapt_output, original_version
-from project.core.schemas import FeedbackAdaptationResult
+from project.core.schemas import FeedbackAdaptationResult, OutputVersion
+from project.core.privacy import session_key
+from project.core.output_preferences import preferences_prompt_hint, render_initial_output
 
 
 @dataclass
@@ -65,10 +67,15 @@ class CareerOrchestrator:
         run_logger: Optional[JsonlRunLogger] = None,
         guidance_model: Optional[GuidanceModel] = None,
         feedback_model: Optional[FeedbackModel] = None,
+        persist: bool = True,
+        knowledge_registry: Any = None,
     ):
         self.settings = get_settings()
-        self.memory = SessionMemory(db_path=db_path)
+        self.persist = persist
+        self.memory = SessionMemory(db_path=db_path) if persist else None
         self.knowledge = CareerKnowledgeBase()
+        self.knowledge_registry = knowledge_registry
+        self._active_knowledge_snapshot: Optional[dict] = None
         self.text_agent = TextPerceptionAgent()
         self.document_agent = DocumentPerceptionAgent()
         self.image_agent = None
@@ -76,7 +83,7 @@ class CareerOrchestrator:
         self.video_agent = None
 
         self.cloud_brain = brain_client or DeepSeekBrainClient()
-        self.run_logger = run_logger or JsonlRunLogger()
+        self.run_logger = (run_logger or JsonlRunLogger()) if persist else None
         self._pending_runs: Dict[str, Tuple[TaskRequest, CareerPlanResponse, str]] = {}
 
         self.image_model_path = image_model_path or self.settings.vision_model_path
@@ -95,7 +102,10 @@ class CareerOrchestrator:
         model_name: str,
     ) -> None:
         response.plan_id = uuid.uuid4().hex
-        response.output_version = original_version(response)
+        response.knowledge_snapshot = self._active_knowledge_snapshot
+        response.output_version = render_initial_output(response, req.output_preferences)
+        if not self.persist:
+            return
         self.memory.save_output_version(req.session_id, redact_data(response.output_version.model_dump()))
         self.memory.upsert_profile(req.session_id, redact_data(response.profile.model_dump()))
         self.memory.append_interaction(
@@ -106,6 +116,7 @@ class CareerOrchestrator:
         self._pending_runs[req.session_id] = (req, response, model_name)
 
     def submit_feedback(self, session_id: str, feedback: str) -> bool:
+        session_id = session_key(session_id)
         if feedback not in FEEDBACK_OPTIONS:
             raise ValueError(f"unsupported feedback: {feedback}")
         self.memory.append_feedback(session_id, feedback, None)
@@ -125,7 +136,8 @@ class CareerOrchestrator:
         self, session_id: str, feedback: str, *, request_id: Optional[str] = None,
         plan_id: Optional[str] = None,
     ) -> FeedbackAdaptationResult:
-        """One adaptation per active plan; identical requests replay durably."""
+        """Extend a saved plan's latest display; identical requests replay durably."""
+        session_id = session_key(session_id)
         if feedback not in FEEDBACK_OPTIONS:
             raise ValueError(f"unsupported feedback: {feedback}")
         pending = self._pending_runs.get(session_id)
@@ -148,14 +160,49 @@ class CareerOrchestrator:
             else:
                 self.run_logger.log_feedback_replay(result, self.memory.get_output_versions(session_id, plan_id))
             return result
-        if not pending or pending[1].plan_id != plan_id:
-            raise ValueError("The plan is no longer active; only a saved feedback request can be replayed")
-        req, response, model_name = pending
-        result = adapt_output(response, feedback, request_id, self.feedback_model)
+        if pending and pending[1].plan_id == plan_id:
+            req, response, model_name = pending
+        else:
+            saved = self.memory.get_plan_interaction(session_id, plan_id)
+            if not saved:
+                raise ValueError("No saved planning input exists for this session and plan")
+            req = TaskRequest.model_validate(saved["request"])
+            response = self._restore_response(saved["response"])
+            model_name = req.brain_model or self.settings.brain_default_model
+        versions = self.memory.get_output_versions(session_id, plan_id)
+        if not versions:
+            raise ValueError("No display versions exist for this session and plan")
+        baseline = OutputVersion.model_validate(versions[-1])
+        result = adapt_output(response, feedback, request_id, self.feedback_model, baseline=baseline)
         self.memory.save_feedback_result(redact_data(result.model_dump()))
-        self.run_logger.log_run(req, response, feedback=feedback, model_name=model_name, adaptation=result)
-        self._pending_runs.pop(session_id)
+        self.run_logger.log_run(
+            req, response, feedback=feedback, model_name=model_name, adaptation=result,
+            output_versions=self.memory.get_output_versions(session_id, plan_id),
+        )
+        if pending and pending[1].plan_id == plan_id:
+            self._pending_runs.pop(session_id, None)
         return result
+
+    @staticmethod
+    def _restore_response(payload: dict) -> CareerPlanResponse:
+        # Persistence deliberately removes raw excerpts and paths. Reconstitute
+        # only empty placeholders, never the original private material.
+        payload = json.loads(json.dumps(payload))
+        for result in payload.get("perception_results", []):
+            for item in result.get("evidence", []):
+                item.setdefault("source", "")
+                item.setdefault("quote", "")
+        return CareerPlanResponse.model_validate(payload)
+
+    def get_saved_plan(self, session_id: str, plan_id: Optional[str] = None) -> CareerPlanResponse:
+        session_id = session_key(session_id)
+        if plan_id is None:
+            latest = self.memory.get_latest_output_version(session_id)
+            plan_id = latest["plan_id"] if latest else None
+        saved = self.memory.get_plan_interaction(session_id, plan_id) if plan_id else None
+        if not saved:
+            raise ValueError("No saved plan exists for this session")
+        return self._restore_response(saved["response"])
 
     def _get_image_agent(self) -> ImagePerceptionAgent:
         if self.image_agent is None:
@@ -240,26 +287,35 @@ class CareerOrchestrator:
         if text_blob:
             results.append(self.text_agent.perceive(text_blob))
 
-        for path in req.document_paths:
-            results.append(self.document_agent.perceive(path))
-        for path in req.audio_paths:
-            results.append(self._get_audio_agent().perceive(path))
-        for path in req.image_paths:
-            results.append(
-                self._get_image_agent().perceive(
-                    path,
-                    user_goal=req.user_goal,
-                    user_text=req.text_input,
+        try:
+            for path in req.document_paths:
+                if req.metadata.get("scan_pdf") == "true" and path.lower().endswith(".pdf"):
+                    results.append(self.document_agent.perceive(path, image_agent=self._get_image_agent()))
+                else:
+                    results.append(self.document_agent.perceive(path))
+            for path in req.audio_paths:
+                results.append(self._get_audio_agent().perceive(path))
+            for path in req.image_paths:
+                results.append(
+                    self._get_image_agent().perceive(
+                        path,
+                        user_goal=req.user_goal,
+                        user_text=req.text_input,
+                    )
                 )
-            )
-        for path in req.video_paths:
-            results.append(self._get_video_agent().perceive(path))
+            for path in req.video_paths:
+                results.append(self._get_video_agent().perceive(path))
+        finally:
+            if self.image_agent is not None:
+                self.image_agent.unload()
         return results
 
     def _build_profile(self, req: TaskRequest, perception_results: List[PerceptionResult]) -> UserProfile:
-        profile = UserProfile.model_validate(self.memory.get_profile(req.session_id))
+        profile = UserProfile.model_validate(self.memory.get_profile(req.session_id)) if self.persist else UserProfile()
         initialize_fields(profile)
-        facts = [fact for result in perception_results for fact in result.facts]
+        facts = [fact for result in perception_results
+                 if not result.requires_confirmation and result.subject not in {"job", "reference"}
+                 for fact in result.facts]
         profile.strengths = self._normalize_list(profile.strengths + [
             fact for fact in facts if any(k in fact for k in ['会', '熟悉', '掌握', '经验', '项目'])
         ])
@@ -288,6 +344,13 @@ class CareerOrchestrator:
         if req.follow_up_answers:
             profile = apply_answers_to_profile(profile, req.follow_up_answers)
         return profile
+
+    def perceive(self, req: TaskRequest) -> List[PerceptionResult]:
+        """Perceive once, without interactive input or persistence."""
+        return self._collect_perception(req)
+
+    def build_profile(self, req: TaskRequest, results: List[PerceptionResult]) -> UserProfile:
+        return self._build_profile(req, results)
 
     def prepare(self, req: TaskRequest, *, input_fn=input, output_fn=print) -> PreparedCareerInput:
         results = self._collect_perception(req)
@@ -328,6 +391,10 @@ class CareerOrchestrator:
         knowledge_hints: List[str],
     ) -> str:
         perception_text = MultiModalFusion.fuse(perception_results)
+        boundaries = [
+            {"modality": result.modality, "summary": result.summary, "limitations": result.missing_info}
+            for result in perception_results if result.missing_info or result.confidence <= 0
+        ]
 
         return f"""
 你是职业规划总控代理。请只输出严格 JSON，不要输出其他文本。
@@ -354,25 +421,43 @@ JSON schema:
 约束: {profile.constraints.model_dump_json(ensure_ascii=False)}
 画像中的 guidance 记录回答及证据。unknown/refused/missing/conflict 都不是已确认事实；
 explicit_none 表示用户明确没有。不要推断未解决项已补齐，规划须说明其限制。
+材料 subject=job/reference/unknown 只能作岗位或参考信息，不能写成学生已经掌握的技能。
+verification=unverified 表示原始来源未经核验；user_confirmed 仅为用户陈述，不等于外部来源核验。
 用户画像: {profile.model_dump_json(ensure_ascii=False)}
+表达偏好（仅用于呈现，不作为用户能力事实）:
+{preferences_prompt_hint(req.output_preferences)}
 多模态感知结构化结果:
 {perception_text}
+材料解析边界（失败或截断均表示信息未完整读取，不得推测缺失内容；需在规划中保留限制）:
+{json.dumps(boundaries, ensure_ascii=False)}
 知识库提示:
 {json.dumps(knowledge_hints, ensure_ascii=False)}
 """
 
     def _retrieve_knowledge(self, req: TaskRequest, query: str) -> Tuple[List[str], List[str]]:
+        self._active_knowledge_snapshot = None
         if not req.use_knowledge:
             return [], []
-
-        hits = self.knowledge.retrieve(query, top_k=4)
-        hints = [
-            (
-                f"{hit['role']} | 核心技能: {hit['skills']} | "
-                f"薪资参考: {hit['salary_hint']}"
-            )
-            for hit in hits
-        ]
+        if self.knowledge_registry is None:
+            import os
+            registry_root = os.environ.get("CAREER_KNOWLEDGE_DIR") or self.settings.career_knowledge_dir
+            if registry_root:
+                from project.core.knowledge_versions import KnowledgeRegistry
+                self.knowledge_registry = KnowledgeRegistry(root=registry_root)
+        if self.knowledge_registry is not None:
+            snapshot = self.knowledge_registry.snapshot(query, top_k=4)
+            hits = snapshot["references"]
+        else:
+            hits = self.knowledge.retrieve(query, top_k=4)
+            entries = self.knowledge.get_items_by_ids([item.item_id for item in self.knowledge.items])
+            digest = hashlib.sha256(json.dumps(entries, ensure_ascii=False, sort_keys=True).encode()).hexdigest()
+            snapshot = {
+                "version_id": f"seed-{digest[:20]}", "content_sha256": digest,
+                "hits": self.knowledge.get_items_by_ids([hit["item_id"] for hit in hits]),
+                "references": hits,
+            }
+        self._active_knowledge_snapshot = json.loads(json.dumps(snapshot))
+        hints = [format_knowledge_hint(hit) for hit in hits]
         hit_ids = [hit["item_id"] for hit in hits if hit.get("item_id")]
         return hints, hit_ids
 

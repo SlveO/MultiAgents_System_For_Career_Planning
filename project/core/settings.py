@@ -17,6 +17,7 @@ class AppSettings(BaseSettings):
     feedback_model_path: str = ""
     guidance_max_rounds: int = Field(default=4, ge=0, le=16)
     audio_model_path: str = "./models/whisper-small"
+    career_knowledge_dir: str = ""
 
     model_config = SettingsConfigDict(
         env_file=".env", env_prefix="", case_sensitive=False, extra="ignore",

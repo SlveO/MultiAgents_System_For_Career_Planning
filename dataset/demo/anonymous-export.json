@@ -1,0 +1,4032 @@
+{
+  "active_task": null,
+  "created_at": "2026-11-06T05:18:22.031504+00:00",
+  "evaluations": [
+    {
+      "comment": "自动化匿名功能验收；未采集人工评分。",
+      "created_at": "2026-11-06T05:25:08.864867+00:00",
+      "id": "40cfd97587074fa1a8d16b89c465547f",
+      "output_version": 3,
+      "plan_id": "5782e9d66c8e42b196403c4dcca0b3f1",
+      "scores": null
+    }
+  ],
+  "feedback": [
+    {
+      "feedback": "过短",
+      "latency_ms": 37296,
+      "model_used": true,
+      "output_version": {
+        "created_at": "2026-11-06T05:24:37.888205+00:00",
+        "display_text": "规划建议\n目标明确：后端开发实习。你已会Python和SQL，每周可投入8小时，但暂无实习经验，且未提供城市、行业偏好、资金预算等约束，规划需保留这些限制。\n\n核心策略：用8周左右补齐后端最小可用技能栈（Web框架、数据库设计、REST API、Git），并完成1个可展示的后端项目；随后用项目+基础八股投递实习。\n\n注意：材料中的岗位卡片（Python/SQL、8小时/周、0预算）为未核验的合成信息，不能当作真实招聘要求；知识库中的后端技能与资源条目也未核验，仅作参考。\n\n行动要点：\n1) 先确认城市/远程偏好与可实习时间段，再锁定投递范围。\n2) 每周8小时拆成：4小时项目开发、2小时基础补强、2小时投递与复盘。\n3) 项目优先选FastAPI或Flask + PostgreSQL/MySQL，实现用户注册登录、CRUD、分页、简单缓存，并写清README与API文档。\n4) 第4周起开始小批量投递，用面试反馈驱动补强。\n\n目标岗位\n- 后端开发实习生（Python方向）\n- Python开发实习生\n\n能力差距\n- 缺少Web后端框架实战经验（如FastAPI/Flask/Django），仅有Python语言基础\n- 缺少数据库设计与ORM使用经验，SQL仅停留在会写查询的层面\n- 缺少REST API设计、鉴权、错误处理等工程化实践\n- 无实习/项目经历，简历缺少可验证的后端产出\n- 未确认城市、可实习时长、行业偏好与资金预算，投递范围不明确\n- Git/协作流程、Linux基础、简单部署等工程习惯未确认\n- 计算机基础（网络、操作系统、数据库原理）掌握程度未确认，面试八股需补\n\n行动路线\n- 30天目标：补齐后端最小技能栈并启动第一个可展示项目\n- 30天交付物：完成FastAPI或Flask官方教程，能独立写出带路由、参数校验、错误处理的API\n- 30天交付物：完成数据库设计练习：为项目设计3-5张表，使用SQLAlchemy或原生SQL实现CRUD\n- 30天交付物：项目仓库初始化：Git提交规范、README骨架、API文档草稿\n- 30天交付物：整理一份后端实习岗位JD样本（10条），标注高频要求\n- 30天指标：每周投入≥8小时，累计≥32小时\n- 30天指标：项目完成≥3个API端点并通过本地测试\n- 30天指标：Git提交≥8次，README包含运行说明\n- 30天指标：JD样本≥10条并完成关键词统计\n- 90天目标：完成可展示的后端项目并开始小批量投递\n- 90天交付物：项目MVP：用户注册登录（JWT或Session）、核心业务CRUD、分页、基础错误处理\n- 90天交付物：项目部署到可访问环境（如Render/Railway/云服务器），提供在线Demo或录屏\n- 90天交付物：简历初版：突出项目、技能、课程，量化项目产出\n- 90天交付物：投递记录表：公司、岗位、渠道、反馈状态\n- 90天指标：项目累计≥15个API端点，核心流程可演示\n- 90天指标：完成≥20次投递，获得≥3次面试或笔试机会\n- 90天指标：每周复盘1次，记录面试问题并归类\n- 90天指标：项目README包含架构说明与API文档\n- 180天目标：拿到后端开发实习offer并形成持续迭代能力\n- 180天交付物：项目迭代：加入缓存（Redis）、简单鉴权优化、单元测试\n- 180天交付物：计算机基础补强笔记：HTTP、数据库索引、事务、操作系统基础\n- 180天交付物：面试题库整理：≥50道后端高频题及自己的答案\n- 180天交付物：实习offer或明确的下一步补强计划\n- 180天指标：累计投递≥60次，面试/笔试≥8次\n- 180天指标：项目单元测试覆盖率≥50%（核心模块）\n- 180天指标：高频题整理≥50道并能口述\n- 180天指标：获得≥1个实习offer或进入≥2家公司终面\n\n下一行动\n- 确认可实习城市/远程偏好与可实习起止时间，回复后缩小投递范围\n- 本周内选定FastAPI或Flask其一，完成官方教程前3章\n- 创建项目仓库，写README骨架并完成第一次Git提交\n- 收集10条后端实习JD，统计高频技能关键词\n- 制定每周8小时时间表（建议4h项目+2h基础+2h投递复盘）\n\n学习资源\n- FastAPI官方文档（教程与高级用户指南）\n- Flask官方教程\n- SQLBolt（SQL练习）\n- MDN HTTP文档（REST与状态码）\n- 《Designing Data-Intensive Applications》（选读，建立系统设计意识）\n- Git官方文档与Pro Git\n- LeetCode（SQL与简单算法题，每周2-3题）\n- 知识库条目career-022后端开发工程师、career-026 Python开发工程师（未核验，仅作参考）\n\n当前约束\n- 每周时间：8小时\n- 限制：未提供\n- 学历：未提供\n- 兴趣：未提供\n- 偏好：未提供\n\n注意事项\n- 每周仅8小时，项目与基础补强并行可能导致进度偏慢，需严格按优先级执行\n- 无实习经验且项目未完成前投递回复率可能较低，需用项目产出弥补\n- 城市、行业偏好、资金预算未确认，投递范围与资源选择存在不确定性\n- 材料中的岗位卡片与知识库条目均未核验，不能作为真实招聘要求或薪资依据\n- 计算机基础掌握程度未确认，面试八股可能成为短板\n\n待确认信息\n- 你希望在哪个城市实习，或是否接受远程实习？\n- 你最早可开始实习的时间与每周可实习天数（与学习8小时不同）是多少？\n- 你是否有资金预算用于课程/云服务器/域名等？\n- 你更倾向哪个行业（如互联网、金融、企业服务）或暂无偏好？\n- 你的计算机基础课程（网络、操作系统、数据库）掌握程度如何？",
+        "facts_sha256": "22ba80af6e479f02b79d0a3e78725593ad6a0b284175fecd8b3f1e007805d237",
+        "item_ids": [
+          "advice",
+          "target_roles:0",
+          "target_roles:1",
+          "gap_analysis:0",
+          "gap_analysis:1",
+          "gap_analysis:2",
+          "gap_analysis:3",
+          "gap_analysis:4",
+          "gap_analysis:5",
+          "gap_analysis:6",
+          "roadmap:30d:objective",
+          "roadmap:30d:deliverables:0",
+          "roadmap:30d:deliverables:1",
+          "roadmap:30d:deliverables:2",
+          "roadmap:30d:deliverables:3",
+          "roadmap:30d:metrics:0",
+          "roadmap:30d:metrics:1",
+          "roadmap:30d:metrics:2",
+          "roadmap:30d:metrics:3",
+          "roadmap:90d:objective",
+          "roadmap:90d:deliverables:0",
+          "roadmap:90d:deliverables:1",
+          "roadmap:90d:deliverables:2",
+          "roadmap:90d:deliverables:3",
+          "roadmap:90d:metrics:0",
+          "roadmap:90d:metrics:1",
+          "roadmap:90d:metrics:2",
+          "roadmap:90d:metrics:3",
+          "roadmap:180d:objective",
+          "roadmap:180d:deliverables:0",
+          "roadmap:180d:deliverables:1",
+          "roadmap:180d:deliverables:2",
+          "roadmap:180d:deliverables:3",
+          "roadmap:180d:metrics:0",
+          "roadmap:180d:metrics:1",
+          "roadmap:180d:metrics:2",
+          "roadmap:180d:metrics:3",
+          "next_actions:0",
+          "next_actions:1",
+          "next_actions:2",
+          "next_actions:3",
+          "next_actions:4",
+          "learning_resources:0",
+          "learning_resources:1",
+          "learning_resources:2",
+          "learning_resources:3",
+          "learning_resources:4",
+          "learning_resources:5",
+          "learning_resources:6",
+          "learning_resources:7",
+          "constraints:time_budget_hours_per_week",
+          "unresolved:constraints",
+          "unresolved:education",
+          "unresolved:interests",
+          "unresolved:preference",
+          "risk_flags:0",
+          "risk_flags:1",
+          "risk_flags:2",
+          "risk_flags:3",
+          "risk_flags:4",
+          "follow_up_questions:0",
+          "follow_up_questions:1",
+          "follow_up_questions:2",
+          "follow_up_questions:3",
+          "follow_up_questions:4"
+        ],
+        "parent_version": 1,
+        "plan_id": "5782e9d66c8e42b196403c4dcca0b3f1",
+        "source_text_sha256": "415c0b6d15208d451762c946983fd9e96c0809e44d515d77918921a97733bb4d",
+        "version": 2
+      },
+      "plan_id": "5782e9d66c8e42b196403c4dcca0b3f1",
+      "reason": "expanded",
+      "request_id": "eb6a230e97764672a017a54d712c1b01",
+      "session_id": "b03ace4fbbd44478832fb96d78e922e8",
+      "source_version": 1,
+      "status": "adapted"
+    },
+    {
+      "feedback": "过于详细",
+      "latency_ms": 30318,
+      "model_used": true,
+      "output_version": {
+        "created_at": "2026-11-06T05:25:08.566367+00:00",
+        "display_text": "目标岗位\n- 后端开发实习生（Python方向）\n- Python开发实习生\n\n能力差距\n- 缺少Web后端框架实战经验（如FastAPI/Flask/Django），仅有Python语言基础\n- 缺少数据库设计与ORM使用经验，SQL仅停留在会写查询的层面\n- 缺少REST API设计、鉴权、错误处理等工程化实践\n- 无实习/项目经历，简历缺少可验证的后端产出\n- 未确认城市、可实习时长、行业偏好与资金预算，投递范围不明确\n- Git/协作流程、Linux基础、简单部署等工程习惯未确认\n- 计算机基础（网络、操作系统、数据库原理）掌握程度未确认，面试八股需补\n\n行动路线\n30天目标：补齐后端最小技能栈并启动第一个可展示项目\n\n30天交付物：完成FastAPI或Flask官方教程，能独立写出带路由、参数校验、错误处理的API\n\n30天交付物：完成数据库设计练习：为项目设计3-5张表，使用SQLAlchemy或原生SQL实现CRUD\n\n30天交付物：项目仓库初始化：Git提交规范、README骨架、API文档草稿\n\n30天交付物：整理一份后端实习岗位JD样本（10条），标注高频要求\n\n30天指标：每周投入≥8小时，累计≥32小时\n\n30天指标：项目完成≥3个API端点并通过本地测试\n\n30天指标：Git提交≥8次，README包含运行说明\n\n30天指标：JD样本≥10条并完成关键词统计\n\n90天目标：完成可展示的后端项目并开始小批量投递\n\n90天交付物：项目MVP：用户注册登录（JWT或Session）、核心业务CRUD、分页、基础错误处理\n\n90天交付物：项目部署到可访问环境（如Render/Railway/云服务器），提供在线Demo或录屏\n\n90天交付物：简历初版：突出项目、技能、课程，量化项目产出\n\n90天交付物：投递记录表：公司、岗位、渠道、反馈状态\n\n90天指标：项目累计≥15个API端点，核心流程可演示\n\n90天指标：完成≥20次投递，获得≥3次面试或笔试机会\n\n90天指标：每周复盘1次，记录面试问题并归类\n\n90天指标：项目README包含架构说明与API文档\n\n180天目标：拿到后端开发实习offer并形成持续迭代能力\n\n180天交付物：项目迭代：加入缓存（Redis）、简单鉴权优化、单元测试\n\n180天交付物：计算机基础补强笔记：HTTP、数据库索引、事务、操作系统基础\n\n180天交付物：面试题库整理：≥50道后端高频题及自己的答案\n\n180天交付物：实习offer或明确的下一步补强计划\n\n180天指标：累计投递≥60次，面试/笔试≥8次\n\n180天指标：项目单元测试覆盖率≥50%（核心模块）\n\n180天指标：高频题整理≥50道并能口述\n\n180天指标：获得≥1个实习offer或进入≥2家公司终面\n\n下一行动\n- 确认可实习城市/远程偏好与可实习起止时间，回复后缩小投递范围\n- 本周内选定FastAPI或Flask其一，完成官方教程前3章\n- 创建项目仓库，写README骨架并完成第一次Git提交\n- 收集10条后端实习JD，统计高频技能关键词\n- 制定每周8小时时间表（建议4h项目+2h基础+2h投递复盘）\n\n当前约束\n每周时间：8小时\n\n限制：未提供\n\n学历：未提供\n\n兴趣：未提供\n\n偏好：未提供\n\n注意事项\n- 每周仅8小时，项目与基础补强并行可能导致进度偏慢，需严格按优先级执行\n- 无实习经验且项目未完成前投递回复率可能较低，需用项目产出弥补\n- 城市、行业偏好、资金预算未确认，投递范围与资源选择存在不确定性\n- 材料中的岗位卡片与知识库条目均未核验，不能作为真实招聘要求或薪资依据\n- 计算机基础掌握程度未确认，面试八股可能成为短板\n\n待确认信息\n- 你希望在哪个城市实习，或是否接受远程实习？\n- 你最早可开始实习的时间与每周可实习天数（与学习8小时不同）是多少？\n- 你是否有资金预算用于课程/云服务器/域名等？\n- 你更倾向哪个行业（如互联网、金融、企业服务）或暂无偏好？\n- 你的计算机基础课程（网络、操作系统、数据库）掌握程度如何？",
+        "facts_sha256": "22ba80af6e479f02b79d0a3e78725593ad6a0b284175fecd8b3f1e007805d237",
+        "item_ids": [
+          "target_roles:0",
+          "target_roles:1",
+          "gap_analysis:0",
+          "gap_analysis:1",
+          "gap_analysis:2",
+          "gap_analysis:3",
+          "gap_analysis:4",
+          "gap_analysis:5",
+          "gap_analysis:6",
+          "roadmap:30d:objective",
+          "roadmap:30d:deliverables:0",
+          "roadmap:30d:deliverables:1",
+          "roadmap:30d:deliverables:2",
+          "roadmap:30d:deliverables:3",
+          "roadmap:30d:metrics:0",
+          "roadmap:30d:metrics:1",
+          "roadmap:30d:metrics:2",
+          "roadmap:30d:metrics:3",
+          "roadmap:90d:objective",
+          "roadmap:90d:deliverables:0",
+          "roadmap:90d:deliverables:1",
+          "roadmap:90d:deliverables:2",
+          "roadmap:90d:deliverables:3",
+          "roadmap:90d:metrics:0",
+          "roadmap:90d:metrics:1",
+          "roadmap:90d:metrics:2",
+          "roadmap:90d:metrics:3",
+          "roadmap:180d:objective",
+          "roadmap:180d:deliverables:0",
+          "roadmap:180d:deliverables:1",
+          "roadmap:180d:deliverables:2",
+          "roadmap:180d:deliverables:3",
+          "roadmap:180d:metrics:0",
+          "roadmap:180d:metrics:1",
+          "roadmap:180d:metrics:2",
+          "roadmap:180d:metrics:3",
+          "next_actions:0",
+          "next_actions:1",
+          "next_actions:2",
+          "next_actions:3",
+          "next_actions:4",
+          "constraints:time_budget_hours_per_week",
+          "unresolved:constraints",
+          "unresolved:education",
+          "unresolved:interests",
+          "unresolved:preference",
+          "risk_flags:0",
+          "risk_flags:1",
+          "risk_flags:2",
+          "risk_flags:3",
+          "risk_flags:4",
+          "follow_up_questions:0",
+          "follow_up_questions:1",
+          "follow_up_questions:2",
+          "follow_up_questions:3",
+          "follow_up_questions:4"
+        ],
+        "parent_version": 2,
+        "plan_id": "5782e9d66c8e42b196403c4dcca0b3f1",
+        "source_text_sha256": "415c0b6d15208d451762c946983fd9e96c0809e44d515d77918921a97733bb4d",
+        "version": 3
+      },
+      "plan_id": "5782e9d66c8e42b196403c4dcca0b3f1",
+      "reason": "compressed",
+      "request_id": "2ffaba0de06644cfa73eb0a55b9460f9",
+      "session_id": "b03ace4fbbd44478832fb96d78e922e8",
+      "source_version": 2,
+      "status": "adapted"
+    }
+  ],
+  "id": "b03ace4fbbd44478832fb96d78e922e8",
+  "knowledge_snapshot": {
+    "content_sha256": "bed5627470a0773b2efa042146ee96b16a910a6c3b5d52151d839b90e0c440af",
+    "hits": [
+      {
+        "id": "career-013",
+        "item_id": "career-013",
+        "provenance_status": "unsourced",
+        "resources": [
+          "CS231n课程",
+          "深度学习计算机视觉",
+          "PapersWithCode",
+          "Kaggle竞赛"
+        ],
+        "role": "计算机视觉算法工程师",
+        "salary_hint": "一线城市应届约20k-40k/月（竞争激烈）",
+        "skills": [
+          "Python",
+          "PyTorch/TensorFlow",
+          "目标检测",
+          "图像分割",
+          "OpenCV",
+          "模型部署",
+          "Transformer",
+          "特征提取"
+        ],
+        "source_notice": "条目尚无来源链接，字段未经逐项核实；薪资参考不代表当前招聘行情。",
+        "sources": [],
+        "subject": "job",
+        "suitable_majors": [],
+        "transition_paths": [
+          "计算机科学 -> CV算法",
+          "数学/统计 -> 计算机视觉"
+        ],
+        "verification": "unverified",
+        "verification_status": "not_verified"
+      },
+      {
+        "id": "career-022",
+        "item_id": "career-022",
+        "provenance_status": "unsourced",
+        "resources": [
+          "MDN HTTP",
+          "Designing Data-Intensive Applications",
+          "后端项目实战"
+        ],
+        "role": "后端开发工程师",
+        "salary_hint": "一线城市应届约12k-25k/月",
+        "skills": [
+          "Python/Java/Go",
+          "数据库",
+          "REST API",
+          "缓存",
+          "系统设计"
+        ],
+        "source_notice": "条目尚无来源链接，字段未经逐项核实；薪资参考不代表当前招聘行情。",
+        "sources": [],
+        "subject": "job",
+        "suitable_majors": [],
+        "transition_paths": [
+          "计算机专业 -> 后端开发",
+          "测试开发 -> 后端开发"
+        ],
+        "verification": "unverified",
+        "verification_status": "not_verified"
+      },
+      {
+        "id": "career-026",
+        "item_id": "career-026",
+        "provenance_status": "unsourced",
+        "resources": [
+          "Python官方教程",
+          "FastAPI文档",
+          "Django教程"
+        ],
+        "role": "Python开发工程师",
+        "salary_hint": "一线城市应届约11k-23k/月",
+        "skills": [
+          "Python",
+          "FastAPI/Django",
+          "SQL",
+          "自动化",
+          "Linux"
+        ],
+        "source_notice": "条目尚无来源链接，字段未经逐项核实；薪资参考不代表当前招聘行情。",
+        "sources": [],
+        "subject": "job",
+        "suitable_majors": [],
+        "transition_paths": [
+          "数据分析 -> Python开发",
+          "自动化测试 -> Python开发"
+        ],
+        "verification": "unverified",
+        "verification_status": "not_verified"
+      },
+      {
+        "id": "career-002",
+        "item_id": "career-002",
+        "provenance_status": "source_lead_only",
+        "resources": [
+          "SQLBolt",
+          "Tableau Public",
+          "Kaggle 数据分析项目"
+        ],
+        "role": "数据分析师",
+        "salary_hint": "一线城市应届约10k-20k/月",
+        "skills": [
+          "SQL",
+          "Python",
+          "统计学",
+          "可视化",
+          "A/B测试",
+          "R",
+          "数据建模",
+          "Power BI/Tableau",
+          "机器学习"
+        ],
+        "source_notice": "来源链接仅为核验线索，条目字段尚未逐项核实；薪资参考不代表当前招聘行情。",
+        "sources": [
+          "百融云创及杭州顺网科技 2025 届招聘信息"
+        ],
+        "subject": "job",
+        "suitable_majors": [
+          "统计学",
+          "数学",
+          "计算机科学",
+          "数据科学",
+          "信息管理"
+        ],
+        "transition_paths": [
+          "运营 -> 数据分析",
+          "BI工程师 -> 数据分析师",
+          "助理数据分析师 -> 数据分析师 -> 高级数据分析师/数据科学家"
+        ],
+        "verification": "unverified",
+        "verification_status": "not_verified"
+      }
+    ],
+    "references": [
+      {
+        "item_id": "career-013",
+        "match_score": "12",
+        "provenance_status": "unsourced",
+        "resources": "CS231n课程, 深度学习计算机视觉, PapersWithCode, Kaggle竞赛",
+        "role": "计算机视觉算法工程师",
+        "salary_hint": "一线城市应届约20k-40k/月（竞争激烈）",
+        "skills": "Python, PyTorch/TensorFlow, 目标检测, 图像分割, OpenCV, 模型部署, Transformer, 特征提取",
+        "source_notice": "条目尚无来源链接，字段未经逐项核实；薪资参考不代表当前招聘行情。",
+        "sources": "",
+        "suitable_majors": "",
+        "transition_paths": "计算机科学 -> CV算法, 数学/统计 -> 计算机视觉",
+        "verification_status": "not_verified"
+      },
+      {
+        "item_id": "career-022",
+        "match_score": "11",
+        "provenance_status": "unsourced",
+        "resources": "MDN HTTP, Designing Data-Intensive Applications, 后端项目实战",
+        "role": "后端开发工程师",
+        "salary_hint": "一线城市应届约12k-25k/月",
+        "skills": "Python/Java/Go, 数据库, REST API, 缓存, 系统设计",
+        "source_notice": "条目尚无来源链接，字段未经逐项核实；薪资参考不代表当前招聘行情。",
+        "sources": "",
+        "suitable_majors": "",
+        "transition_paths": "计算机专业 -> 后端开发, 测试开发 -> 后端开发",
+        "verification_status": "not_verified"
+      },
+      {
+        "item_id": "career-026",
+        "match_score": "11",
+        "provenance_status": "unsourced",
+        "resources": "Python官方教程, FastAPI文档, Django教程",
+        "role": "Python开发工程师",
+        "salary_hint": "一线城市应届约11k-23k/月",
+        "skills": "Python, FastAPI/Django, SQL, 自动化, Linux",
+        "source_notice": "条目尚无来源链接，字段未经逐项核实；薪资参考不代表当前招聘行情。",
+        "sources": "",
+        "suitable_majors": "",
+        "transition_paths": "数据分析 -> Python开发, 自动化测试 -> Python开发",
+        "verification_status": "not_verified"
+      },
+      {
+        "item_id": "career-002",
+        "match_score": "10",
+        "provenance_status": "source_lead_only",
+        "resources": "SQLBolt, Tableau Public, Kaggle 数据分析项目",
+        "role": "数据分析师",
+        "salary_hint": "一线城市应届约10k-20k/月",
+        "skills": "SQL, Python, 统计学, 可视化, A/B测试, R, 数据建模, Power BI/Tableau, 机器学习",
+        "source_notice": "来源链接仅为核验线索，条目字段尚未逐项核实；薪资参考不代表当前招聘行情。",
+        "sources": "百融云创及杭州顺网科技 2025 届招聘信息",
+        "suitable_majors": "统计学, 数学, 计算机科学, 数据科学, 信息管理",
+        "transition_paths": "运营 -> 数据分析, BI工程师 -> 数据分析师, 助理数据分析师 -> 数据分析师 -> 高级数据分析师/数据科学家",
+        "verification_status": "not_verified"
+      }
+    ],
+    "version_id": "kb-bed5627470a0773b2efa"
+  },
+  "last_task": {
+    "created_at": "2026-11-06T05:24:38.247540+00:00",
+    "error": null,
+    "id": "8418af1107994ece8001a62deaaaa450",
+    "kind": "feedback",
+    "session_id": "b03ace4fbbd44478832fb96d78e922e8",
+    "status": "succeeded",
+    "updated_at": "2026-11-06T05:25:08.617688+00:00"
+  },
+  "plan": {
+    "confidence": 0.55,
+    "follow_up_questions": [
+      "你希望在哪个城市实习，或是否接受远程实习？",
+      "你最早可开始实习的时间与每周可实习天数（与学习8小时不同）是多少？",
+      "你是否有资金预算用于课程/云服务器/域名等？",
+      "你更倾向哪个行业（如互联网、金融、企业服务）或暂无偏好？",
+      "你的计算机基础课程（网络、操作系统、数据库）掌握程度如何？"
+    ],
+    "gap_analysis": [
+      "缺少Web后端框架实战经验（如FastAPI/Flask/Django），仅有Python语言基础",
+      "缺少数据库设计与ORM使用经验，SQL仅停留在会写查询的层面",
+      "缺少REST API设计、鉴权、错误处理等工程化实践",
+      "无实习/项目经历，简历缺少可验证的后端产出",
+      "未确认城市、可实习时长、行业偏好与资金预算，投递范围不明确",
+      "Git/协作流程、Linux基础、简单部署等工程习惯未确认",
+      "计算机基础（网络、操作系统、数据库原理）掌握程度未确认，面试八股需补"
+    ],
+    "graph": {
+      "edges": [
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_c4c4cc7e4b0bfb7285cb",
+          "label": "画像信息",
+          "provenance_ids": [
+            "p_ffe3a81cfd9f1e398e95"
+          ],
+          "relation": "has_profile",
+          "to": "n_60da73d3493dfc052d3a"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_7de1f9a2fa2c60014e9c",
+          "label": "画像信息",
+          "provenance_ids": [
+            "p_8f4c7b80d44b627581f0"
+          ],
+          "relation": "has_profile",
+          "to": "n_7d9c9108007aabd6fef2"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_3f55f7c9b190168dccb0",
+          "label": "画像信息",
+          "provenance_ids": [
+            "p_a8018ad274ddf88c3d2a"
+          ],
+          "relation": "has_profile",
+          "to": "n_0e17e3b9ba469c62e9a4"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_27544663311263292fad",
+          "label": "画像信息",
+          "provenance_ids": [
+            "p_94633c336380aeade7a0"
+          ],
+          "relation": "has_profile",
+          "to": "n_ef58eb9d101fde6d96bf"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_1449cc51969bb45bdab7",
+          "label": "建议目标",
+          "provenance_ids": [
+            "p_28698527cf5c47f53753"
+          ],
+          "relation": "suggests_role",
+          "to": "n_cd818e2ab5144097e4ab"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_17e6ab515a728f548340",
+          "label": "建议目标",
+          "provenance_ids": [
+            "p_9eb11832513b231c456b"
+          ],
+          "relation": "suggests_role",
+          "to": "n_b538f8e85b0ee1da4e8f"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_f8db9d684b7042a13074",
+          "label": "待补足能力",
+          "provenance_ids": [
+            "p_b720bc02242e51291610"
+          ],
+          "relation": "has_gap",
+          "to": "n_cad024b6c0d0603374df"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_7e9ee0571c03c5d53926",
+          "label": "待补足能力",
+          "provenance_ids": [
+            "p_c307158317aeceec1e2f"
+          ],
+          "relation": "has_gap",
+          "to": "n_c88134fe5e1c3efe5bca"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_4650bf61803e19ac3f1c",
+          "label": "待补足能力",
+          "provenance_ids": [
+            "p_5a4951e366a75d1db1f5"
+          ],
+          "relation": "has_gap",
+          "to": "n_db74a241c38594f60eca"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_1fdc8df039565629a25b",
+          "label": "待补足能力",
+          "provenance_ids": [
+            "p_3e2b45352fdc48ec077f"
+          ],
+          "relation": "has_gap",
+          "to": "n_08123555f0b54117c4be"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_24ab5fb7bd1216832d19",
+          "label": "待补足能力",
+          "provenance_ids": [
+            "p_ac2da2e00ee13472cadf"
+          ],
+          "relation": "has_gap",
+          "to": "n_b88b78e13a296c3d9d45"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_25468ae0135794f7230e",
+          "label": "待补足能力",
+          "provenance_ids": [
+            "p_f95bbb7d49ea7ee5b057"
+          ],
+          "relation": "has_gap",
+          "to": "n_03605e6045d54a6ed825"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_1264c7ed30cba2f2669e",
+          "label": "待补足能力",
+          "provenance_ids": [
+            "p_912204fae30998c2de9e"
+          ],
+          "relation": "has_gap",
+          "to": "n_77d55d41256a5a91a9c2"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_f373ed1e7dbaedf4e8c6",
+          "label": "建议资源",
+          "provenance_ids": [
+            "p_faac4ed326ab48ccfcab"
+          ],
+          "relation": "suggests_resource",
+          "to": "n_9a6a8eda6323d31bba1c"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_d918a53a95217c558de2",
+          "label": "建议资源",
+          "provenance_ids": [
+            "p_87f8e02c3b943860a741"
+          ],
+          "relation": "suggests_resource",
+          "to": "n_82deed5b7a533e2bbd32"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_d332a76f1e2711b9ccae",
+          "label": "建议资源",
+          "provenance_ids": [
+            "p_5b7c05dbc51029797613"
+          ],
+          "relation": "suggests_resource",
+          "to": "n_03cd88f95e99099867e9"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_51217c6a867dfc0e52fb",
+          "label": "建议资源",
+          "provenance_ids": [
+            "p_e52797d4265705f93d75"
+          ],
+          "relation": "suggests_resource",
+          "to": "n_7237b55fd5bc4cc165e2"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_1610ab775bb5f80c71f8",
+          "label": "建议资源",
+          "provenance_ids": [
+            "p_743ae2d5ea13c6ac588d"
+          ],
+          "relation": "suggests_resource",
+          "to": "n_00b0d1efdf9baa07728b"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_1c293906116c3fa1c969",
+          "label": "建议资源",
+          "provenance_ids": [
+            "p_68c510abc31f929d9f92"
+          ],
+          "relation": "suggests_resource",
+          "to": "n_62c3f07e6f85bcded1f0"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_cbe28151dc7f549a9bea",
+          "label": "建议资源",
+          "provenance_ids": [
+            "p_eae9b8702df8ac575428"
+          ],
+          "relation": "suggests_resource",
+          "to": "n_627f6e8cab8cc3beca39"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_c72d8844092930e3cc07",
+          "label": "建议资源",
+          "provenance_ids": [
+            "p_f477d1e04e9dce2800e1"
+          ],
+          "relation": "suggests_resource",
+          "to": "n_7d6892b2856f0e0d09e7"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_439615dd6bdcf6bedbf8",
+          "label": "建议行动",
+          "provenance_ids": [
+            "p_4ff192291a0c390bd67a"
+          ],
+          "relation": "suggests_action",
+          "to": "n_04e4d14807275e261e09"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_7b6ee0348c965b060a94",
+          "label": "建议行动",
+          "provenance_ids": [
+            "p_32184ffe77af854976a2"
+          ],
+          "relation": "suggests_action",
+          "to": "n_bd9547c6a4668a0f0864"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_0ff6063f5ab16cee4ea5",
+          "label": "建议行动",
+          "provenance_ids": [
+            "p_282fb14e817f9d5dc225"
+          ],
+          "relation": "suggests_action",
+          "to": "n_436778bae65f46ee21af"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_bf6c925ac5f9fd986bc5",
+          "label": "建议行动",
+          "provenance_ids": [
+            "p_aa23de04feed255c6ae5"
+          ],
+          "relation": "suggests_action",
+          "to": "n_dc63ef04be289167b92a"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_7c00187c8e096141cdff",
+          "label": "建议行动",
+          "provenance_ids": [
+            "p_414b06ba4cc11f362870"
+          ],
+          "relation": "suggests_action",
+          "to": "n_05d6e8908286b17db261"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_bb0545e0d84419524063",
+          "label": "风险提示",
+          "provenance_ids": [
+            "p_0c66dbd68e3a75ec2ce2"
+          ],
+          "relation": "has_risk",
+          "to": "n_d3061b11f995e9f50de1"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_22fb2c30c21342e3eef1",
+          "label": "风险提示",
+          "provenance_ids": [
+            "p_7bbdbcfac03e2e3a3156"
+          ],
+          "relation": "has_risk",
+          "to": "n_f1d2a7bd80ca96afd71e"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_ff6c6d8df420069f3470",
+          "label": "风险提示",
+          "provenance_ids": [
+            "p_64812c86d9d6f3a75565"
+          ],
+          "relation": "has_risk",
+          "to": "n_1cb3546ba80d09d83070"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_2b7b2247b76a07ed2e8a",
+          "label": "风险提示",
+          "provenance_ids": [
+            "p_337910be2acb8bca9338"
+          ],
+          "relation": "has_risk",
+          "to": "n_978de1be968b9aa7a4f4"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_77029618c5d8334c585f",
+          "label": "风险提示",
+          "provenance_ids": [
+            "p_2c1856353e76c1b4e868"
+          ],
+          "relation": "has_risk",
+          "to": "n_82151cd23d4eba51bb71"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_e7e1f9ba9676ab3d329d",
+          "label": "待确认",
+          "provenance_ids": [
+            "p_b7e8de80b1ecf800918a"
+          ],
+          "relation": "has_open_question",
+          "to": "n_b7d345cbfa795a65e326"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_18c738b3a4d3245c38b1",
+          "label": "待确认",
+          "provenance_ids": [
+            "p_11581d12271b87c37c18"
+          ],
+          "relation": "has_open_question",
+          "to": "n_526f9a037e661f72b4de"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_a677de205e91d5b7f6a0",
+          "label": "待确认",
+          "provenance_ids": [
+            "p_22f5fff724573a5c3424"
+          ],
+          "relation": "has_open_question",
+          "to": "n_f720e74b492ea3c0a95d"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_165c1aa20872951ab5fc",
+          "label": "待确认",
+          "provenance_ids": [
+            "p_0f3467323c99694b7a17"
+          ],
+          "relation": "has_open_question",
+          "to": "n_bf246e5a809e4a7aa4c3"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_fa6d292b22180582e89a",
+          "label": "待确认",
+          "provenance_ids": [
+            "p_28221c399b546834e556"
+          ],
+          "relation": "has_open_question",
+          "to": "n_96be874f9b27b7862c31"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_33fa2addcec0060a3189",
+          "label": "建议阶段",
+          "provenance_ids": [
+            "p_40ac2b365bb53ab50e54"
+          ],
+          "relation": "has_milestone",
+          "to": "n_470509c0163371e9ea17"
+        },
+        {
+          "from": "n_470509c0163371e9ea17",
+          "id": "e_2501284025dad314f4d8",
+          "label": "建议交付物",
+          "provenance_ids": [
+            "p_04a263b86c5332af1646"
+          ],
+          "relation": "has_deliverable",
+          "to": "n_a0b91f33c543deb39822"
+        },
+        {
+          "from": "n_470509c0163371e9ea17",
+          "id": "e_0905d296f7263aacf114",
+          "label": "建议交付物",
+          "provenance_ids": [
+            "p_2a4ed275a0c78f0fc6d2"
+          ],
+          "relation": "has_deliverable",
+          "to": "n_6bf2ef85d6cc8302c7e5"
+        },
+        {
+          "from": "n_470509c0163371e9ea17",
+          "id": "e_ff56d651f7054e1ff3ee",
+          "label": "建议交付物",
+          "provenance_ids": [
+            "p_cced6e5bd5bb20027923"
+          ],
+          "relation": "has_deliverable",
+          "to": "n_ba88fd59549e49a3aed1"
+        },
+        {
+          "from": "n_470509c0163371e9ea17",
+          "id": "e_66dcbe1f247de582fe76",
+          "label": "建议交付物",
+          "provenance_ids": [
+            "p_85e040bcd93f05a8122d"
+          ],
+          "relation": "has_deliverable",
+          "to": "n_375d460940d8fd6c473e"
+        },
+        {
+          "from": "n_470509c0163371e9ea17",
+          "id": "e_07b1af659efdcbb69a89",
+          "label": "检查指标",
+          "provenance_ids": [
+            "p_15e67bda57bc8e8db3fa"
+          ],
+          "relation": "has_metric",
+          "to": "n_24f531351e454b18ce5e"
+        },
+        {
+          "from": "n_470509c0163371e9ea17",
+          "id": "e_a414c632a12cd5f9921e",
+          "label": "检查指标",
+          "provenance_ids": [
+            "p_b7d5feb69dafdf441211"
+          ],
+          "relation": "has_metric",
+          "to": "n_b49c301ce4c20cfac289"
+        },
+        {
+          "from": "n_470509c0163371e9ea17",
+          "id": "e_80b9e4fb34c1dc16a640",
+          "label": "检查指标",
+          "provenance_ids": [
+            "p_9ecff4828d6475917e57"
+          ],
+          "relation": "has_metric",
+          "to": "n_fde564a9d49da43ba9a5"
+        },
+        {
+          "from": "n_470509c0163371e9ea17",
+          "id": "e_4140085ae32bae7d7447",
+          "label": "检查指标",
+          "provenance_ids": [
+            "p_e2947834005885fa5ca2"
+          ],
+          "relation": "has_metric",
+          "to": "n_ca29ac7f75ca99723d17"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_1190c9f1470e840629b7",
+          "label": "建议阶段",
+          "provenance_ids": [
+            "p_bdaabae9ad1f726a66b1"
+          ],
+          "relation": "has_milestone",
+          "to": "n_4256b0a227dae1301823"
+        },
+        {
+          "from": "n_4256b0a227dae1301823",
+          "id": "e_e1af2862312e30c781e4",
+          "label": "建议交付物",
+          "provenance_ids": [
+            "p_261860d511ec26a23562"
+          ],
+          "relation": "has_deliverable",
+          "to": "n_79b6d2fbf759c3025d44"
+        },
+        {
+          "from": "n_4256b0a227dae1301823",
+          "id": "e_3ffb1d38cf0e7395fa92",
+          "label": "建议交付物",
+          "provenance_ids": [
+            "p_27c81ee61fe71a9cebea"
+          ],
+          "relation": "has_deliverable",
+          "to": "n_5bd4f55bcb9e031e6700"
+        },
+        {
+          "from": "n_4256b0a227dae1301823",
+          "id": "e_af26c14513e63f6b0ac6",
+          "label": "建议交付物",
+          "provenance_ids": [
+            "p_eff9a50d4ba936e4f790"
+          ],
+          "relation": "has_deliverable",
+          "to": "n_003cd9a4eb2a16f6dff8"
+        },
+        {
+          "from": "n_4256b0a227dae1301823",
+          "id": "e_a8f3d9c76fbc2f3ae7e3",
+          "label": "建议交付物",
+          "provenance_ids": [
+            "p_f32b04b31f2971e637a2"
+          ],
+          "relation": "has_deliverable",
+          "to": "n_084ee3ba16c48a05fc0b"
+        },
+        {
+          "from": "n_4256b0a227dae1301823",
+          "id": "e_39cd1b274a5f75101d12",
+          "label": "检查指标",
+          "provenance_ids": [
+            "p_6fe0e552c96c06661647"
+          ],
+          "relation": "has_metric",
+          "to": "n_b615be6c6660c1d5fa53"
+        },
+        {
+          "from": "n_4256b0a227dae1301823",
+          "id": "e_465d05889390f08e1c0b",
+          "label": "检查指标",
+          "provenance_ids": [
+            "p_3a140bb98f9d963cffd8"
+          ],
+          "relation": "has_metric",
+          "to": "n_dfa9c863f506db7d4e15"
+        },
+        {
+          "from": "n_4256b0a227dae1301823",
+          "id": "e_44be25de39116a398790",
+          "label": "检查指标",
+          "provenance_ids": [
+            "p_b6388fb6139c1c65c2de"
+          ],
+          "relation": "has_metric",
+          "to": "n_fa67e1f0b81672417c04"
+        },
+        {
+          "from": "n_4256b0a227dae1301823",
+          "id": "e_6f6320d6a470426fff83",
+          "label": "检查指标",
+          "provenance_ids": [
+            "p_6274db8ae752e3d16707"
+          ],
+          "relation": "has_metric",
+          "to": "n_c2a6e85f85ca59f72a11"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_918a12b7b8eaed1c3814",
+          "label": "建议阶段",
+          "provenance_ids": [
+            "p_1aade88e45925aa73382"
+          ],
+          "relation": "has_milestone",
+          "to": "n_f617c4a2932a8b29a08e"
+        },
+        {
+          "from": "n_f617c4a2932a8b29a08e",
+          "id": "e_079fde88cbe1f6b8ada7",
+          "label": "建议交付物",
+          "provenance_ids": [
+            "p_55dac6afee19beb08e71"
+          ],
+          "relation": "has_deliverable",
+          "to": "n_eef9b8dbc40146226f4e"
+        },
+        {
+          "from": "n_f617c4a2932a8b29a08e",
+          "id": "e_b1a990afcaf94f3459a8",
+          "label": "建议交付物",
+          "provenance_ids": [
+            "p_44f8a0fc216f7afca2f9"
+          ],
+          "relation": "has_deliverable",
+          "to": "n_11dd37d6328702a02d2b"
+        },
+        {
+          "from": "n_f617c4a2932a8b29a08e",
+          "id": "e_151d6ced3379311b4987",
+          "label": "建议交付物",
+          "provenance_ids": [
+            "p_a9fb4789d0071bfff402"
+          ],
+          "relation": "has_deliverable",
+          "to": "n_f16d49542b2f05bc1764"
+        },
+        {
+          "from": "n_f617c4a2932a8b29a08e",
+          "id": "e_4e058b6f1233b0b875b6",
+          "label": "建议交付物",
+          "provenance_ids": [
+            "p_d57bece85e9ceefcbe9d"
+          ],
+          "relation": "has_deliverable",
+          "to": "n_a4fd2c5f5d00a569e958"
+        },
+        {
+          "from": "n_f617c4a2932a8b29a08e",
+          "id": "e_e689a1007a16bde9db56",
+          "label": "检查指标",
+          "provenance_ids": [
+            "p_31f204b1c116a6f5f6f4"
+          ],
+          "relation": "has_metric",
+          "to": "n_5f009437188024fe36a9"
+        },
+        {
+          "from": "n_f617c4a2932a8b29a08e",
+          "id": "e_2864dc3e5a410b0a7dee",
+          "label": "检查指标",
+          "provenance_ids": [
+            "p_12c93967dc39509b6ef7"
+          ],
+          "relation": "has_metric",
+          "to": "n_744c8cc3631a7a58578e"
+        },
+        {
+          "from": "n_f617c4a2932a8b29a08e",
+          "id": "e_5d69d4457adbe947013d",
+          "label": "检查指标",
+          "provenance_ids": [
+            "p_f0f05054ce2bed9a02fc"
+          ],
+          "relation": "has_metric",
+          "to": "n_f64d5670f9e332daab13"
+        },
+        {
+          "from": "n_f617c4a2932a8b29a08e",
+          "id": "e_3135207a924913a626e7",
+          "label": "检查指标",
+          "provenance_ids": [
+            "p_5bac5ccd976ff8114e7a"
+          ],
+          "relation": "has_metric",
+          "to": "n_0e80bcfd8037287aac9e"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_a50c1e4af5094eefdb3f",
+          "label": "检索命中（未逐项核实）",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ],
+          "relation": "retrieved_knowledge",
+          "to": "n_0f0a55c94d14a73bb78b"
+        },
+        {
+          "from": "n_0f0a55c94d14a73bb78b",
+          "id": "e_5ea59356a4e481bd39a8",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ],
+          "relation": "requires_skill",
+          "to": "n_ac025e3685de3610746c"
+        },
+        {
+          "from": "n_0f0a55c94d14a73bb78b",
+          "id": "e_ef60b9f26318a072fb74",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ],
+          "relation": "requires_skill",
+          "to": "n_ec8ff879d05b8c327752"
+        },
+        {
+          "from": "n_0f0a55c94d14a73bb78b",
+          "id": "e_d1bcdb2ed5d3469bc0c4",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ],
+          "relation": "requires_skill",
+          "to": "n_a45ac728229cf829973d"
+        },
+        {
+          "from": "n_0f0a55c94d14a73bb78b",
+          "id": "e_aad73e2f6e6ec607c07d",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ],
+          "relation": "requires_skill",
+          "to": "n_2cdcb07d471ccc9b381b"
+        },
+        {
+          "from": "n_0f0a55c94d14a73bb78b",
+          "id": "e_79354237ea9282954228",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ],
+          "relation": "requires_skill",
+          "to": "n_6e84d5b5b232409cf2e6"
+        },
+        {
+          "from": "n_0f0a55c94d14a73bb78b",
+          "id": "e_bc2f97dbe31546faafb8",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ],
+          "relation": "requires_skill",
+          "to": "n_bac29d6c00e039cfec10"
+        },
+        {
+          "from": "n_0f0a55c94d14a73bb78b",
+          "id": "e_201352cb61e14fff76eb",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ],
+          "relation": "requires_skill",
+          "to": "n_33bc85bc0a994da129c1"
+        },
+        {
+          "from": "n_0f0a55c94d14a73bb78b",
+          "id": "e_3bb0d5cb3430af7e8a7b",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ],
+          "relation": "requires_skill",
+          "to": "n_e1d3a01f38d183973620"
+        },
+        {
+          "from": "n_0f0a55c94d14a73bb78b",
+          "id": "e_5ab7a1ac37498e55dc92",
+          "label": "条目所列资源",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ],
+          "relation": "lists_resource",
+          "to": "n_bf3789156af94316d90f"
+        },
+        {
+          "from": "n_0f0a55c94d14a73bb78b",
+          "id": "e_141d3af1f24f80108e02",
+          "label": "条目所列资源",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ],
+          "relation": "lists_resource",
+          "to": "n_b2f8270004d1119831a5"
+        },
+        {
+          "from": "n_0f0a55c94d14a73bb78b",
+          "id": "e_a22f4bc24549262159ac",
+          "label": "条目所列资源",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ],
+          "relation": "lists_resource",
+          "to": "n_7e55325623b68baca8fa"
+        },
+        {
+          "from": "n_0f0a55c94d14a73bb78b",
+          "id": "e_15973dabb487ec17e21b",
+          "label": "条目所列资源",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ],
+          "relation": "lists_resource",
+          "to": "n_882c529347a06cc43b16"
+        },
+        {
+          "from": "n_0f0a55c94d14a73bb78b",
+          "id": "e_48f93cd611afdb2336af",
+          "label": "条目所列发展路径",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ],
+          "relation": "lists_transition",
+          "to": "n_e4cb4f212de9cb354e35"
+        },
+        {
+          "from": "n_0f0a55c94d14a73bb78b",
+          "id": "e_f09a9dd91af82775c84f",
+          "label": "条目所列发展路径",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ],
+          "relation": "lists_transition",
+          "to": "n_8c5a2e7f40e3fc246712"
+        },
+        {
+          "from": "n_0f0a55c94d14a73bb78b",
+          "id": "e_53b408989ff06848f9c6",
+          "label": "条目薪资参考",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ],
+          "relation": "has_salary_reference",
+          "to": "n_491a7f21697d009a3f8c"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_17776c1ea77e438dcb17",
+          "label": "检索命中（未逐项核实）",
+          "provenance_ids": [
+            "p_92b0810742e5c79e4660"
+          ],
+          "relation": "retrieved_knowledge",
+          "to": "n_99f1311efdb3551d45c4"
+        },
+        {
+          "from": "n_99f1311efdb3551d45c4",
+          "id": "e_d9c8afdb21804084eef9",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_92b0810742e5c79e4660"
+          ],
+          "relation": "requires_skill",
+          "to": "n_95830b96c45372c0b2d8"
+        },
+        {
+          "from": "n_99f1311efdb3551d45c4",
+          "id": "e_25b3552165facca02920",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_92b0810742e5c79e4660"
+          ],
+          "relation": "requires_skill",
+          "to": "n_90613116bad5230c3ffa"
+        },
+        {
+          "from": "n_99f1311efdb3551d45c4",
+          "id": "e_3d9f0c5942190046255f",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_92b0810742e5c79e4660"
+          ],
+          "relation": "requires_skill",
+          "to": "n_78bd2419b575bc521ecd"
+        },
+        {
+          "from": "n_99f1311efdb3551d45c4",
+          "id": "e_6bebf90f5677a1156376",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_92b0810742e5c79e4660"
+          ],
+          "relation": "requires_skill",
+          "to": "n_25eab3f4aec618cc7e8d"
+        },
+        {
+          "from": "n_99f1311efdb3551d45c4",
+          "id": "e_bd167e16d046c4912063",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_92b0810742e5c79e4660"
+          ],
+          "relation": "requires_skill",
+          "to": "n_f5f0b70a57c725d33dff"
+        },
+        {
+          "from": "n_99f1311efdb3551d45c4",
+          "id": "e_68e29d754d8bc8dd11cc",
+          "label": "条目所列资源",
+          "provenance_ids": [
+            "p_92b0810742e5c79e4660"
+          ],
+          "relation": "lists_resource",
+          "to": "n_e01fc1429211d92b9c6e"
+        },
+        {
+          "from": "n_99f1311efdb3551d45c4",
+          "id": "e_410bdd1b93dcfd2ce461",
+          "label": "条目所列资源",
+          "provenance_ids": [
+            "p_92b0810742e5c79e4660"
+          ],
+          "relation": "lists_resource",
+          "to": "n_297baedd35e8d86aa86b"
+        },
+        {
+          "from": "n_99f1311efdb3551d45c4",
+          "id": "e_dac68f24e2bd6c48e685",
+          "label": "条目所列资源",
+          "provenance_ids": [
+            "p_92b0810742e5c79e4660"
+          ],
+          "relation": "lists_resource",
+          "to": "n_10a808476665d67e9a2b"
+        },
+        {
+          "from": "n_99f1311efdb3551d45c4",
+          "id": "e_1a6964b60538d0f83618",
+          "label": "条目所列发展路径",
+          "provenance_ids": [
+            "p_92b0810742e5c79e4660"
+          ],
+          "relation": "lists_transition",
+          "to": "n_0be8cbc0e9487edca25f"
+        },
+        {
+          "from": "n_99f1311efdb3551d45c4",
+          "id": "e_515a1560cb091db942eb",
+          "label": "条目所列发展路径",
+          "provenance_ids": [
+            "p_92b0810742e5c79e4660"
+          ],
+          "relation": "lists_transition",
+          "to": "n_ef0b0534e7e568cbbe55"
+        },
+        {
+          "from": "n_99f1311efdb3551d45c4",
+          "id": "e_8cec6fa121e36c41bf92",
+          "label": "条目薪资参考",
+          "provenance_ids": [
+            "p_92b0810742e5c79e4660"
+          ],
+          "relation": "has_salary_reference",
+          "to": "n_675b5081ed1e7a6f57e8"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_4cd4f5b4b9ea6226b910",
+          "label": "检索命中（未逐项核实）",
+          "provenance_ids": [
+            "p_2f9eea233ea652375040"
+          ],
+          "relation": "retrieved_knowledge",
+          "to": "n_bbae3abe3616852d8c69"
+        },
+        {
+          "from": "n_bbae3abe3616852d8c69",
+          "id": "e_79d525356f3d5378ac82",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_2f9eea233ea652375040"
+          ],
+          "relation": "requires_skill",
+          "to": "n_ac025e3685de3610746c"
+        },
+        {
+          "from": "n_bbae3abe3616852d8c69",
+          "id": "e_ab4e8409c51046bb913e",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_2f9eea233ea652375040"
+          ],
+          "relation": "requires_skill",
+          "to": "n_fad7883ea722c83fc096"
+        },
+        {
+          "from": "n_bbae3abe3616852d8c69",
+          "id": "e_b710e359b4bc783730de",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_2f9eea233ea652375040"
+          ],
+          "relation": "requires_skill",
+          "to": "n_cfa7e3ca7a2c11a90973"
+        },
+        {
+          "from": "n_bbae3abe3616852d8c69",
+          "id": "e_828322bf49fbbed52e94",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_2f9eea233ea652375040"
+          ],
+          "relation": "requires_skill",
+          "to": "n_6c7e1f026926f2256fa0"
+        },
+        {
+          "from": "n_bbae3abe3616852d8c69",
+          "id": "e_ff1663aabeff62eb1ad4",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_2f9eea233ea652375040"
+          ],
+          "relation": "requires_skill",
+          "to": "n_b9d81398f3d810ebb2fe"
+        },
+        {
+          "from": "n_bbae3abe3616852d8c69",
+          "id": "e_325c89d5b30cbff7ec93",
+          "label": "条目所列资源",
+          "provenance_ids": [
+            "p_2f9eea233ea652375040"
+          ],
+          "relation": "lists_resource",
+          "to": "n_498d12018d15075ee7d9"
+        },
+        {
+          "from": "n_bbae3abe3616852d8c69",
+          "id": "e_f11088e0ec558ea39926",
+          "label": "条目所列资源",
+          "provenance_ids": [
+            "p_2f9eea233ea652375040"
+          ],
+          "relation": "lists_resource",
+          "to": "n_26f9b30d37aeed4bb3af"
+        },
+        {
+          "from": "n_bbae3abe3616852d8c69",
+          "id": "e_5d8cf1f2fa1d5da9ab26",
+          "label": "条目所列资源",
+          "provenance_ids": [
+            "p_2f9eea233ea652375040"
+          ],
+          "relation": "lists_resource",
+          "to": "n_96257d4ce472d38e3828"
+        },
+        {
+          "from": "n_bbae3abe3616852d8c69",
+          "id": "e_2cb1f29557275a01eef4",
+          "label": "条目所列发展路径",
+          "provenance_ids": [
+            "p_2f9eea233ea652375040"
+          ],
+          "relation": "lists_transition",
+          "to": "n_df64b22e15f63942ef1c"
+        },
+        {
+          "from": "n_bbae3abe3616852d8c69",
+          "id": "e_e015cc45c158af229c58",
+          "label": "条目所列发展路径",
+          "provenance_ids": [
+            "p_2f9eea233ea652375040"
+          ],
+          "relation": "lists_transition",
+          "to": "n_0f6a132690bff22059b1"
+        },
+        {
+          "from": "n_bbae3abe3616852d8c69",
+          "id": "e_2603eafbcb0f89042380",
+          "label": "条目薪资参考",
+          "provenance_ids": [
+            "p_2f9eea233ea652375040"
+          ],
+          "relation": "has_salary_reference",
+          "to": "n_5a2239e09c61f35e1a38"
+        },
+        {
+          "from": "n_908a9ebdfe439a9ac71e",
+          "id": "e_36b8f0f5649784fe3c94",
+          "label": "检索命中（未逐项核实）",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ],
+          "relation": "retrieved_knowledge",
+          "to": "n_586e4691d919e5e62847"
+        },
+        {
+          "from": "n_586e4691d919e5e62847",
+          "id": "e_a2d01cbf7daef23ee1aa",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ],
+          "relation": "requires_skill",
+          "to": "n_cfa7e3ca7a2c11a90973"
+        },
+        {
+          "from": "n_586e4691d919e5e62847",
+          "id": "e_b4d1a901d328d74a0c32",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ],
+          "relation": "requires_skill",
+          "to": "n_ac025e3685de3610746c"
+        },
+        {
+          "from": "n_586e4691d919e5e62847",
+          "id": "e_5eddf38831e4ea8f67f9",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ],
+          "relation": "requires_skill",
+          "to": "n_ddc11f58da60795bd3b8"
+        },
+        {
+          "from": "n_586e4691d919e5e62847",
+          "id": "e_5a966e1183256e647821",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ],
+          "relation": "requires_skill",
+          "to": "n_36d98ab186b0957210e9"
+        },
+        {
+          "from": "n_586e4691d919e5e62847",
+          "id": "e_cd23eeb28fde65c6ae8c",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ],
+          "relation": "requires_skill",
+          "to": "n_d6761765d8e2c713954b"
+        },
+        {
+          "from": "n_586e4691d919e5e62847",
+          "id": "e_db7c7dbde01bf6c62388",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ],
+          "relation": "requires_skill",
+          "to": "n_15b8c529dff7d5950602"
+        },
+        {
+          "from": "n_586e4691d919e5e62847",
+          "id": "e_c03dedd22520a552a28d",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ],
+          "relation": "requires_skill",
+          "to": "n_33a6ea975645049954d2"
+        },
+        {
+          "from": "n_586e4691d919e5e62847",
+          "id": "e_6015dad29442cfd63a72",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ],
+          "relation": "requires_skill",
+          "to": "n_9af640323cd4f39720bd"
+        },
+        {
+          "from": "n_586e4691d919e5e62847",
+          "id": "e_1c8b01e5137b1ebc033d",
+          "label": "条目所列技能",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ],
+          "relation": "requires_skill",
+          "to": "n_2acfd2c4fc7f66d811f0"
+        },
+        {
+          "from": "n_586e4691d919e5e62847",
+          "id": "e_991cf8184f75942ce9fc",
+          "label": "条目所列资源",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ],
+          "relation": "lists_resource",
+          "to": "n_06f0b0c51359168f2b99"
+        },
+        {
+          "from": "n_586e4691d919e5e62847",
+          "id": "e_7746812645b17caf8177",
+          "label": "条目所列资源",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ],
+          "relation": "lists_resource",
+          "to": "n_b8b5ec34d9e4cde9fcfd"
+        },
+        {
+          "from": "n_586e4691d919e5e62847",
+          "id": "e_b13974f34a6e40aa34a5",
+          "label": "条目所列资源",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ],
+          "relation": "lists_resource",
+          "to": "n_ad48970739a36f0a0095"
+        },
+        {
+          "from": "n_586e4691d919e5e62847",
+          "id": "e_58a83390d8a0cb03da21",
+          "label": "条目所列专业",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ],
+          "relation": "lists_major",
+          "to": "n_c52f1a8393c0b0ade4db"
+        },
+        {
+          "from": "n_586e4691d919e5e62847",
+          "id": "e_b540b7e0d6187b560106",
+          "label": "条目所列专业",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ],
+          "relation": "lists_major",
+          "to": "n_4c51e8e5f3e69348b0bd"
+        },
+        {
+          "from": "n_586e4691d919e5e62847",
+          "id": "e_ab74c44b80f474fc38b9",
+          "label": "条目所列专业",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ],
+          "relation": "lists_major",
+          "to": "n_043b2ee9ccbd8e8eeca5"
+        },
+        {
+          "from": "n_586e4691d919e5e62847",
+          "id": "e_c9bb325044722d3a49e0",
+          "label": "条目所列专业",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ],
+          "relation": "lists_major",
+          "to": "n_35a205143b58d7f2bf9b"
+        },
+        {
+          "from": "n_586e4691d919e5e62847",
+          "id": "e_65fe1fd94862e114c902",
+          "label": "条目所列专业",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ],
+          "relation": "lists_major",
+          "to": "n_59303414e5dd4e09b8af"
+        },
+        {
+          "from": "n_586e4691d919e5e62847",
+          "id": "e_044e95f1a94e0bd7054e",
+          "label": "条目所列发展路径",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ],
+          "relation": "lists_transition",
+          "to": "n_7c42838a412c2e96040c"
+        },
+        {
+          "from": "n_586e4691d919e5e62847",
+          "id": "e_aab602b4673130dde90a",
+          "label": "条目所列发展路径",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ],
+          "relation": "lists_transition",
+          "to": "n_3322a1d214474a951899"
+        },
+        {
+          "from": "n_586e4691d919e5e62847",
+          "id": "e_14bc6debe748b3e4e22b",
+          "label": "条目所列发展路径",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ],
+          "relation": "lists_transition",
+          "to": "n_97c29984cfcf9c255aae"
+        },
+        {
+          "from": "n_586e4691d919e5e62847",
+          "id": "e_9c57a9721350a3c2e2c3",
+          "label": "条目薪资参考",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ],
+          "relation": "has_salary_reference",
+          "to": "n_a5f6699587f93298c913"
+        }
+      ],
+      "limitations": [
+        "图谱按现有材料、知识条目和规划字段投影生成，不包含额外事实推断。",
+        "知识库来源链接仅为核验线索，不代表技能、资源、路径或薪资已经逐项核实。",
+        "模型建议与知识库条目分别标记；相同岗位名称不表示建议已被外部证据验证。"
+      ],
+      "nodes": [
+        {
+          "id": "n_908a9ebdfe439a9ac71e",
+          "kind": "plan",
+          "label": "职业发展规划（建议）",
+          "provenance_ids": [
+            "p_e989c7b9dde65df5d4d5"
+          ]
+        },
+        {
+          "id": "n_60da73d3493dfc052d3a",
+          "kind": "profile",
+          "label": "专业：计算机科学",
+          "provenance_ids": [
+            "p_ffe3a81cfd9f1e398e95"
+          ]
+        },
+        {
+          "id": "n_7d9c9108007aabd6fef2",
+          "kind": "profile",
+          "label": "已掌握技能：Python、SQL",
+          "provenance_ids": [
+            "p_8f4c7b80d44b627581f0"
+          ]
+        },
+        {
+          "id": "n_0e17e3b9ba469c62e9a4",
+          "kind": "profile",
+          "label": "意向岗位：后端开发实习",
+          "provenance_ids": [
+            "p_a8018ad274ddf88c3d2a"
+          ]
+        },
+        {
+          "id": "n_ef58eb9d101fde6d96bf",
+          "kind": "profile",
+          "label": "每周时间：8",
+          "provenance_ids": [
+            "p_94633c336380aeade7a0"
+          ]
+        },
+        {
+          "id": "n_cd818e2ab5144097e4ab",
+          "kind": "role_suggestion",
+          "label": "后端开发实习生（Python方向）",
+          "provenance_ids": [
+            "p_28698527cf5c47f53753"
+          ]
+        },
+        {
+          "id": "n_b538f8e85b0ee1da4e8f",
+          "kind": "role_suggestion",
+          "label": "Python开发实习生",
+          "provenance_ids": [
+            "p_9eb11832513b231c456b"
+          ]
+        },
+        {
+          "id": "n_cad024b6c0d0603374df",
+          "kind": "gap_suggestion",
+          "label": "缺少Web后端框架实战经验（如FastAPI/Flask/Django），仅有Python语言基础",
+          "provenance_ids": [
+            "p_b720bc02242e51291610"
+          ]
+        },
+        {
+          "id": "n_c88134fe5e1c3efe5bca",
+          "kind": "gap_suggestion",
+          "label": "缺少数据库设计与ORM使用经验，SQL仅停留在会写查询的层面",
+          "provenance_ids": [
+            "p_c307158317aeceec1e2f"
+          ]
+        },
+        {
+          "id": "n_db74a241c38594f60eca",
+          "kind": "gap_suggestion",
+          "label": "缺少REST API设计、鉴权、错误处理等工程化实践",
+          "provenance_ids": [
+            "p_5a4951e366a75d1db1f5"
+          ]
+        },
+        {
+          "id": "n_08123555f0b54117c4be",
+          "kind": "gap_suggestion",
+          "label": "无实习/项目经历，简历缺少可验证的后端产出",
+          "provenance_ids": [
+            "p_3e2b45352fdc48ec077f"
+          ]
+        },
+        {
+          "id": "n_b88b78e13a296c3d9d45",
+          "kind": "gap_suggestion",
+          "label": "未确认城市、可实习时长、行业偏好与资金预算，投递范围不明确",
+          "provenance_ids": [
+            "p_ac2da2e00ee13472cadf"
+          ]
+        },
+        {
+          "id": "n_03605e6045d54a6ed825",
+          "kind": "gap_suggestion",
+          "label": "Git/协作流程、Linux基础、简单部署等工程习惯未确认",
+          "provenance_ids": [
+            "p_f95bbb7d49ea7ee5b057"
+          ]
+        },
+        {
+          "id": "n_77d55d41256a5a91a9c2",
+          "kind": "gap_suggestion",
+          "label": "计算机基础（网络、操作系统、数据库原理）掌握程度未确认，面试八股需补",
+          "provenance_ids": [
+            "p_912204fae30998c2de9e"
+          ]
+        },
+        {
+          "id": "n_9a6a8eda6323d31bba1c",
+          "kind": "resource_suggestion",
+          "label": "FastAPI官方文档（教程与高级用户指南）",
+          "provenance_ids": [
+            "p_faac4ed326ab48ccfcab"
+          ]
+        },
+        {
+          "id": "n_82deed5b7a533e2bbd32",
+          "kind": "resource_suggestion",
+          "label": "Flask官方教程",
+          "provenance_ids": [
+            "p_87f8e02c3b943860a741"
+          ]
+        },
+        {
+          "id": "n_03cd88f95e99099867e9",
+          "kind": "resource_suggestion",
+          "label": "SQLBolt（SQL练习）",
+          "provenance_ids": [
+            "p_5b7c05dbc51029797613"
+          ]
+        },
+        {
+          "id": "n_7237b55fd5bc4cc165e2",
+          "kind": "resource_suggestion",
+          "label": "MDN HTTP文档（REST与状态码）",
+          "provenance_ids": [
+            "p_e52797d4265705f93d75"
+          ]
+        },
+        {
+          "id": "n_00b0d1efdf9baa07728b",
+          "kind": "resource_suggestion",
+          "label": "《Designing Data-Intensive Applications》（选读，建立系统设计意识）",
+          "provenance_ids": [
+            "p_743ae2d5ea13c6ac588d"
+          ]
+        },
+        {
+          "id": "n_62c3f07e6f85bcded1f0",
+          "kind": "resource_suggestion",
+          "label": "Git官方文档与Pro Git",
+          "provenance_ids": [
+            "p_68c510abc31f929d9f92"
+          ]
+        },
+        {
+          "id": "n_627f6e8cab8cc3beca39",
+          "kind": "resource_suggestion",
+          "label": "LeetCode（SQL与简单算法题，每周2-3题）",
+          "provenance_ids": [
+            "p_eae9b8702df8ac575428"
+          ]
+        },
+        {
+          "id": "n_7d6892b2856f0e0d09e7",
+          "kind": "resource_suggestion",
+          "label": "知识库条目career-022后端开发工程师、career-026 Python开发工程师（未核验，仅作参考）",
+          "provenance_ids": [
+            "p_f477d1e04e9dce2800e1"
+          ]
+        },
+        {
+          "id": "n_04e4d14807275e261e09",
+          "kind": "action_suggestion",
+          "label": "确认可实习城市/远程偏好与可实习起止时间，回复后缩小投递范围",
+          "provenance_ids": [
+            "p_4ff192291a0c390bd67a"
+          ]
+        },
+        {
+          "id": "n_bd9547c6a4668a0f0864",
+          "kind": "action_suggestion",
+          "label": "本周内选定FastAPI或Flask其一，完成官方教程前3章",
+          "provenance_ids": [
+            "p_32184ffe77af854976a2"
+          ]
+        },
+        {
+          "id": "n_436778bae65f46ee21af",
+          "kind": "action_suggestion",
+          "label": "创建项目仓库，写README骨架并完成第一次Git提交",
+          "provenance_ids": [
+            "p_282fb14e817f9d5dc225"
+          ]
+        },
+        {
+          "id": "n_dc63ef04be289167b92a",
+          "kind": "action_suggestion",
+          "label": "收集10条后端实习JD，统计高频技能关键词",
+          "provenance_ids": [
+            "p_aa23de04feed255c6ae5"
+          ]
+        },
+        {
+          "id": "n_05d6e8908286b17db261",
+          "kind": "action_suggestion",
+          "label": "制定每周8小时时间表（建议4h项目+2h基础+2h投递复盘）",
+          "provenance_ids": [
+            "p_414b06ba4cc11f362870"
+          ]
+        },
+        {
+          "id": "n_d3061b11f995e9f50de1",
+          "kind": "risk",
+          "label": "每周仅8小时，项目与基础补强并行可能导致进度偏慢，需严格按优先级执行",
+          "provenance_ids": [
+            "p_0c66dbd68e3a75ec2ce2"
+          ]
+        },
+        {
+          "id": "n_f1d2a7bd80ca96afd71e",
+          "kind": "risk",
+          "label": "无实习经验且项目未完成前投递回复率可能较低，需用项目产出弥补",
+          "provenance_ids": [
+            "p_7bbdbcfac03e2e3a3156"
+          ]
+        },
+        {
+          "id": "n_1cb3546ba80d09d83070",
+          "kind": "risk",
+          "label": "城市、行业偏好、资金预算未确认，投递范围与资源选择存在不确定性",
+          "provenance_ids": [
+            "p_64812c86d9d6f3a75565"
+          ]
+        },
+        {
+          "id": "n_978de1be968b9aa7a4f4",
+          "kind": "risk",
+          "label": "材料中的岗位卡片与知识库条目均未核验，不能作为真实招聘要求或薪资依据",
+          "provenance_ids": [
+            "p_337910be2acb8bca9338"
+          ]
+        },
+        {
+          "id": "n_82151cd23d4eba51bb71",
+          "kind": "risk",
+          "label": "计算机基础掌握程度未确认，面试八股可能成为短板",
+          "provenance_ids": [
+            "p_2c1856353e76c1b4e868"
+          ]
+        },
+        {
+          "id": "n_b7d345cbfa795a65e326",
+          "kind": "open_question",
+          "label": "你希望在哪个城市实习，或是否接受远程实习？",
+          "provenance_ids": [
+            "p_b7e8de80b1ecf800918a"
+          ]
+        },
+        {
+          "id": "n_526f9a037e661f72b4de",
+          "kind": "open_question",
+          "label": "你最早可开始实习的时间与每周可实习天数（与学习8小时不同）是多少？",
+          "provenance_ids": [
+            "p_11581d12271b87c37c18"
+          ]
+        },
+        {
+          "id": "n_f720e74b492ea3c0a95d",
+          "kind": "open_question",
+          "label": "你是否有资金预算用于课程/云服务器/域名等？",
+          "provenance_ids": [
+            "p_22f5fff724573a5c3424"
+          ]
+        },
+        {
+          "id": "n_bf246e5a809e4a7aa4c3",
+          "kind": "open_question",
+          "label": "你更倾向哪个行业（如互联网、金融、企业服务）或暂无偏好？",
+          "provenance_ids": [
+            "p_0f3467323c99694b7a17"
+          ]
+        },
+        {
+          "id": "n_96be874f9b27b7862c31",
+          "kind": "open_question",
+          "label": "你的计算机基础课程（网络、操作系统、数据库）掌握程度如何？",
+          "provenance_ids": [
+            "p_28221c399b546834e556"
+          ]
+        },
+        {
+          "id": "n_470509c0163371e9ea17",
+          "kind": "milestone",
+          "label": "30天：补齐后端最小技能栈并启动第一个可展示项目",
+          "provenance_ids": [
+            "p_40ac2b365bb53ab50e54"
+          ]
+        },
+        {
+          "id": "n_a0b91f33c543deb39822",
+          "kind": "deliverable",
+          "label": "完成FastAPI或Flask官方教程，能独立写出带路由、参数校验、错误处理的API",
+          "provenance_ids": [
+            "p_04a263b86c5332af1646"
+          ]
+        },
+        {
+          "id": "n_6bf2ef85d6cc8302c7e5",
+          "kind": "deliverable",
+          "label": "完成数据库设计练习：为项目设计3-5张表，使用SQLAlchemy或原生SQL实现CRUD",
+          "provenance_ids": [
+            "p_2a4ed275a0c78f0fc6d2"
+          ]
+        },
+        {
+          "id": "n_ba88fd59549e49a3aed1",
+          "kind": "deliverable",
+          "label": "项目仓库初始化：Git提交规范、README骨架、API文档草稿",
+          "provenance_ids": [
+            "p_cced6e5bd5bb20027923"
+          ]
+        },
+        {
+          "id": "n_375d460940d8fd6c473e",
+          "kind": "deliverable",
+          "label": "整理一份后端实习岗位JD样本（10条），标注高频要求",
+          "provenance_ids": [
+            "p_85e040bcd93f05a8122d"
+          ]
+        },
+        {
+          "id": "n_24f531351e454b18ce5e",
+          "kind": "metric",
+          "label": "每周投入≥8小时，累计≥32小时",
+          "provenance_ids": [
+            "p_15e67bda57bc8e8db3fa"
+          ]
+        },
+        {
+          "id": "n_b49c301ce4c20cfac289",
+          "kind": "metric",
+          "label": "项目完成≥3个API端点并通过本地测试",
+          "provenance_ids": [
+            "p_b7d5feb69dafdf441211"
+          ]
+        },
+        {
+          "id": "n_fde564a9d49da43ba9a5",
+          "kind": "metric",
+          "label": "Git提交≥8次，README包含运行说明",
+          "provenance_ids": [
+            "p_9ecff4828d6475917e57"
+          ]
+        },
+        {
+          "id": "n_ca29ac7f75ca99723d17",
+          "kind": "metric",
+          "label": "JD样本≥10条并完成关键词统计",
+          "provenance_ids": [
+            "p_e2947834005885fa5ca2"
+          ]
+        },
+        {
+          "id": "n_4256b0a227dae1301823",
+          "kind": "milestone",
+          "label": "90天：完成可展示的后端项目并开始小批量投递",
+          "provenance_ids": [
+            "p_bdaabae9ad1f726a66b1"
+          ]
+        },
+        {
+          "id": "n_79b6d2fbf759c3025d44",
+          "kind": "deliverable",
+          "label": "项目MVP：用户注册登录（JWT或Session）、核心业务CRUD、分页、基础错误处理",
+          "provenance_ids": [
+            "p_261860d511ec26a23562"
+          ]
+        },
+        {
+          "id": "n_5bd4f55bcb9e031e6700",
+          "kind": "deliverable",
+          "label": "项目部署到可访问环境（如Render/Railway/云服务器），提供在线Demo或录屏",
+          "provenance_ids": [
+            "p_27c81ee61fe71a9cebea"
+          ]
+        },
+        {
+          "id": "n_003cd9a4eb2a16f6dff8",
+          "kind": "deliverable",
+          "label": "简历初版：突出项目、技能、课程，量化项目产出",
+          "provenance_ids": [
+            "p_eff9a50d4ba936e4f790"
+          ]
+        },
+        {
+          "id": "n_084ee3ba16c48a05fc0b",
+          "kind": "deliverable",
+          "label": "投递记录表：公司、岗位、渠道、反馈状态",
+          "provenance_ids": [
+            "p_f32b04b31f2971e637a2"
+          ]
+        },
+        {
+          "id": "n_b615be6c6660c1d5fa53",
+          "kind": "metric",
+          "label": "项目累计≥15个API端点，核心流程可演示",
+          "provenance_ids": [
+            "p_6fe0e552c96c06661647"
+          ]
+        },
+        {
+          "id": "n_dfa9c863f506db7d4e15",
+          "kind": "metric",
+          "label": "完成≥20次投递，获得≥3次面试或笔试机会",
+          "provenance_ids": [
+            "p_3a140bb98f9d963cffd8"
+          ]
+        },
+        {
+          "id": "n_fa67e1f0b81672417c04",
+          "kind": "metric",
+          "label": "每周复盘1次，记录面试问题并归类",
+          "provenance_ids": [
+            "p_b6388fb6139c1c65c2de"
+          ]
+        },
+        {
+          "id": "n_c2a6e85f85ca59f72a11",
+          "kind": "metric",
+          "label": "项目README包含架构说明与API文档",
+          "provenance_ids": [
+            "p_6274db8ae752e3d16707"
+          ]
+        },
+        {
+          "id": "n_f617c4a2932a8b29a08e",
+          "kind": "milestone",
+          "label": "180天：拿到后端开发实习offer并形成持续迭代能力",
+          "provenance_ids": [
+            "p_1aade88e45925aa73382"
+          ]
+        },
+        {
+          "id": "n_eef9b8dbc40146226f4e",
+          "kind": "deliverable",
+          "label": "项目迭代：加入缓存（Redis）、简单鉴权优化、单元测试",
+          "provenance_ids": [
+            "p_55dac6afee19beb08e71"
+          ]
+        },
+        {
+          "id": "n_11dd37d6328702a02d2b",
+          "kind": "deliverable",
+          "label": "计算机基础补强笔记：HTTP、数据库索引、事务、操作系统基础",
+          "provenance_ids": [
+            "p_44f8a0fc216f7afca2f9"
+          ]
+        },
+        {
+          "id": "n_f16d49542b2f05bc1764",
+          "kind": "deliverable",
+          "label": "面试题库整理：≥50道后端高频题及自己的答案",
+          "provenance_ids": [
+            "p_a9fb4789d0071bfff402"
+          ]
+        },
+        {
+          "id": "n_a4fd2c5f5d00a569e958",
+          "kind": "deliverable",
+          "label": "实习offer或明确的下一步补强计划",
+          "provenance_ids": [
+            "p_d57bece85e9ceefcbe9d"
+          ]
+        },
+        {
+          "id": "n_5f009437188024fe36a9",
+          "kind": "metric",
+          "label": "累计投递≥60次，面试/笔试≥8次",
+          "provenance_ids": [
+            "p_31f204b1c116a6f5f6f4"
+          ]
+        },
+        {
+          "id": "n_744c8cc3631a7a58578e",
+          "kind": "metric",
+          "label": "项目单元测试覆盖率≥50%（核心模块）",
+          "provenance_ids": [
+            "p_12c93967dc39509b6ef7"
+          ]
+        },
+        {
+          "id": "n_f64d5670f9e332daab13",
+          "kind": "metric",
+          "label": "高频题整理≥50道并能口述",
+          "provenance_ids": [
+            "p_f0f05054ce2bed9a02fc"
+          ]
+        },
+        {
+          "id": "n_0e80bcfd8037287aac9e",
+          "kind": "metric",
+          "label": "获得≥1个实习offer或进入≥2家公司终面",
+          "provenance_ids": [
+            "p_5bac5ccd976ff8114e7a"
+          ]
+        },
+        {
+          "id": "n_0f0a55c94d14a73bb78b",
+          "kind": "knowledge_role",
+          "label": "计算机视觉算法工程师",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ]
+        },
+        {
+          "id": "n_ac025e3685de3610746c",
+          "kind": "knowledge_skill",
+          "label": "Python",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293",
+            "p_2f9eea233ea652375040",
+            "p_c5f43430a8b35101a038"
+          ]
+        },
+        {
+          "id": "n_ec8ff879d05b8c327752",
+          "kind": "knowledge_skill",
+          "label": "PyTorch/TensorFlow",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ]
+        },
+        {
+          "id": "n_a45ac728229cf829973d",
+          "kind": "knowledge_skill",
+          "label": "目标检测",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ]
+        },
+        {
+          "id": "n_2cdcb07d471ccc9b381b",
+          "kind": "knowledge_skill",
+          "label": "图像分割",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ]
+        },
+        {
+          "id": "n_6e84d5b5b232409cf2e6",
+          "kind": "knowledge_skill",
+          "label": "OpenCV",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ]
+        },
+        {
+          "id": "n_bac29d6c00e039cfec10",
+          "kind": "knowledge_skill",
+          "label": "模型部署",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ]
+        },
+        {
+          "id": "n_33bc85bc0a994da129c1",
+          "kind": "knowledge_skill",
+          "label": "Transformer",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ]
+        },
+        {
+          "id": "n_e1d3a01f38d183973620",
+          "kind": "knowledge_skill",
+          "label": "特征提取",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ]
+        },
+        {
+          "id": "n_bf3789156af94316d90f",
+          "kind": "knowledge_resource",
+          "label": "CS231n课程",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ]
+        },
+        {
+          "id": "n_b2f8270004d1119831a5",
+          "kind": "knowledge_resource",
+          "label": "深度学习计算机视觉",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ]
+        },
+        {
+          "id": "n_7e55325623b68baca8fa",
+          "kind": "knowledge_resource",
+          "label": "PapersWithCode",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ]
+        },
+        {
+          "id": "n_882c529347a06cc43b16",
+          "kind": "knowledge_resource",
+          "label": "Kaggle竞赛",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ]
+        },
+        {
+          "id": "n_e4cb4f212de9cb354e35",
+          "kind": "knowledge_transition",
+          "label": "计算机科学 -> CV算法",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ]
+        },
+        {
+          "id": "n_8c5a2e7f40e3fc246712",
+          "kind": "knowledge_transition",
+          "label": "数学/统计 -> 计算机视觉",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ]
+        },
+        {
+          "id": "n_491a7f21697d009a3f8c",
+          "kind": "salary_reference",
+          "label": "一线城市应届约20k-40k/月（竞争激烈）",
+          "provenance_ids": [
+            "p_6347056023bf2f2d4293"
+          ]
+        },
+        {
+          "id": "n_99f1311efdb3551d45c4",
+          "kind": "knowledge_role",
+          "label": "后端开发工程师",
+          "provenance_ids": [
+            "p_92b0810742e5c79e4660"
+          ]
+        },
+        {
+          "id": "n_95830b96c45372c0b2d8",
+          "kind": "knowledge_skill",
+          "label": "Python/Java/Go",
+          "provenance_ids": [
+            "p_92b0810742e5c79e4660"
+          ]
+        },
+        {
+          "id": "n_90613116bad5230c3ffa",
+          "kind": "knowledge_skill",
+          "label": "数据库",
+          "provenance_ids": [
+            "p_92b0810742e5c79e4660"
+          ]
+        },
+        {
+          "id": "n_78bd2419b575bc521ecd",
+          "kind": "knowledge_skill",
+          "label": "REST API",
+          "provenance_ids": [
+            "p_92b0810742e5c79e4660"
+          ]
+        },
+        {
+          "id": "n_25eab3f4aec618cc7e8d",
+          "kind": "knowledge_skill",
+          "label": "缓存",
+          "provenance_ids": [
+            "p_92b0810742e5c79e4660"
+          ]
+        },
+        {
+          "id": "n_f5f0b70a57c725d33dff",
+          "kind": "knowledge_skill",
+          "label": "系统设计",
+          "provenance_ids": [
+            "p_92b0810742e5c79e4660"
+          ]
+        },
+        {
+          "id": "n_e01fc1429211d92b9c6e",
+          "kind": "knowledge_resource",
+          "label": "MDN HTTP",
+          "provenance_ids": [
+            "p_92b0810742e5c79e4660"
+          ]
+        },
+        {
+          "id": "n_297baedd35e8d86aa86b",
+          "kind": "knowledge_resource",
+          "label": "Designing Data-Intensive Applications",
+          "provenance_ids": [
+            "p_92b0810742e5c79e4660"
+          ]
+        },
+        {
+          "id": "n_10a808476665d67e9a2b",
+          "kind": "knowledge_resource",
+          "label": "后端项目实战",
+          "provenance_ids": [
+            "p_92b0810742e5c79e4660"
+          ]
+        },
+        {
+          "id": "n_0be8cbc0e9487edca25f",
+          "kind": "knowledge_transition",
+          "label": "计算机专业 -> 后端开发",
+          "provenance_ids": [
+            "p_92b0810742e5c79e4660"
+          ]
+        },
+        {
+          "id": "n_ef0b0534e7e568cbbe55",
+          "kind": "knowledge_transition",
+          "label": "测试开发 -> 后端开发",
+          "provenance_ids": [
+            "p_92b0810742e5c79e4660"
+          ]
+        },
+        {
+          "id": "n_675b5081ed1e7a6f57e8",
+          "kind": "salary_reference",
+          "label": "一线城市应届约12k-25k/月",
+          "provenance_ids": [
+            "p_92b0810742e5c79e4660"
+          ]
+        },
+        {
+          "id": "n_bbae3abe3616852d8c69",
+          "kind": "knowledge_role",
+          "label": "Python开发工程师",
+          "provenance_ids": [
+            "p_2f9eea233ea652375040"
+          ]
+        },
+        {
+          "id": "n_fad7883ea722c83fc096",
+          "kind": "knowledge_skill",
+          "label": "FastAPI/Django",
+          "provenance_ids": [
+            "p_2f9eea233ea652375040"
+          ]
+        },
+        {
+          "id": "n_cfa7e3ca7a2c11a90973",
+          "kind": "knowledge_skill",
+          "label": "SQL",
+          "provenance_ids": [
+            "p_2f9eea233ea652375040",
+            "p_c5f43430a8b35101a038"
+          ]
+        },
+        {
+          "id": "n_6c7e1f026926f2256fa0",
+          "kind": "knowledge_skill",
+          "label": "自动化",
+          "provenance_ids": [
+            "p_2f9eea233ea652375040"
+          ]
+        },
+        {
+          "id": "n_b9d81398f3d810ebb2fe",
+          "kind": "knowledge_skill",
+          "label": "Linux",
+          "provenance_ids": [
+            "p_2f9eea233ea652375040"
+          ]
+        },
+        {
+          "id": "n_498d12018d15075ee7d9",
+          "kind": "knowledge_resource",
+          "label": "Python官方教程",
+          "provenance_ids": [
+            "p_2f9eea233ea652375040"
+          ]
+        },
+        {
+          "id": "n_26f9b30d37aeed4bb3af",
+          "kind": "knowledge_resource",
+          "label": "FastAPI文档",
+          "provenance_ids": [
+            "p_2f9eea233ea652375040"
+          ]
+        },
+        {
+          "id": "n_96257d4ce472d38e3828",
+          "kind": "knowledge_resource",
+          "label": "Django教程",
+          "provenance_ids": [
+            "p_2f9eea233ea652375040"
+          ]
+        },
+        {
+          "id": "n_df64b22e15f63942ef1c",
+          "kind": "knowledge_transition",
+          "label": "数据分析 -> Python开发",
+          "provenance_ids": [
+            "p_2f9eea233ea652375040"
+          ]
+        },
+        {
+          "id": "n_0f6a132690bff22059b1",
+          "kind": "knowledge_transition",
+          "label": "自动化测试 -> Python开发",
+          "provenance_ids": [
+            "p_2f9eea233ea652375040"
+          ]
+        },
+        {
+          "id": "n_5a2239e09c61f35e1a38",
+          "kind": "salary_reference",
+          "label": "一线城市应届约11k-23k/月",
+          "provenance_ids": [
+            "p_2f9eea233ea652375040"
+          ]
+        },
+        {
+          "id": "n_586e4691d919e5e62847",
+          "kind": "knowledge_role",
+          "label": "数据分析师",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ]
+        },
+        {
+          "id": "n_ddc11f58da60795bd3b8",
+          "kind": "knowledge_skill",
+          "label": "统计学",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ]
+        },
+        {
+          "id": "n_36d98ab186b0957210e9",
+          "kind": "knowledge_skill",
+          "label": "可视化",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ]
+        },
+        {
+          "id": "n_d6761765d8e2c713954b",
+          "kind": "knowledge_skill",
+          "label": "A/B测试",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ]
+        },
+        {
+          "id": "n_15b8c529dff7d5950602",
+          "kind": "knowledge_skill",
+          "label": "R",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ]
+        },
+        {
+          "id": "n_33a6ea975645049954d2",
+          "kind": "knowledge_skill",
+          "label": "数据建模",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ]
+        },
+        {
+          "id": "n_9af640323cd4f39720bd",
+          "kind": "knowledge_skill",
+          "label": "Power BI/Tableau",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ]
+        },
+        {
+          "id": "n_2acfd2c4fc7f66d811f0",
+          "kind": "knowledge_skill",
+          "label": "机器学习",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ]
+        },
+        {
+          "id": "n_06f0b0c51359168f2b99",
+          "kind": "knowledge_resource",
+          "label": "SQLBolt",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ]
+        },
+        {
+          "id": "n_b8b5ec34d9e4cde9fcfd",
+          "kind": "knowledge_resource",
+          "label": "Tableau Public",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ]
+        },
+        {
+          "id": "n_ad48970739a36f0a0095",
+          "kind": "knowledge_resource",
+          "label": "Kaggle 数据分析项目",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ]
+        },
+        {
+          "id": "n_c52f1a8393c0b0ade4db",
+          "kind": "knowledge_major",
+          "label": "统计学",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ]
+        },
+        {
+          "id": "n_4c51e8e5f3e69348b0bd",
+          "kind": "knowledge_major",
+          "label": "数学",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ]
+        },
+        {
+          "id": "n_043b2ee9ccbd8e8eeca5",
+          "kind": "knowledge_major",
+          "label": "计算机科学",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ]
+        },
+        {
+          "id": "n_35a205143b58d7f2bf9b",
+          "kind": "knowledge_major",
+          "label": "数据科学",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ]
+        },
+        {
+          "id": "n_59303414e5dd4e09b8af",
+          "kind": "knowledge_major",
+          "label": "信息管理",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ]
+        },
+        {
+          "id": "n_7c42838a412c2e96040c",
+          "kind": "knowledge_transition",
+          "label": "运营 -> 数据分析",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ]
+        },
+        {
+          "id": "n_3322a1d214474a951899",
+          "kind": "knowledge_transition",
+          "label": "BI工程师 -> 数据分析师",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ]
+        },
+        {
+          "id": "n_97c29984cfcf9c255aae",
+          "kind": "knowledge_transition",
+          "label": "助理数据分析师 -> 数据分析师 -> 高级数据分析师/数据科学家",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ]
+        },
+        {
+          "id": "n_a5f6699587f93298c913",
+          "kind": "salary_reference",
+          "label": "一线城市应届约10k-20k/月",
+          "provenance_ids": [
+            "p_c5f43430a8b35101a038"
+          ]
+        }
+      ],
+      "plan_id": "5782e9d66c8e42b196403c4dcca0b3f1",
+      "provenance": [
+        {
+          "id": "p_e989c7b9dde65df5d4d5",
+          "kind": "planning_output",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:structured_output",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_ffe3a81cfd9f1e398e95",
+          "kind": "input_evidence",
+          "notice": "有原文证据的画像信息（未经外部核验）",
+          "reference": "guidance:major:065441021131d4939be1",
+          "source_id": "",
+          "status": "confirmed_input",
+          "subject": "student",
+          "verification": "user_confirmed"
+        },
+        {
+          "id": "p_8f4c7b80d44b627581f0",
+          "kind": "input_evidence",
+          "notice": "有原文证据的画像信息（未经外部核验）",
+          "reference": "guidance:skills:d8beaafeda94c187131b",
+          "source_id": "",
+          "status": "confirmed_input",
+          "subject": "student",
+          "verification": "user_confirmed"
+        },
+        {
+          "id": "p_a8018ad274ddf88c3d2a",
+          "kind": "input_evidence",
+          "notice": "有原文证据的画像信息（未经外部核验）",
+          "reference": "guidance:target_role:d3a4670fed50d7534024",
+          "source_id": "",
+          "status": "confirmed_input",
+          "subject": "student",
+          "verification": "user_confirmed"
+        },
+        {
+          "id": "p_94633c336380aeade7a0",
+          "kind": "input_evidence",
+          "notice": "有原文证据的画像信息（未经外部核验）",
+          "reference": "guidance:time_budget:065441021131d4939be1",
+          "source_id": "",
+          "status": "confirmed_input",
+          "subject": "student",
+          "verification": "user_confirmed"
+        },
+        {
+          "id": "p_28698527cf5c47f53753",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:target_roles:0",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_9eb11832513b231c456b",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:target_roles:1",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_b720bc02242e51291610",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:gap_analysis:0",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_c307158317aeceec1e2f",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:gap_analysis:1",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_5a4951e366a75d1db1f5",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:gap_analysis:2",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_3e2b45352fdc48ec077f",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:gap_analysis:3",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_ac2da2e00ee13472cadf",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:gap_analysis:4",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_f95bbb7d49ea7ee5b057",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:gap_analysis:5",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_912204fae30998c2de9e",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:gap_analysis:6",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_faac4ed326ab48ccfcab",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:learning_resources:0",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_87f8e02c3b943860a741",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:learning_resources:1",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_5b7c05dbc51029797613",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:learning_resources:2",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_e52797d4265705f93d75",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:learning_resources:3",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_743ae2d5ea13c6ac588d",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:learning_resources:4",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_68c510abc31f929d9f92",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:learning_resources:5",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_eae9b8702df8ac575428",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:learning_resources:6",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_f477d1e04e9dce2800e1",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:learning_resources:7",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_4ff192291a0c390bd67a",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:next_actions:0",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_32184ffe77af854976a2",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:next_actions:1",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_282fb14e817f9d5dc225",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:next_actions:2",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_aa23de04feed255c6ae5",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:next_actions:3",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_414b06ba4cc11f362870",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:next_actions:4",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_0c66dbd68e3a75ec2ce2",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:risk_flags:0",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_7bbdbcfac03e2e3a3156",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:risk_flags:1",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_64812c86d9d6f3a75565",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:risk_flags:2",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_337910be2acb8bca9338",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:risk_flags:3",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_2c1856353e76c1b4e868",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:risk_flags:4",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_b7e8de80b1ecf800918a",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:follow_up_questions:0",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_11581d12271b87c37c18",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:follow_up_questions:1",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_22f5fff724573a5c3424",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:follow_up_questions:2",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_0f3467323c99694b7a17",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:follow_up_questions:3",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_28221c399b546834e556",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:follow_up_questions:4",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_40ac2b365bb53ab50e54",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:30d",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_04a263b86c5332af1646",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:30d:deliverables:0",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_2a4ed275a0c78f0fc6d2",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:30d:deliverables:1",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_cced6e5bd5bb20027923",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:30d:deliverables:2",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_85e040bcd93f05a8122d",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:30d:deliverables:3",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_15e67bda57bc8e8db3fa",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:30d:metrics:0",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_b7d5feb69dafdf441211",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:30d:metrics:1",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_9ecff4828d6475917e57",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:30d:metrics:2",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_e2947834005885fa5ca2",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:30d:metrics:3",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_bdaabae9ad1f726a66b1",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:90d",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_261860d511ec26a23562",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:90d:deliverables:0",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_27c81ee61fe71a9cebea",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:90d:deliverables:1",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_eff9a50d4ba936e4f790",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:90d:deliverables:2",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_f32b04b31f2971e637a2",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:90d:deliverables:3",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_6fe0e552c96c06661647",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:90d:metrics:0",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_3a140bb98f9d963cffd8",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:90d:metrics:1",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_b6388fb6139c1c65c2de",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:90d:metrics:2",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_6274db8ae752e3d16707",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:90d:metrics:3",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_1aade88e45925aa73382",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:180d",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_55dac6afee19beb08e71",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:180d:deliverables:0",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_44f8a0fc216f7afca2f9",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:180d:deliverables:1",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_a9fb4789d0071bfff402",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:180d:deliverables:2",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_d57bece85e9ceefcbe9d",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:180d:deliverables:3",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_31f204b1c116a6f5f6f4",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:180d:metrics:0",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_12c93967dc39509b6ef7",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:180d:metrics:1",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_f0f05054ce2bed9a02fc",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:180d:metrics:2",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_5bac5ccd976ff8114e7a",
+          "kind": "planning_field",
+          "notice": "模型规划建议（非已核实事实）",
+          "reference": "plan:roadmap:180d:metrics:3",
+          "status": "model_suggestion"
+        },
+        {
+          "id": "p_6347056023bf2f2d4293",
+          "kind": "knowledge_item",
+          "notice": "知识库条目（缺少来源且未逐项核实）",
+          "reference": "career-013",
+          "sources": [],
+          "status": "unsourced",
+          "urls": [],
+          "verification_status": "not_verified"
+        },
+        {
+          "id": "p_92b0810742e5c79e4660",
+          "kind": "knowledge_item",
+          "notice": "知识库条目（缺少来源且未逐项核实）",
+          "reference": "career-022",
+          "sources": [],
+          "status": "unsourced",
+          "urls": [],
+          "verification_status": "not_verified"
+        },
+        {
+          "id": "p_2f9eea233ea652375040",
+          "kind": "knowledge_item",
+          "notice": "知识库条目（缺少来源且未逐项核实）",
+          "reference": "career-026",
+          "sources": [],
+          "status": "unsourced",
+          "urls": [],
+          "verification_status": "not_verified"
+        },
+        {
+          "id": "p_c5f43430a8b35101a038",
+          "kind": "knowledge_item",
+          "notice": "知识库来源线索（字段未逐项核实）",
+          "reference": "career-002",
+          "sources": [
+            "百融云创及杭州顺网科技 2025 届招聘信息"
+          ],
+          "status": "source_lead_only",
+          "urls": [],
+          "verification_status": "not_verified"
+        }
+      ],
+      "schema_version": "career-graph-v1"
+    },
+    "intent": "qa",
+    "knowledge_hit_ids": [
+      "career-013",
+      "career-022",
+      "career-026",
+      "career-002"
+    ],
+    "knowledge_hits": [
+      "[career-013] 计算机视觉算法工程师 | 核心技能: Python, PyTorch/TensorFlow, 目标检测, 图像分割, OpenCV, 模型部署, Transformer, 特征提取 | 学习资源: CS231n课程, 深度学习计算机视觉, PapersWithCode, Kaggle竞赛 | 发展路径: 计算机科学 -> CV算法, 数学/统计 -> 计算机视觉 | 适合专业: 未提供 | 薪资参考: 一线城市应届约20k-40k/月（竞争激烈） | 来源: 未提供 | 核验状态: not_verified | 使用限制: 条目尚无来源链接，字段未经逐项核实；薪资参考不代表当前招聘行情。",
+      "[career-022] 后端开发工程师 | 核心技能: Python/Java/Go, 数据库, REST API, 缓存, 系统设计 | 学习资源: MDN HTTP, Designing Data-Intensive Applications, 后端项目实战 | 发展路径: 计算机专业 -> 后端开发, 测试开发 -> 后端开发 | 适合专业: 未提供 | 薪资参考: 一线城市应届约12k-25k/月 | 来源: 未提供 | 核验状态: not_verified | 使用限制: 条目尚无来源链接，字段未经逐项核实；薪资参考不代表当前招聘行情。",
+      "[career-026] Python开发工程师 | 核心技能: Python, FastAPI/Django, SQL, 自动化, Linux | 学习资源: Python官方教程, FastAPI文档, Django教程 | 发展路径: 数据分析 -> Python开发, 自动化测试 -> Python开发 | 适合专业: 未提供 | 薪资参考: 一线城市应届约11k-23k/月 | 来源: 未提供 | 核验状态: not_verified | 使用限制: 条目尚无来源链接，字段未经逐项核实；薪资参考不代表当前招聘行情。",
+      "[career-002] 数据分析师 | 核心技能: SQL, Python, 统计学, 可视化, A/B测试, R, 数据建模, Power BI/Tableau, 机器学习 | 学习资源: SQLBolt, Tableau Public, Kaggle 数据分析项目 | 发展路径: 运营 -> 数据分析, BI工程师 -> 数据分析师, 助理数据分析师 -> 数据分析师 -> 高级数据分析师/数据科学家 | 适合专业: 统计学, 数学, 计算机科学, 数据科学, 信息管理 | 薪资参考: 一线城市应届约10k-20k/月 | 来源: 百融云创及杭州顺网科技 2025 届招聘信息 | 核验状态: not_verified | 使用限制: 来源链接仅为核验线索，条目字段尚未逐项核实；薪资参考不代表当前招聘行情。"
+    ],
+    "knowledge_snapshot": {
+      "content_sha256": "bed5627470a0773b2efa042146ee96b16a910a6c3b5d52151d839b90e0c440af",
+      "hits": [
+        {
+          "id": "career-013",
+          "item_id": "career-013",
+          "provenance_status": "unsourced",
+          "resources": [
+            "CS231n课程",
+            "深度学习计算机视觉",
+            "PapersWithCode",
+            "Kaggle竞赛"
+          ],
+          "role": "计算机视觉算法工程师",
+          "salary_hint": "一线城市应届约20k-40k/月（竞争激烈）",
+          "skills": [
+            "Python",
+            "PyTorch/TensorFlow",
+            "目标检测",
+            "图像分割",
+            "OpenCV",
+            "模型部署",
+            "Transformer",
+            "特征提取"
+          ],
+          "source_notice": "条目尚无来源链接，字段未经逐项核实；薪资参考不代表当前招聘行情。",
+          "sources": [],
+          "subject": "job",
+          "suitable_majors": [],
+          "transition_paths": [
+            "计算机科学 -> CV算法",
+            "数学/统计 -> 计算机视觉"
+          ],
+          "verification": "unverified",
+          "verification_status": "not_verified"
+        },
+        {
+          "id": "career-022",
+          "item_id": "career-022",
+          "provenance_status": "unsourced",
+          "resources": [
+            "MDN HTTP",
+            "Designing Data-Intensive Applications",
+            "后端项目实战"
+          ],
+          "role": "后端开发工程师",
+          "salary_hint": "一线城市应届约12k-25k/月",
+          "skills": [
+            "Python/Java/Go",
+            "数据库",
+            "REST API",
+            "缓存",
+            "系统设计"
+          ],
+          "source_notice": "条目尚无来源链接，字段未经逐项核实；薪资参考不代表当前招聘行情。",
+          "sources": [],
+          "subject": "job",
+          "suitable_majors": [],
+          "transition_paths": [
+            "计算机专业 -> 后端开发",
+            "测试开发 -> 后端开发"
+          ],
+          "verification": "unverified",
+          "verification_status": "not_verified"
+        },
+        {
+          "id": "career-026",
+          "item_id": "career-026",
+          "provenance_status": "unsourced",
+          "resources": [
+            "Python官方教程",
+            "FastAPI文档",
+            "Django教程"
+          ],
+          "role": "Python开发工程师",
+          "salary_hint": "一线城市应届约11k-23k/月",
+          "skills": [
+            "Python",
+            "FastAPI/Django",
+            "SQL",
+            "自动化",
+            "Linux"
+          ],
+          "source_notice": "条目尚无来源链接，字段未经逐项核实；薪资参考不代表当前招聘行情。",
+          "sources": [],
+          "subject": "job",
+          "suitable_majors": [],
+          "transition_paths": [
+            "数据分析 -> Python开发",
+            "自动化测试 -> Python开发"
+          ],
+          "verification": "unverified",
+          "verification_status": "not_verified"
+        },
+        {
+          "id": "career-002",
+          "item_id": "career-002",
+          "provenance_status": "source_lead_only",
+          "resources": [
+            "SQLBolt",
+            "Tableau Public",
+            "Kaggle 数据分析项目"
+          ],
+          "role": "数据分析师",
+          "salary_hint": "一线城市应届约10k-20k/月",
+          "skills": [
+            "SQL",
+            "Python",
+            "统计学",
+            "可视化",
+            "A/B测试",
+            "R",
+            "数据建模",
+            "Power BI/Tableau",
+            "机器学习"
+          ],
+          "source_notice": "来源链接仅为核验线索，条目字段尚未逐项核实；薪资参考不代表当前招聘行情。",
+          "sources": [
+            "百融云创及杭州顺网科技 2025 届招聘信息"
+          ],
+          "subject": "job",
+          "suitable_majors": [
+            "统计学",
+            "数学",
+            "计算机科学",
+            "数据科学",
+            "信息管理"
+          ],
+          "transition_paths": [
+            "运营 -> 数据分析",
+            "BI工程师 -> 数据分析师",
+            "助理数据分析师 -> 数据分析师 -> 高级数据分析师/数据科学家"
+          ],
+          "verification": "unverified",
+          "verification_status": "not_verified"
+        }
+      ],
+      "references": [
+        {
+          "item_id": "career-013",
+          "match_score": "12",
+          "provenance_status": "unsourced",
+          "resources": "CS231n课程, 深度学习计算机视觉, PapersWithCode, Kaggle竞赛",
+          "role": "计算机视觉算法工程师",
+          "salary_hint": "一线城市应届约20k-40k/月（竞争激烈）",
+          "skills": "Python, PyTorch/TensorFlow, 目标检测, 图像分割, OpenCV, 模型部署, Transformer, 特征提取",
+          "source_notice": "条目尚无来源链接，字段未经逐项核实；薪资参考不代表当前招聘行情。",
+          "sources": "",
+          "suitable_majors": "",
+          "transition_paths": "计算机科学 -> CV算法, 数学/统计 -> 计算机视觉",
+          "verification_status": "not_verified"
+        },
+        {
+          "item_id": "career-022",
+          "match_score": "11",
+          "provenance_status": "unsourced",
+          "resources": "MDN HTTP, Designing Data-Intensive Applications, 后端项目实战",
+          "role": "后端开发工程师",
+          "salary_hint": "一线城市应届约12k-25k/月",
+          "skills": "Python/Java/Go, 数据库, REST API, 缓存, 系统设计",
+          "source_notice": "条目尚无来源链接，字段未经逐项核实；薪资参考不代表当前招聘行情。",
+          "sources": "",
+          "suitable_majors": "",
+          "transition_paths": "计算机专业 -> 后端开发, 测试开发 -> 后端开发",
+          "verification_status": "not_verified"
+        },
+        {
+          "item_id": "career-026",
+          "match_score": "11",
+          "provenance_status": "unsourced",
+          "resources": "Python官方教程, FastAPI文档, Django教程",
+          "role": "Python开发工程师",
+          "salary_hint": "一线城市应届约11k-23k/月",
+          "skills": "Python, FastAPI/Django, SQL, 自动化, Linux",
+          "source_notice": "条目尚无来源链接，字段未经逐项核实；薪资参考不代表当前招聘行情。",
+          "sources": "",
+          "suitable_majors": "",
+          "transition_paths": "数据分析 -> Python开发, 自动化测试 -> Python开发",
+          "verification_status": "not_verified"
+        },
+        {
+          "item_id": "career-002",
+          "match_score": "10",
+          "provenance_status": "source_lead_only",
+          "resources": "SQLBolt, Tableau Public, Kaggle 数据分析项目",
+          "role": "数据分析师",
+          "salary_hint": "一线城市应届约10k-20k/月",
+          "skills": "SQL, Python, 统计学, 可视化, A/B测试, R, 数据建模, Power BI/Tableau, 机器学习",
+          "source_notice": "来源链接仅为核验线索，条目字段尚未逐项核实；薪资参考不代表当前招聘行情。",
+          "sources": "百融云创及杭州顺网科技 2025 届招聘信息",
+          "suitable_majors": "统计学, 数学, 计算机科学, 数据科学, 信息管理",
+          "transition_paths": "运营 -> 数据分析, BI工程师 -> 数据分析师, 助理数据分析师 -> 数据分析师 -> 高级数据分析师/数据科学家",
+          "verification_status": "not_verified"
+        }
+      ],
+      "version_id": "kb-bed5627470a0773b2efa"
+    },
+    "latency_ms": 10427,
+    "learning_resources": [
+      "FastAPI官方文档（教程与高级用户指南）",
+      "Flask官方教程",
+      "SQLBolt（SQL练习）",
+      "MDN HTTP文档（REST与状态码）",
+      "《Designing Data-Intensive Applications》（选读，建立系统设计意识）",
+      "Git官方文档与Pro Git",
+      "LeetCode（SQL与简单算法题，每周2-3题）",
+      "知识库条目career-022后端开发工程师、career-026 Python开发工程师（未核验，仅作参考）"
+    ],
+    "model_trace": [
+      "text-perception: rule-based",
+      "image-perception: /home/shenxiaoyang/project/models/Qwen3-VL-2B-Instruct",
+      "brain: deepseek-v4-flash"
+    ],
+    "next_actions": [
+      "确认可实习城市/远程偏好与可实习起止时间，回复后缩小投递范围",
+      "本周内选定FastAPI或Flask其一，完成官方教程前3章",
+      "创建项目仓库，写README骨架并完成第一次Git提交",
+      "收集10条后端实习JD，统计高频技能关键词",
+      "制定每周8小时时间表（建议4h项目+2h基础+2h投递复盘）"
+    ],
+    "output_version": {
+      "created_at": "2026-11-06T05:24:00.000426+00:00",
+      "display_text": "目标岗位\n- 后端开发实习生（Python方向）\n- Python开发实习生\n\n行动路线\n- 30天目标：补齐后端最小技能栈并启动第一个可展示项目\n- 90天目标：完成可展示的后端项目并开始小批量投递\n- 180天目标：拿到后端开发实习offer并形成持续迭代能力\n\n下一行动\n- 确认可实习城市/远程偏好与可实习起止时间，回复后缩小投递范围\n- 本周内选定FastAPI或Flask其一，完成官方教程前3章\n- 创建项目仓库，写README骨架并完成第一次Git提交\n- 收集10条后端实习JD，统计高频技能关键词\n- 制定每周8小时时间表（建议4h项目+2h基础+2h投递复盘）\n\n当前约束\n- 每周时间：8小时\n- 限制：未提供\n- 学历：未提供\n- 兴趣：未提供\n- 偏好：未提供\n\n注意事项\n- 每周仅8小时，项目与基础补强并行可能导致进度偏慢，需严格按优先级执行\n- 无实习经验且项目未完成前投递回复率可能较低，需用项目产出弥补\n- 城市、行业偏好、资金预算未确认，投递范围与资源选择存在不确定性\n- 材料中的岗位卡片与知识库条目均未核验，不能作为真实招聘要求或薪资依据\n- 计算机基础掌握程度未确认，面试八股可能成为短板\n\n待确认信息\n- 你希望在哪个城市实习，或是否接受远程实习？\n- 你最早可开始实习的时间与每周可实习天数（与学习8小时不同）是多少？\n- 你是否有资金预算用于课程/云服务器/域名等？\n- 你更倾向哪个行业（如互联网、金融、企业服务）或暂无偏好？\n- 你的计算机基础课程（网络、操作系统、数据库）掌握程度如何？",
+      "facts_sha256": "22ba80af6e479f02b79d0a3e78725593ad6a0b284175fecd8b3f1e007805d237",
+      "item_ids": [
+        "target_roles:0",
+        "target_roles:1",
+        "roadmap:30d:objective",
+        "roadmap:90d:objective",
+        "roadmap:180d:objective",
+        "next_actions:0",
+        "next_actions:1",
+        "next_actions:2",
+        "next_actions:3",
+        "next_actions:4",
+        "constraints:time_budget_hours_per_week",
+        "unresolved:constraints",
+        "unresolved:education",
+        "unresolved:interests",
+        "unresolved:preference",
+        "risk_flags:0",
+        "risk_flags:1",
+        "risk_flags:2",
+        "risk_flags:3",
+        "risk_flags:4",
+        "follow_up_questions:0",
+        "follow_up_questions:1",
+        "follow_up_questions:2",
+        "follow_up_questions:3",
+        "follow_up_questions:4"
+      ],
+      "parent_version": null,
+      "plan_id": "5782e9d66c8e42b196403c4dcca0b3f1",
+      "source_text_sha256": "415c0b6d15208d451762c946983fd9e96c0809e44d515d77918921a97733bb4d",
+      "version": 1
+    },
+    "perception_results": [
+      {
+        "confidence": 0.55,
+        "evidence": [
+          {
+            "quote": "",
+            "source": "",
+            "source_id": "user_input",
+            "subject": "student",
+            "verification": "user_confirmed"
+          }
+        ],
+        "facts": [
+          "获得后端开发实习",
+          "本科大三，计算机科学专业",
+          "我会Python和SQL，每周8小时，暂无实习经验",
+          "技能关键词: python, sql, 后端"
+        ],
+        "missing_info": [
+          "未明确描述个人优势或技能",
+          "未明确描述目标岗位或转行方向"
+        ],
+        "modality": "text",
+        "raw_output": "",
+        "requires_confirmation": false,
+        "source_id": "user_input",
+        "subject": "student",
+        "summary": "检测到技能: python, sql, 后端",
+        "verification": "user_confirmed"
+      },
+      {
+        "confidence": 0.6,
+        "evidence": [
+          {
+            "quote": "",
+            "source": "",
+            "source_id": "12ae2f145db54f5bb2c0b9906cca5694",
+            "subject": "job",
+            "verification": "unverified"
+          }
+        ],
+        "facts": [
+          "Backend intern",
+          "Required skills: Python SQL",
+          "Availability: 8 hours weekly",
+          "Training budget: 0 CNY",
+          "Anonymous synthetic job card"
+        ],
+        "missing_info": [
+          "PDF page 1 text was generated by local vision and requires source verification"
+        ],
+        "modality": "document",
+        "raw_output": "",
+        "requires_confirmation": true,
+        "source_id": "12ae2f145db54f5bb2c0b9906cca5694",
+        "subject": "job",
+        "summary": "Parsed 12ae2f145db54f5bb2c0b9906cca5694.pdf",
+        "verification": "unverified"
+      },
+      {
+        "confidence": 0.6,
+        "evidence": [
+          {
+            "quote": "",
+            "source": "",
+            "source_id": "358b0277e08d4fb1b8865f6dac961b3a",
+            "subject": "job",
+            "verification": "unverified"
+          }
+        ],
+        "facts": [
+          "[frame_0s] - 职业类型: Backend intern",
+          "所需技能: Python SQL",
+          "工作时间: 8小时/周",
+          "培训预算: 0 CNY",
+          "职业性质: 保密合成工作卡片"
+        ],
+        "missing_info": [
+          "Video sampled 1 frames; audio and unsampled intervals were not analysed"
+        ],
+        "modality": "video",
+        "raw_output": "",
+        "requires_confirmation": false,
+        "source_id": "358b0277e08d4fb1b8865f6dac961b3a",
+        "subject": "job",
+        "summary": "Analyzed 358b0277e08d4fb1b8865f6dac961b3a.mp4 (1/1 frames)",
+        "verification": "unverified"
+      }
+    ],
+    "plan_id": "5782e9d66c8e42b196403c4dcca0b3f1",
+    "profile": {
+      "constraints": {
+        "city": null,
+        "education_level": null,
+        "financial_budget_cny": null,
+        "preferred_industries": [],
+        "time_budget_hours_per_week": 8.0
+      },
+      "current_stage": "",
+      "education_stage": "",
+      "guidance": {
+        "answers": [
+          {
+            "evidence_id": "d8beaafeda94c187131b",
+            "field": "skills",
+            "origin": "interactive",
+            "prompt": "你已经掌握哪些可用于目标工作的技能？可举一个课程或项目中的例子，没有可回答无。",
+            "question_id": "f19b67018f39682303b7",
+            "raw_answer": "Python、SQL",
+            "round_number": 1,
+            "status": "known"
+          }
+        ],
+        "asked_keys": [
+          "f19b67018f39682303b7"
+        ],
+        "evidence": [
+          {
+            "evidence_id": "d3a4670fed50d7534024",
+            "excerpt": "获得后端开发实习",
+            "origin": "user_goal",
+            "source_id": "",
+            "subject": "student",
+            "verification": "user_confirmed"
+          },
+          {
+            "evidence_id": "065441021131d4939be1",
+            "excerpt": "本科大三，计算机科学专业。我会Python和SQL，每周8小时，暂无实习经验。",
+            "origin": "text_input",
+            "source_id": "",
+            "subject": "student",
+            "verification": "user_confirmed"
+          },
+          {
+            "evidence_id": "3939cb3ccd3eca0fa717",
+            "excerpt": "获得后端开发实习\n本科大三，计算机科学专业。我会Python和SQL，每周8小时，暂无实习经验。",
+            "origin": "text:0:evidence:0",
+            "source_id": "user_input",
+            "subject": "student",
+            "verification": "user_confirmed"
+          },
+          {
+            "evidence_id": "d8beaafeda94c187131b",
+            "excerpt": "Python、SQL",
+            "origin": "interactive:skills",
+            "source_id": "",
+            "subject": "student",
+            "verification": "user_confirmed"
+          }
+        ],
+        "fields": {
+          "constraints": {
+            "evidence_ids": [],
+            "resolved_evidence_ids": [],
+            "status": "missing",
+            "values": []
+          },
+          "education": {
+            "evidence_ids": [],
+            "resolved_evidence_ids": [],
+            "status": "missing",
+            "values": []
+          },
+          "interests": {
+            "evidence_ids": [],
+            "resolved_evidence_ids": [],
+            "status": "missing",
+            "values": []
+          },
+          "major": {
+            "evidence_ids": [
+              "065441021131d4939be1"
+            ],
+            "resolved_evidence_ids": [],
+            "status": "known",
+            "values": [
+              "计算机科学"
+            ]
+          },
+          "preference": {
+            "evidence_ids": [],
+            "resolved_evidence_ids": [],
+            "status": "missing",
+            "values": []
+          },
+          "skills": {
+            "evidence_ids": [
+              "d8beaafeda94c187131b"
+            ],
+            "resolved_evidence_ids": [
+              "d3a4670fed50d7534024",
+              "065441021131d4939be1",
+              "3939cb3ccd3eca0fa717",
+              "d8beaafeda94c187131b"
+            ],
+            "status": "known",
+            "values": [
+              "Python、SQL"
+            ]
+          },
+          "target_role": {
+            "evidence_ids": [
+              "d3a4670fed50d7534024"
+            ],
+            "resolved_evidence_ids": [],
+            "status": "known",
+            "values": [
+              "后端开发实习"
+            ]
+          },
+          "time_budget": {
+            "evidence_ids": [
+              "065441021131d4939be1"
+            ],
+            "resolved_evidence_ids": [],
+            "status": "known",
+            "values": [
+              "8"
+            ]
+          }
+        },
+        "model_used": true,
+        "stop_reason": "model_error"
+      },
+      "interests": [],
+      "main_constraints": [],
+      "major": "计算机科学",
+      "preference": "",
+      "skills": [
+        "Python",
+        "SQL"
+      ],
+      "strengths": [],
+      "target_role": "后端开发实习",
+      "weaknesses": []
+    },
+    "report_markdown": "# 职业发展规划\n\n以下内容为规划建议；知识来源和未核验边界列在报告末尾。\n\n目标岗位\n- 后端开发实习生（Python方向）\n- Python开发实习生\n\n能力差距\n- 缺少Web后端框架实战经验（如FastAPI/Flask/Django），仅有Python语言基础\n- 缺少数据库设计与ORM使用经验，SQL仅停留在会写查询的层面\n- 缺少REST API设计、鉴权、错误处理等工程化实践\n- 无实习/项目经历，简历缺少可验证的后端产出\n- 未确认城市、可实习时长、行业偏好与资金预算，投递范围不明确\n- Git/协作流程、Linux基础、简单部署等工程习惯未确认\n- 计算机基础（网络、操作系统、数据库原理）掌握程度未确认，面试八股需补\n\n行动路线\n30天目标：补齐后端最小技能栈并启动第一个可展示项目\n\n30天交付物：完成FastAPI或Flask官方教程，能独立写出带路由、参数校验、错误处理的API\n\n30天交付物：完成数据库设计练习：为项目设计3-5张表，使用SQLAlchemy或原生SQL实现CRUD\n\n30天交付物：项目仓库初始化：Git提交规范、README骨架、API文档草稿\n\n30天交付物：整理一份后端实习岗位JD样本（10条），标注高频要求\n\n30天指标：每周投入≥8小时，累计≥32小时\n\n30天指标：项目完成≥3个API端点并通过本地测试\n\n30天指标：Git提交≥8次，README包含运行说明\n\n30天指标：JD样本≥10条并完成关键词统计\n\n90天目标：完成可展示的后端项目并开始小批量投递\n\n90天交付物：项目MVP：用户注册登录（JWT或Session）、核心业务CRUD、分页、基础错误处理\n\n90天交付物：项目部署到可访问环境（如Render/Railway/云服务器），提供在线Demo或录屏\n\n90天交付物：简历初版：突出项目、技能、课程，量化项目产出\n\n90天交付物：投递记录表：公司、岗位、渠道、反馈状态\n\n90天指标：项目累计≥15个API端点，核心流程可演示\n\n90天指标：完成≥20次投递，获得≥3次面试或笔试机会\n\n90天指标：每周复盘1次，记录面试问题并归类\n\n90天指标：项目README包含架构说明与API文档\n\n180天目标：拿到后端开发实习offer并形成持续迭代能力\n\n180天交付物：项目迭代：加入缓存（Redis）、简单鉴权优化、单元测试\n\n180天交付物：计算机基础补强笔记：HTTP、数据库索引、事务、操作系统基础\n\n180天交付物：面试题库整理：≥50道后端高频题及自己的答案\n\n180天交付物：实习offer或明确的下一步补强计划\n\n180天指标：累计投递≥60次，面试/笔试≥8次\n\n180天指标：项目单元测试覆盖率≥50%（核心模块）\n\n180天指标：高频题整理≥50道并能口述\n\n180天指标：获得≥1个实习offer或进入≥2家公司终面\n\n下一行动\n- 确认可实习城市/远程偏好与可实习起止时间，回复后缩小投递范围\n- 本周内选定FastAPI或Flask其一，完成官方教程前3章\n- 创建项目仓库，写README骨架并完成第一次Git提交\n- 收集10条后端实习JD，统计高频技能关键词\n- 制定每周8小时时间表（建议4h项目+2h基础+2h投递复盘）\n\n当前约束\n每周时间：8小时\n\n限制：未提供\n\n学历：未提供\n\n兴趣：未提供\n\n偏好：未提供\n\n注意事项\n- 每周仅8小时，项目与基础补强并行可能导致进度偏慢，需严格按优先级执行\n- 无实习经验且项目未完成前投递回复率可能较低，需用项目产出弥补\n- 城市、行业偏好、资金预算未确认，投递范围与资源选择存在不确定性\n- 材料中的岗位卡片与知识库条目均未核验，不能作为真实招聘要求或薪资依据\n- 计算机基础掌握程度未确认，面试八股可能成为短板\n\n待确认信息\n- 你希望在哪个城市实习，或是否接受远程实习？\n- 你最早可开始实习的时间与每周可实习天数（与学习8小时不同）是多少？\n- 你是否有资金预算用于课程/云服务器/域名等？\n- 你更倾向哪个行业（如互联网、金融、企业服务）或暂无偏好？\n- 你的计算机基础课程（网络、操作系统、数据库）掌握程度如何？\n\n## 画像与约束\n\n- 专业：计算机科学\n- 已掌握技能：Python、SQL\n- 意向岗位：后端开发实习\n- 每周时间：8\n\n## 结构化规划\n\n### 目标岗位\n\n- 后端开发实习生（Python方向）\n- Python开发实习生\n\n### 能力差距\n\n- 缺少Web后端框架实战经验（如FastAPI/Flask/Django），仅有Python语言基础\n- 缺少数据库设计与ORM使用经验，SQL仅停留在会写查询的层面\n- 缺少REST API设计、鉴权、错误处理等工程化实践\n- 无实习/项目经历，简历缺少可验证的后端产出\n- 未确认城市、可实习时长、行业偏好与资金预算，投递范围不明确\n- Git/协作流程、Linux基础、简单部署等工程习惯未确认\n- 计算机基础（网络、操作系统、数据库原理）掌握程度未确认，面试八股需补\n\n### 学习资源\n\n- FastAPI官方文档（教程与高级用户指南）\n- Flask官方教程\n- SQLBolt（SQL练习）\n- MDN HTTP文档（REST与状态码）\n- 《Designing Data-Intensive Applications》（选读，建立系统设计意识）\n- Git官方文档与Pro Git\n- LeetCode（SQL与简单算法题，每周2-3题）\n- 知识库条目career-022后端开发工程师、career-026 Python开发工程师（未核验，仅作参考）\n\n### 下一行动\n\n- 确认可实习城市/远程偏好与可实习起止时间，回复后缩小投递范围\n- 本周内选定FastAPI或Flask其一，完成官方教程前3章\n- 创建项目仓库，写README骨架并完成第一次Git提交\n- 收集10条后端实习JD，统计高频技能关键词\n- 制定每周8小时时间表（建议4h项目+2h基础+2h投递复盘）\n\n### 风险提示\n\n- 每周仅8小时，项目与基础补强并行可能导致进度偏慢，需严格按优先级执行\n- 无实习经验且项目未完成前投递回复率可能较低，需用项目产出弥补\n- 城市、行业偏好、资金预算未确认，投递范围与资源选择存在不确定性\n- 材料中的岗位卡片与知识库条目均未核验，不能作为真实招聘要求或薪资依据\n- 计算机基础掌握程度未确认，面试八股可能成为短板\n\n### 待确认问题\n\n- 你希望在哪个城市实习，或是否接受远程实习？\n- 你最早可开始实习的时间与每周可实习天数（与学习8小时不同）是多少？\n- 你是否有资金预算用于课程/云服务器/域名等？\n- 你更倾向哪个行业（如互联网、金融、企业服务）或暂无偏好？\n- 你的计算机基础课程（网络、操作系统、数据库）掌握程度如何？\n\n### 30天路线\n\n补齐后端最小技能栈并启动第一个可展示项目\n\n- 交付物：完成FastAPI或Flask官方教程，能独立写出带路由、参数校验、错误处理的API\n- 交付物：完成数据库设计练习：为项目设计3-5张表，使用SQLAlchemy或原生SQL实现CRUD\n- 交付物：项目仓库初始化：Git提交规范、README骨架、API文档草稿\n- 交付物：整理一份后端实习岗位JD样本（10条），标注高频要求\n- 检查指标：每周投入≥8小时，累计≥32小时\n- 检查指标：项目完成≥3个API端点并通过本地测试\n- 检查指标：Git提交≥8次，README包含运行说明\n- 检查指标：JD样本≥10条并完成关键词统计\n\n### 90天路线\n\n完成可展示的后端项目并开始小批量投递\n\n- 交付物：项目MVP：用户注册登录（JWT或Session）、核心业务CRUD、分页、基础错误处理\n- 交付物：项目部署到可访问环境（如Render/Railway/云服务器），提供在线Demo或录屏\n- 交付物：简历初版：突出项目、技能、课程，量化项目产出\n- 交付物：投递记录表：公司、岗位、渠道、反馈状态\n- 检查指标：项目累计≥15个API端点，核心流程可演示\n- 检查指标：完成≥20次投递，获得≥3次面试或笔试机会\n- 检查指标：每周复盘1次，记录面试问题并归类\n- 检查指标：项目README包含架构说明与API文档\n\n### 180天路线\n\n拿到后端开发实习offer并形成持续迭代能力\n\n- 交付物：项目迭代：加入缓存（Redis）、简单鉴权优化、单元测试\n- 交付物：计算机基础补强笔记：HTTP、数据库索引、事务、操作系统基础\n- 交付物：面试题库整理：≥50道后端高频题及自己的答案\n- 交付物：实习offer或明确的下一步补强计划\n- 检查指标：累计投递≥60次，面试/笔试≥8次\n- 检查指标：项目单元测试覆盖率≥50%（核心模块）\n- 检查指标：高频题整理≥50道并能口述\n- 检查指标：获得≥1个实习offer或进入≥2家公司终面\n\n## 职业关系图\n\n```mermaid\nflowchart TD\n    n0[\"职业发展规划（建议）\"]\n    n1[\"专业：计算机科学\"]\n    n2[\"已掌握技能：Python、SQL\"]\n    n3[\"意向岗位：后端开发实习\"]\n    n4[\"每周时间：8\"]\n    n5[\"后端开发实习生（Python方向）\"]\n    n6[\"Python开发实习生\"]\n    n7[\"缺少Web后端框架实战经验（如FastAPI/Flask/Django），仅有Python语言基础\"]\n    n8[\"缺少数据库设计与ORM使用经验，SQL仅停留在会写查询的层面\"]\n    n9[\"缺少REST API设计、鉴权、错误处理等工程化实践\"]\n    n10[\"无实习/项目经历，简历缺少可验证的后端产出\"]\n    n11[\"未确认城市、可实习时长、行业偏好与资金预算，投递范围不明确\"]\n    n12[\"Git/协作流程、Linux基础、简单部署等工程习惯未确认\"]\n    n13[\"计算机基础（网络、操作系统、数据库原理）掌握程度未确认，面试八股需补\"]\n    n14[\"FastAPI官方文档（教程与高级用户指南）\"]\n    n15[\"Flask官方教程\"]\n    n16[\"SQLBolt（SQL练习）\"]\n    n17[\"MDN HTTP文档（REST与状态码）\"]\n    n18[\"《Designing Data-Intensive Applications》（选读，建立系统设计意识）\"]\n    n19[\"Git官方文档与Pro Git\"]\n    n20[\"LeetCode（SQL与简单算法题，每周2-3题）\"]\n    n21[\"知识库条目career-022后端开发工程师、career-026 Python开发工程师（未核验，仅作参考）\"]\n    n22[\"确认可实习城市/远程偏好与可实习起止时间，回复后缩小投递范围\"]\n    n23[\"本周内选定FastAPI或Flask其一，完成官方教程前3章\"]\n    n24[\"创建项目仓库，写README骨架并完成第一次Git提交\"]\n    n25[\"收集10条后端实习JD，统计高频技能关键词\"]\n    n26[\"制定每周8小时时间表（建议4h项目+2h基础+2h投递复盘）\"]\n    n27[\"每周仅8小时，项目与基础补强并行可能导致进度偏慢，需严格按优先级执行\"]\n    n28[\"无实习经验且项目未完成前投递回复率可能较低，需用项目产出弥补\"]\n    n29[\"城市、行业偏好、资金预算未确认，投递范围与资源选择存在不确定性\"]\n    n30[\"材料中的岗位卡片与知识库条目均未核验，不能作为真实招聘要求或薪资依据\"]\n    n31[\"计算机基础掌握程度未确认，面试八股可能成为短板\"]\n    n32[\"你希望在哪个城市实习，或是否接受远程实习？\"]\n    n33[\"你最早可开始实习的时间与每周可实习天数（与学习8小时不同）是多少？\"]\n    n34[\"你是否有资金预算用于课程/云服务器/域名等？\"]\n    n35[\"你更倾向哪个行业（如互联网、金融、企业服务）或暂无偏好？\"]\n    n36[\"你的计算机基础课程（网络、操作系统、数据库）掌握程度如何？\"]\n    n37[\"30天：补齐后端最小技能栈并启动第一个可展示项目\"]\n    n38[\"完成FastAPI或Flask官方教程，能独立写出带路由、参数校验、错误处理的API\"]\n    n39[\"完成数据库设计练习：为项目设计3-5张表，使用SQLAlchemy或原生SQL实现CRUD\"]\n    n40[\"项目仓库初始化：Git提交规范、README骨架、API文档草稿\"]\n    n41[\"整理一份后端实习岗位JD样本（10条），标注高频要求\"]\n    n42[\"每周投入≥8小时，累计≥32小时\"]\n    n43[\"项目完成≥3个API端点并通过本地测试\"]\n    n44[\"Git提交≥8次，README包含运行说明\"]\n    n45[\"JD样本≥10条并完成关键词统计\"]\n    n46[\"90天：完成可展示的后端项目并开始小批量投递\"]\n    n47[\"项目MVP：用户注册登录（JWT或Session）、核心业务CRUD、分页、基础错误处理\"]\n    n48[\"项目部署到可访问环境（如Render/Railway/云服务器），提供在线Demo或录屏\"]\n    n49[\"简历初版：突出项目、技能、课程，量化项目产出\"]\n    n50[\"投递记录表：公司、岗位、渠道、反馈状态\"]\n    n51[\"项目累计≥15个API端点，核心流程可演示\"]\n    n52[\"完成≥20次投递，获得≥3次面试或笔试机会\"]\n    n53[\"每周复盘1次，记录面试问题并归类\"]\n    n54[\"项目README包含架构说明与API文档\"]\n    n55[\"180天：拿到后端开发实习offer并形成持续迭代能力\"]\n    n56[\"项目迭代：加入缓存（Redis）、简单鉴权优化、单元测试\"]\n    n57[\"计算机基础补强笔记：HTTP、数据库索引、事务、操作系统基础\"]\n    n58[\"面试题库整理：≥50道后端高频题及自己的答案\"]\n    n59[\"实习offer或明确的下一步补强计划\"]\n    n60[\"累计投递≥60次，面试/笔试≥8次\"]\n    n61[\"项目单元测试覆盖率≥50%（核心模块）\"]\n    n62[\"高频题整理≥50道并能口述\"]\n    n63[\"获得≥1个实习offer或进入≥2家公司终面\"]\n    n64[\"计算机视觉算法工程师\"]\n    n65[\"Python\"]\n    n66[\"PyTorch/TensorFlow\"]\n    n67[\"目标检测\"]\n    n68[\"图像分割\"]\n    n69[\"OpenCV\"]\n    n70[\"模型部署\"]\n    n71[\"Transformer\"]\n    n72[\"特征提取\"]\n    n73[\"CS231n课程\"]\n    n74[\"深度学习计算机视觉\"]\n    n75[\"PapersWithCode\"]\n    n76[\"Kaggle竞赛\"]\n    n77[\"计算机科学 -#62; CV算法\"]\n    n78[\"数学/统计 -#62; 计算机视觉\"]\n    n79[\"一线城市应届约20k-40k/月（竞争激烈）\"]\n    n80[\"后端开发工程师\"]\n    n81[\"Python/Java/Go\"]\n    n82[\"数据库\"]\n    n83[\"REST API\"]\n    n84[\"缓存\"]\n    n85[\"系统设计\"]\n    n86[\"MDN HTTP\"]\n    n87[\"Designing Data-Intensive Applications\"]\n    n88[\"后端项目实战\"]\n    n89[\"计算机专业 -#62; 后端开发\"]\n    n90[\"测试开发 -#62; 后端开发\"]\n    n91[\"一线城市应届约12k-25k/月\"]\n    n92[\"Python开发工程师\"]\n    n93[\"FastAPI/Django\"]\n    n94[\"SQL\"]\n    n95[\"自动化\"]\n    n96[\"Linux\"]\n    n97[\"Python官方教程\"]\n    n98[\"FastAPI文档\"]\n    n99[\"Django教程\"]\n    n100[\"数据分析 -#62; Python开发\"]\n    n101[\"自动化测试 -#62; Python开发\"]\n    n102[\"一线城市应届约11k-23k/月\"]\n    n103[\"数据分析师\"]\n    n104[\"统计学\"]\n    n105[\"可视化\"]\n    n106[\"A/B测试\"]\n    n107[\"R\"]\n    n108[\"数据建模\"]\n    n109[\"Power BI/Tableau\"]\n    n110[\"机器学习\"]\n    n111[\"SQLBolt\"]\n    n112[\"Tableau Public\"]\n    n113[\"Kaggle 数据分析项目\"]\n    n114[\"统计学\"]\n    n115[\"数学\"]\n    n116[\"计算机科学\"]\n    n117[\"数据科学\"]\n    n118[\"信息管理\"]\n    n119[\"运营 -#62; 数据分析\"]\n    n120[\"BI工程师 -#62; 数据分析师\"]\n    n121[\"助理数据分析师 -#62; 数据分析师 -#62; 高级数据分析师/数据科学家\"]\n    n122[\"一线城市应届约10k-20k/月\"]\n    n0 -->|\"画像信息\"| n1\n    n0 -->|\"画像信息\"| n2\n    n0 -->|\"画像信息\"| n3\n    n0 -->|\"画像信息\"| n4\n    n0 -->|\"建议目标\"| n5\n    n0 -->|\"建议目标\"| n6\n    n0 -->|\"待补足能力\"| n7\n    n0 -->|\"待补足能力\"| n8\n    n0 -->|\"待补足能力\"| n9\n    n0 -->|\"待补足能力\"| n10\n    n0 -->|\"待补足能力\"| n11\n    n0 -->|\"待补足能力\"| n12\n    n0 -->|\"待补足能力\"| n13\n    n0 -->|\"建议资源\"| n14\n    n0 -->|\"建议资源\"| n15\n    n0 -->|\"建议资源\"| n16\n    n0 -->|\"建议资源\"| n17\n    n0 -->|\"建议资源\"| n18\n    n0 -->|\"建议资源\"| n19\n    n0 -->|\"建议资源\"| n20\n    n0 -->|\"建议资源\"| n21\n    n0 -->|\"建议行动\"| n22\n    n0 -->|\"建议行动\"| n23\n    n0 -->|\"建议行动\"| n24\n    n0 -->|\"建议行动\"| n25\n    n0 -->|\"建议行动\"| n26\n    n0 -->|\"风险提示\"| n27\n    n0 -->|\"风险提示\"| n28\n    n0 -->|\"风险提示\"| n29\n    n0 -->|\"风险提示\"| n30\n    n0 -->|\"风险提示\"| n31\n    n0 -->|\"待确认\"| n32\n    n0 -->|\"待确认\"| n33\n    n0 -->|\"待确认\"| n34\n    n0 -->|\"待确认\"| n35\n    n0 -->|\"待确认\"| n36\n    n0 -->|\"建议阶段\"| n37\n    n37 -->|\"建议交付物\"| n38\n    n37 -->|\"建议交付物\"| n39\n    n37 -->|\"建议交付物\"| n40\n    n37 -->|\"建议交付物\"| n41\n    n37 -->|\"检查指标\"| n42\n    n37 -->|\"检查指标\"| n43\n    n37 -->|\"检查指标\"| n44\n    n37 -->|\"检查指标\"| n45\n    n0 -->|\"建议阶段\"| n46\n    n46 -->|\"建议交付物\"| n47\n    n46 -->|\"建议交付物\"| n48\n    n46 -->|\"建议交付物\"| n49\n    n46 -->|\"建议交付物\"| n50\n    n46 -->|\"检查指标\"| n51\n    n46 -->|\"检查指标\"| n52\n    n46 -->|\"检查指标\"| n53\n    n46 -->|\"检查指标\"| n54\n    n0 -->|\"建议阶段\"| n55\n    n55 -->|\"建议交付物\"| n56\n    n55 -->|\"建议交付物\"| n57\n    n55 -->|\"建议交付物\"| n58\n    n55 -->|\"建议交付物\"| n59\n    n55 -->|\"检查指标\"| n60\n    n55 -->|\"检查指标\"| n61\n    n55 -->|\"检查指标\"| n62\n    n55 -->|\"检查指标\"| n63\n    n0 -->|\"检索命中（未逐项核实）\"| n64\n    n64 -->|\"条目所列技能\"| n65\n    n64 -->|\"条目所列技能\"| n66\n    n64 -->|\"条目所列技能\"| n67\n    n64 -->|\"条目所列技能\"| n68\n    n64 -->|\"条目所列技能\"| n69\n    n64 -->|\"条目所列技能\"| n70\n    n64 -->|\"条目所列技能\"| n71\n    n64 -->|\"条目所列技能\"| n72\n    n64 -->|\"条目所列资源\"| n73\n    n64 -->|\"条目所列资源\"| n74\n    n64 -->|\"条目所列资源\"| n75\n    n64 -->|\"条目所列资源\"| n76\n    n64 -->|\"条目所列发展路径\"| n77\n    n64 -->|\"条目所列发展路径\"| n78\n    n64 -->|\"条目薪资参考\"| n79\n    n0 -->|\"检索命中（未逐项核实）\"| n80\n    n80 -->|\"条目所列技能\"| n81\n    n80 -->|\"条目所列技能\"| n82\n    n80 -->|\"条目所列技能\"| n83\n    n80 -->|\"条目所列技能\"| n84\n    n80 -->|\"条目所列技能\"| n85\n    n80 -->|\"条目所列资源\"| n86\n    n80 -->|\"条目所列资源\"| n87\n    n80 -->|\"条目所列资源\"| n88\n    n80 -->|\"条目所列发展路径\"| n89\n    n80 -->|\"条目所列发展路径\"| n90\n    n80 -->|\"条目薪资参考\"| n91\n    n0 -->|\"检索命中（未逐项核实）\"| n92\n    n92 -->|\"条目所列技能\"| n65\n    n92 -->|\"条目所列技能\"| n93\n    n92 -->|\"条目所列技能\"| n94\n    n92 -->|\"条目所列技能\"| n95\n    n92 -->|\"条目所列技能\"| n96\n    n92 -->|\"条目所列资源\"| n97\n    n92 -->|\"条目所列资源\"| n98\n    n92 -->|\"条目所列资源\"| n99\n    n92 -->|\"条目所列发展路径\"| n100\n    n92 -->|\"条目所列发展路径\"| n101\n    n92 -->|\"条目薪资参考\"| n102\n    n0 -->|\"检索命中（未逐项核实）\"| n103\n    n103 -->|\"条目所列技能\"| n94\n    n103 -->|\"条目所列技能\"| n65\n    n103 -->|\"条目所列技能\"| n104\n    n103 -->|\"条目所列技能\"| n105\n    n103 -->|\"条目所列技能\"| n106\n    n103 -->|\"条目所列技能\"| n107\n    n103 -->|\"条目所列技能\"| n108\n    n103 -->|\"条目所列技能\"| n109\n    n103 -->|\"条目所列技能\"| n110\n    n103 -->|\"条目所列资源\"| n111\n    n103 -->|\"条目所列资源\"| n112\n    n103 -->|\"条目所列资源\"| n113\n    n103 -->|\"条目所列专业\"| n114\n    n103 -->|\"条目所列专业\"| n115\n    n103 -->|\"条目所列专业\"| n116\n    n103 -->|\"条目所列专业\"| n117\n    n103 -->|\"条目所列专业\"| n118\n    n103 -->|\"条目所列发展路径\"| n119\n    n103 -->|\"条目所列发展路径\"| n120\n    n103 -->|\"条目所列发展路径\"| n121\n    n103 -->|\"条目薪资参考\"| n122\n```\n\n## 来源与核验边界\n\n- p_e989c7b9dde65df5d4d5：plan:structured_output；模型规划建议（非已核实事实）\n- p_ffe3a81cfd9f1e398e95：guidance:major:065441021131d4939be1；有原文证据的画像信息（未经外部核验）\n- p_8f4c7b80d44b627581f0：guidance:skills:d8beaafeda94c187131b；有原文证据的画像信息（未经外部核验）\n- p_a8018ad274ddf88c3d2a：guidance:target_role:d3a4670fed50d7534024；有原文证据的画像信息（未经外部核验）\n- p_94633c336380aeade7a0：guidance:time_budget:065441021131d4939be1；有原文证据的画像信息（未经外部核验）\n- p_28698527cf5c47f53753：plan:target_roles:0；模型规划建议（非已核实事实）\n- p_9eb11832513b231c456b：plan:target_roles:1；模型规划建议（非已核实事实）\n- p_b720bc02242e51291610：plan:gap_analysis:0；模型规划建议（非已核实事实）\n- p_c307158317aeceec1e2f：plan:gap_analysis:1；模型规划建议（非已核实事实）\n- p_5a4951e366a75d1db1f5：plan:gap_analysis:2；模型规划建议（非已核实事实）\n- p_3e2b45352fdc48ec077f：plan:gap_analysis:3；模型规划建议（非已核实事实）\n- p_ac2da2e00ee13472cadf：plan:gap_analysis:4；模型规划建议（非已核实事实）\n- p_f95bbb7d49ea7ee5b057：plan:gap_analysis:5；模型规划建议（非已核实事实）\n- p_912204fae30998c2de9e：plan:gap_analysis:6；模型规划建议（非已核实事实）\n- p_faac4ed326ab48ccfcab：plan:learning_resources:0；模型规划建议（非已核实事实）\n- p_87f8e02c3b943860a741：plan:learning_resources:1；模型规划建议（非已核实事实）\n- p_5b7c05dbc51029797613：plan:learning_resources:2；模型规划建议（非已核实事实）\n- p_e52797d4265705f93d75：plan:learning_resources:3；模型规划建议（非已核实事实）\n- p_743ae2d5ea13c6ac588d：plan:learning_resources:4；模型规划建议（非已核实事实）\n- p_68c510abc31f929d9f92：plan:learning_resources:5；模型规划建议（非已核实事实）\n- p_eae9b8702df8ac575428：plan:learning_resources:6；模型规划建议（非已核实事实）\n- p_f477d1e04e9dce2800e1：plan:learning_resources:7；模型规划建议（非已核实事实）\n- p_4ff192291a0c390bd67a：plan:next_actions:0；模型规划建议（非已核实事实）\n- p_32184ffe77af854976a2：plan:next_actions:1；模型规划建议（非已核实事实）\n- p_282fb14e817f9d5dc225：plan:next_actions:2；模型规划建议（非已核实事实）\n- p_aa23de04feed255c6ae5：plan:next_actions:3；模型规划建议（非已核实事实）\n- p_414b06ba4cc11f362870：plan:next_actions:4；模型规划建议（非已核实事实）\n- p_0c66dbd68e3a75ec2ce2：plan:risk_flags:0；模型规划建议（非已核实事实）\n- p_7bbdbcfac03e2e3a3156：plan:risk_flags:1；模型规划建议（非已核实事实）\n- p_64812c86d9d6f3a75565：plan:risk_flags:2；模型规划建议（非已核实事实）\n- p_337910be2acb8bca9338：plan:risk_flags:3；模型规划建议（非已核实事实）\n- p_2c1856353e76c1b4e868：plan:risk_flags:4；模型规划建议（非已核实事实）\n- p_b7e8de80b1ecf800918a：plan:follow_up_questions:0；模型规划建议（非已核实事实）\n- p_11581d12271b87c37c18：plan:follow_up_questions:1；模型规划建议（非已核实事实）\n- p_22f5fff724573a5c3424：plan:follow_up_questions:2；模型规划建议（非已核实事实）\n- p_0f3467323c99694b7a17：plan:follow_up_questions:3；模型规划建议（非已核实事实）\n- p_28221c399b546834e556：plan:follow_up_questions:4；模型规划建议（非已核实事实）\n- p_40ac2b365bb53ab50e54：plan:roadmap:30d；模型规划建议（非已核实事实）\n- p_04a263b86c5332af1646：plan:roadmap:30d:deliverables:0；模型规划建议（非已核实事实）\n- p_2a4ed275a0c78f0fc6d2：plan:roadmap:30d:deliverables:1；模型规划建议（非已核实事实）\n- p_cced6e5bd5bb20027923：plan:roadmap:30d:deliverables:2；模型规划建议（非已核实事实）\n- p_85e040bcd93f05a8122d：plan:roadmap:30d:deliverables:3；模型规划建议（非已核实事实）\n- p_15e67bda57bc8e8db3fa：plan:roadmap:30d:metrics:0；模型规划建议（非已核实事实）\n- p_b7d5feb69dafdf441211：plan:roadmap:30d:metrics:1；模型规划建议（非已核实事实）\n- p_9ecff4828d6475917e57：plan:roadmap:30d:metrics:2；模型规划建议（非已核实事实）\n- p_e2947834005885fa5ca2：plan:roadmap:30d:metrics:3；模型规划建议（非已核实事实）\n- p_bdaabae9ad1f726a66b1：plan:roadmap:90d；模型规划建议（非已核实事实）\n- p_261860d511ec26a23562：plan:roadmap:90d:deliverables:0；模型规划建议（非已核实事实）\n- p_27c81ee61fe71a9cebea：plan:roadmap:90d:deliverables:1；模型规划建议（非已核实事实）\n- p_eff9a50d4ba936e4f790：plan:roadmap:90d:deliverables:2；模型规划建议（非已核实事实）\n- p_f32b04b31f2971e637a2：plan:roadmap:90d:deliverables:3；模型规划建议（非已核实事实）\n- p_6fe0e552c96c06661647：plan:roadmap:90d:metrics:0；模型规划建议（非已核实事实）\n- p_3a140bb98f9d963cffd8：plan:roadmap:90d:metrics:1；模型规划建议（非已核实事实）\n- p_b6388fb6139c1c65c2de：plan:roadmap:90d:metrics:2；模型规划建议（非已核实事实）\n- p_6274db8ae752e3d16707：plan:roadmap:90d:metrics:3；模型规划建议（非已核实事实）\n- p_1aade88e45925aa73382：plan:roadmap:180d；模型规划建议（非已核实事实）\n- p_55dac6afee19beb08e71：plan:roadmap:180d:deliverables:0；模型规划建议（非已核实事实）\n- p_44f8a0fc216f7afca2f9：plan:roadmap:180d:deliverables:1；模型规划建议（非已核实事实）\n- p_a9fb4789d0071bfff402：plan:roadmap:180d:deliverables:2；模型规划建议（非已核实事实）\n- p_d57bece85e9ceefcbe9d：plan:roadmap:180d:deliverables:3；模型规划建议（非已核实事实）\n- p_31f204b1c116a6f5f6f4：plan:roadmap:180d:metrics:0；模型规划建议（非已核实事实）\n- p_12c93967dc39509b6ef7：plan:roadmap:180d:metrics:1；模型规划建议（非已核实事实）\n- p_f0f05054ce2bed9a02fc：plan:roadmap:180d:metrics:2；模型规划建议（非已核实事实）\n- p_5bac5ccd976ff8114e7a：plan:roadmap:180d:metrics:3；模型规划建议（非已核实事实）\n- p_6347056023bf2f2d4293：career-013；知识库条目（缺少来源且未逐项核实）\n- p_92b0810742e5c79e4660：career-022；知识库条目（缺少来源且未逐项核实）\n- p_2f9eea233ea652375040：career-026；知识库条目（缺少来源且未逐项核实）\n- p_c5f43430a8b35101a038：career-002；知识库来源线索（字段未逐项核实）\n  - 百融云创及杭州顺网科技 2025 届招聘信息\n\n### 图谱对应记录\n\n- 节点 n_908a9ebdfe439a9ac71e：职业发展规划（建议）；依据 p_e989c7b9dde65df5d4d5\n- 节点 n_60da73d3493dfc052d3a：专业：计算机科学；依据 p_ffe3a81cfd9f1e398e95\n- 节点 n_7d9c9108007aabd6fef2：已掌握技能：Python、SQL；依据 p_8f4c7b80d44b627581f0\n- 节点 n_0e17e3b9ba469c62e9a4：意向岗位：后端开发实习；依据 p_a8018ad274ddf88c3d2a\n- 节点 n_ef58eb9d101fde6d96bf：每周时间：8；依据 p_94633c336380aeade7a0\n- 节点 n_cd818e2ab5144097e4ab：后端开发实习生（Python方向）；依据 p_28698527cf5c47f53753\n- 节点 n_b538f8e85b0ee1da4e8f：Python开发实习生；依据 p_9eb11832513b231c456b\n- 节点 n_cad024b6c0d0603374df：缺少Web后端框架实战经验（如FastAPI/Flask/Django），仅有Python语言基础；依据 p_b720bc02242e51291610\n- 节点 n_c88134fe5e1c3efe5bca：缺少数据库设计与ORM使用经验，SQL仅停留在会写查询的层面；依据 p_c307158317aeceec1e2f\n- 节点 n_db74a241c38594f60eca：缺少REST API设计、鉴权、错误处理等工程化实践；依据 p_5a4951e366a75d1db1f5\n- 节点 n_08123555f0b54117c4be：无实习/项目经历，简历缺少可验证的后端产出；依据 p_3e2b45352fdc48ec077f\n- 节点 n_b88b78e13a296c3d9d45：未确认城市、可实习时长、行业偏好与资金预算，投递范围不明确；依据 p_ac2da2e00ee13472cadf\n- 节点 n_03605e6045d54a6ed825：Git/协作流程、Linux基础、简单部署等工程习惯未确认；依据 p_f95bbb7d49ea7ee5b057\n- 节点 n_77d55d41256a5a91a9c2：计算机基础（网络、操作系统、数据库原理）掌握程度未确认，面试八股需补；依据 p_912204fae30998c2de9e\n- 节点 n_9a6a8eda6323d31bba1c：FastAPI官方文档（教程与高级用户指南）；依据 p_faac4ed326ab48ccfcab\n- 节点 n_82deed5b7a533e2bbd32：Flask官方教程；依据 p_87f8e02c3b943860a741\n- 节点 n_03cd88f95e99099867e9：SQLBolt（SQL练习）；依据 p_5b7c05dbc51029797613\n- 节点 n_7237b55fd5bc4cc165e2：MDN HTTP文档（REST与状态码）；依据 p_e52797d4265705f93d75\n- 节点 n_00b0d1efdf9baa07728b：《Designing Data-Intensive Applications》（选读，建立系统设计意识）；依据 p_743ae2d5ea13c6ac588d\n- 节点 n_62c3f07e6f85bcded1f0：Git官方文档与Pro Git；依据 p_68c510abc31f929d9f92\n- 节点 n_627f6e8cab8cc3beca39：LeetCode（SQL与简单算法题，每周2-3题）；依据 p_eae9b8702df8ac575428\n- 节点 n_7d6892b2856f0e0d09e7：知识库条目career-022后端开发工程师、career-026 Python开发工程师（未核验，仅作参考）；依据 p_f477d1e04e9dce2800e1\n- 节点 n_04e4d14807275e261e09：确认可实习城市/远程偏好与可实习起止时间，回复后缩小投递范围；依据 p_4ff192291a0c390bd67a\n- 节点 n_bd9547c6a4668a0f0864：本周内选定FastAPI或Flask其一，完成官方教程前3章；依据 p_32184ffe77af854976a2\n- 节点 n_436778bae65f46ee21af：创建项目仓库，写README骨架并完成第一次Git提交；依据 p_282fb14e817f9d5dc225\n- 节点 n_dc63ef04be289167b92a：收集10条后端实习JD，统计高频技能关键词；依据 p_aa23de04feed255c6ae5\n- 节点 n_05d6e8908286b17db261：制定每周8小时时间表（建议4h项目+2h基础+2h投递复盘）；依据 p_414b06ba4cc11f362870\n- 节点 n_d3061b11f995e9f50de1：每周仅8小时，项目与基础补强并行可能导致进度偏慢，需严格按优先级执行；依据 p_0c66dbd68e3a75ec2ce2\n- 节点 n_f1d2a7bd80ca96afd71e：无实习经验且项目未完成前投递回复率可能较低，需用项目产出弥补；依据 p_7bbdbcfac03e2e3a3156\n- 节点 n_1cb3546ba80d09d83070：城市、行业偏好、资金预算未确认，投递范围与资源选择存在不确定性；依据 p_64812c86d9d6f3a75565\n- 节点 n_978de1be968b9aa7a4f4：材料中的岗位卡片与知识库条目均未核验，不能作为真实招聘要求或薪资依据；依据 p_337910be2acb8bca9338\n- 节点 n_82151cd23d4eba51bb71：计算机基础掌握程度未确认，面试八股可能成为短板；依据 p_2c1856353e76c1b4e868\n- 节点 n_b7d345cbfa795a65e326：你希望在哪个城市实习，或是否接受远程实习？；依据 p_b7e8de80b1ecf800918a\n- 节点 n_526f9a037e661f72b4de：你最早可开始实习的时间与每周可实习天数（与学习8小时不同）是多少？；依据 p_11581d12271b87c37c18\n- 节点 n_f720e74b492ea3c0a95d：你是否有资金预算用于课程/云服务器/域名等？；依据 p_22f5fff724573a5c3424\n- 节点 n_bf246e5a809e4a7aa4c3：你更倾向哪个行业（如互联网、金融、企业服务）或暂无偏好？；依据 p_0f3467323c99694b7a17\n- 节点 n_96be874f9b27b7862c31：你的计算机基础课程（网络、操作系统、数据库）掌握程度如何？；依据 p_28221c399b546834e556\n- 节点 n_470509c0163371e9ea17：30天：补齐后端最小技能栈并启动第一个可展示项目；依据 p_40ac2b365bb53ab50e54\n- 节点 n_a0b91f33c543deb39822：完成FastAPI或Flask官方教程，能独立写出带路由、参数校验、错误处理的API；依据 p_04a263b86c5332af1646\n- 节点 n_6bf2ef85d6cc8302c7e5：完成数据库设计练习：为项目设计3-5张表，使用SQLAlchemy或原生SQL实现CRUD；依据 p_2a4ed275a0c78f0fc6d2\n- 节点 n_ba88fd59549e49a3aed1：项目仓库初始化：Git提交规范、README骨架、API文档草稿；依据 p_cced6e5bd5bb20027923\n- 节点 n_375d460940d8fd6c473e：整理一份后端实习岗位JD样本（10条），标注高频要求；依据 p_85e040bcd93f05a8122d\n- 节点 n_24f531351e454b18ce5e：每周投入≥8小时，累计≥32小时；依据 p_15e67bda57bc8e8db3fa\n- 节点 n_b49c301ce4c20cfac289：项目完成≥3个API端点并通过本地测试；依据 p_b7d5feb69dafdf441211\n- 节点 n_fde564a9d49da43ba9a5：Git提交≥8次，README包含运行说明；依据 p_9ecff4828d6475917e57\n- 节点 n_ca29ac7f75ca99723d17：JD样本≥10条并完成关键词统计；依据 p_e2947834005885fa5ca2\n- 节点 n_4256b0a227dae1301823：90天：完成可展示的后端项目并开始小批量投递；依据 p_bdaabae9ad1f726a66b1\n- 节点 n_79b6d2fbf759c3025d44：项目MVP：用户注册登录（JWT或Session）、核心业务CRUD、分页、基础错误处理；依据 p_261860d511ec26a23562\n- 节点 n_5bd4f55bcb9e031e6700：项目部署到可访问环境（如Render/Railway/云服务器），提供在线Demo或录屏；依据 p_27c81ee61fe71a9cebea\n- 节点 n_003cd9a4eb2a16f6dff8：简历初版：突出项目、技能、课程，量化项目产出；依据 p_eff9a50d4ba936e4f790\n- 节点 n_084ee3ba16c48a05fc0b：投递记录表：公司、岗位、渠道、反馈状态；依据 p_f32b04b31f2971e637a2\n- 节点 n_b615be6c6660c1d5fa53：项目累计≥15个API端点，核心流程可演示；依据 p_6fe0e552c96c06661647\n- 节点 n_dfa9c863f506db7d4e15：完成≥20次投递，获得≥3次面试或笔试机会；依据 p_3a140bb98f9d963cffd8\n- 节点 n_fa67e1f0b81672417c04：每周复盘1次，记录面试问题并归类；依据 p_b6388fb6139c1c65c2de\n- 节点 n_c2a6e85f85ca59f72a11：项目README包含架构说明与API文档；依据 p_6274db8ae752e3d16707\n- 节点 n_f617c4a2932a8b29a08e：180天：拿到后端开发实习offer并形成持续迭代能力；依据 p_1aade88e45925aa73382\n- 节点 n_eef9b8dbc40146226f4e：项目迭代：加入缓存（Redis）、简单鉴权优化、单元测试；依据 p_55dac6afee19beb08e71\n- 节点 n_11dd37d6328702a02d2b：计算机基础补强笔记：HTTP、数据库索引、事务、操作系统基础；依据 p_44f8a0fc216f7afca2f9\n- 节点 n_f16d49542b2f05bc1764：面试题库整理：≥50道后端高频题及自己的答案；依据 p_a9fb4789d0071bfff402\n- 节点 n_a4fd2c5f5d00a569e958：实习offer或明确的下一步补强计划；依据 p_d57bece85e9ceefcbe9d\n- 节点 n_5f009437188024fe36a9：累计投递≥60次，面试/笔试≥8次；依据 p_31f204b1c116a6f5f6f4\n- 节点 n_744c8cc3631a7a58578e：项目单元测试覆盖率≥50%（核心模块）；依据 p_12c93967dc39509b6ef7\n- 节点 n_f64d5670f9e332daab13：高频题整理≥50道并能口述；依据 p_f0f05054ce2bed9a02fc\n- 节点 n_0e80bcfd8037287aac9e：获得≥1个实习offer或进入≥2家公司终面；依据 p_5bac5ccd976ff8114e7a\n- 节点 n_0f0a55c94d14a73bb78b：计算机视觉算法工程师；依据 p_6347056023bf2f2d4293\n- 节点 n_ac025e3685de3610746c：Python；依据 p_6347056023bf2f2d4293、p_2f9eea233ea652375040、p_c5f43430a8b35101a038\n- 节点 n_ec8ff879d05b8c327752：PyTorch/TensorFlow；依据 p_6347056023bf2f2d4293\n- 节点 n_a45ac728229cf829973d：目标检测；依据 p_6347056023bf2f2d4293\n- 节点 n_2cdcb07d471ccc9b381b：图像分割；依据 p_6347056023bf2f2d4293\n- 节点 n_6e84d5b5b232409cf2e6：OpenCV；依据 p_6347056023bf2f2d4293\n- 节点 n_bac29d6c00e039cfec10：模型部署；依据 p_6347056023bf2f2d4293\n- 节点 n_33bc85bc0a994da129c1：Transformer；依据 p_6347056023bf2f2d4293\n- 节点 n_e1d3a01f38d183973620：特征提取；依据 p_6347056023bf2f2d4293\n- 节点 n_bf3789156af94316d90f：CS231n课程；依据 p_6347056023bf2f2d4293\n- 节点 n_b2f8270004d1119831a5：深度学习计算机视觉；依据 p_6347056023bf2f2d4293\n- 节点 n_7e55325623b68baca8fa：PapersWithCode；依据 p_6347056023bf2f2d4293\n- 节点 n_882c529347a06cc43b16：Kaggle竞赛；依据 p_6347056023bf2f2d4293\n- 节点 n_e4cb4f212de9cb354e35：计算机科学 -&gt; CV算法；依据 p_6347056023bf2f2d4293\n- 节点 n_8c5a2e7f40e3fc246712：数学/统计 -&gt; 计算机视觉；依据 p_6347056023bf2f2d4293\n- 节点 n_491a7f21697d009a3f8c：一线城市应届约20k-40k/月（竞争激烈）；依据 p_6347056023bf2f2d4293\n- 节点 n_99f1311efdb3551d45c4：后端开发工程师；依据 p_92b0810742e5c79e4660\n- 节点 n_95830b96c45372c0b2d8：Python/Java/Go；依据 p_92b0810742e5c79e4660\n- 节点 n_90613116bad5230c3ffa：数据库；依据 p_92b0810742e5c79e4660\n- 节点 n_78bd2419b575bc521ecd：REST API；依据 p_92b0810742e5c79e4660\n- 节点 n_25eab3f4aec618cc7e8d：缓存；依据 p_92b0810742e5c79e4660\n- 节点 n_f5f0b70a57c725d33dff：系统设计；依据 p_92b0810742e5c79e4660\n- 节点 n_e01fc1429211d92b9c6e：MDN HTTP；依据 p_92b0810742e5c79e4660\n- 节点 n_297baedd35e8d86aa86b：Designing Data-Intensive Applications；依据 p_92b0810742e5c79e4660\n- 节点 n_10a808476665d67e9a2b：后端项目实战；依据 p_92b0810742e5c79e4660\n- 节点 n_0be8cbc0e9487edca25f：计算机专业 -&gt; 后端开发；依据 p_92b0810742e5c79e4660\n- 节点 n_ef0b0534e7e568cbbe55：测试开发 -&gt; 后端开发；依据 p_92b0810742e5c79e4660\n- 节点 n_675b5081ed1e7a6f57e8：一线城市应届约12k-25k/月；依据 p_92b0810742e5c79e4660\n- 节点 n_bbae3abe3616852d8c69：Python开发工程师；依据 p_2f9eea233ea652375040\n- 节点 n_fad7883ea722c83fc096：FastAPI/Django；依据 p_2f9eea233ea652375040\n- 节点 n_cfa7e3ca7a2c11a90973：SQL；依据 p_2f9eea233ea652375040、p_c5f43430a8b35101a038\n- 节点 n_6c7e1f026926f2256fa0：自动化；依据 p_2f9eea233ea652375040\n- 节点 n_b9d81398f3d810ebb2fe：Linux；依据 p_2f9eea233ea652375040\n- 节点 n_498d12018d15075ee7d9：Python官方教程；依据 p_2f9eea233ea652375040\n- 节点 n_26f9b30d37aeed4bb3af：FastAPI文档；依据 p_2f9eea233ea652375040\n- 节点 n_96257d4ce472d38e3828：Django教程；依据 p_2f9eea233ea652375040\n- 节点 n_df64b22e15f63942ef1c：数据分析 -&gt; Python开发；依据 p_2f9eea233ea652375040\n- 节点 n_0f6a132690bff22059b1：自动化测试 -&gt; Python开发；依据 p_2f9eea233ea652375040\n- 节点 n_5a2239e09c61f35e1a38：一线城市应届约11k-23k/月；依据 p_2f9eea233ea652375040\n- 节点 n_586e4691d919e5e62847：数据分析师；依据 p_c5f43430a8b35101a038\n- 节点 n_ddc11f58da60795bd3b8：统计学；依据 p_c5f43430a8b35101a038\n- 节点 n_36d98ab186b0957210e9：可视化；依据 p_c5f43430a8b35101a038\n- 节点 n_d6761765d8e2c713954b：A/B测试；依据 p_c5f43430a8b35101a038\n- 节点 n_15b8c529dff7d5950602：R；依据 p_c5f43430a8b35101a038\n- 节点 n_33a6ea975645049954d2：数据建模；依据 p_c5f43430a8b35101a038\n- 节点 n_9af640323cd4f39720bd：Power BI/Tableau；依据 p_c5f43430a8b35101a038\n- 节点 n_2acfd2c4fc7f66d811f0：机器学习；依据 p_c5f43430a8b35101a038\n- 节点 n_06f0b0c51359168f2b99：SQLBolt；依据 p_c5f43430a8b35101a038\n- 节点 n_b8b5ec34d9e4cde9fcfd：Tableau Public；依据 p_c5f43430a8b35101a038\n- 节点 n_ad48970739a36f0a0095：Kaggle 数据分析项目；依据 p_c5f43430a8b35101a038\n- 节点 n_c52f1a8393c0b0ade4db：统计学；依据 p_c5f43430a8b35101a038\n- 节点 n_4c51e8e5f3e69348b0bd：数学；依据 p_c5f43430a8b35101a038\n- 节点 n_043b2ee9ccbd8e8eeca5：计算机科学；依据 p_c5f43430a8b35101a038\n- 节点 n_35a205143b58d7f2bf9b：数据科学；依据 p_c5f43430a8b35101a038\n- 节点 n_59303414e5dd4e09b8af：信息管理；依据 p_c5f43430a8b35101a038\n- 节点 n_7c42838a412c2e96040c：运营 -&gt; 数据分析；依据 p_c5f43430a8b35101a038\n- 节点 n_3322a1d214474a951899：BI工程师 -&gt; 数据分析师；依据 p_c5f43430a8b35101a038\n- 节点 n_97c29984cfcf9c255aae：助理数据分析师 -&gt; 数据分析师 -&gt; 高级数据分析师/数据科学家；依据 p_c5f43430a8b35101a038\n- 节点 n_a5f6699587f93298c913：一线城市应届约10k-20k/月；依据 p_c5f43430a8b35101a038\n- 关系 e_c4c4cc7e4b0bfb7285cb：n_908a9ebdfe439a9ac71e → n_60da73d3493dfc052d3a（画像信息）；依据 p_ffe3a81cfd9f1e398e95\n- 关系 e_7de1f9a2fa2c60014e9c：n_908a9ebdfe439a9ac71e → n_7d9c9108007aabd6fef2（画像信息）；依据 p_8f4c7b80d44b627581f0\n- 关系 e_3f55f7c9b190168dccb0：n_908a9ebdfe439a9ac71e → n_0e17e3b9ba469c62e9a4（画像信息）；依据 p_a8018ad274ddf88c3d2a\n- 关系 e_27544663311263292fad：n_908a9ebdfe439a9ac71e → n_ef58eb9d101fde6d96bf（画像信息）；依据 p_94633c336380aeade7a0\n- 关系 e_1449cc51969bb45bdab7：n_908a9ebdfe439a9ac71e → n_cd818e2ab5144097e4ab（建议目标）；依据 p_28698527cf5c47f53753\n- 关系 e_17e6ab515a728f548340：n_908a9ebdfe439a9ac71e → n_b538f8e85b0ee1da4e8f（建议目标）；依据 p_9eb11832513b231c456b\n- 关系 e_f8db9d684b7042a13074：n_908a9ebdfe439a9ac71e → n_cad024b6c0d0603374df（待补足能力）；依据 p_b720bc02242e51291610\n- 关系 e_7e9ee0571c03c5d53926：n_908a9ebdfe439a9ac71e → n_c88134fe5e1c3efe5bca（待补足能力）；依据 p_c307158317aeceec1e2f\n- 关系 e_4650bf61803e19ac3f1c：n_908a9ebdfe439a9ac71e → n_db74a241c38594f60eca（待补足能力）；依据 p_5a4951e366a75d1db1f5\n- 关系 e_1fdc8df039565629a25b：n_908a9ebdfe439a9ac71e → n_08123555f0b54117c4be（待补足能力）；依据 p_3e2b45352fdc48ec077f\n- 关系 e_24ab5fb7bd1216832d19：n_908a9ebdfe439a9ac71e → n_b88b78e13a296c3d9d45（待补足能力）；依据 p_ac2da2e00ee13472cadf\n- 关系 e_25468ae0135794f7230e：n_908a9ebdfe439a9ac71e → n_03605e6045d54a6ed825（待补足能力）；依据 p_f95bbb7d49ea7ee5b057\n- 关系 e_1264c7ed30cba2f2669e：n_908a9ebdfe439a9ac71e → n_77d55d41256a5a91a9c2（待补足能力）；依据 p_912204fae30998c2de9e\n- 关系 e_f373ed1e7dbaedf4e8c6：n_908a9ebdfe439a9ac71e → n_9a6a8eda6323d31bba1c（建议资源）；依据 p_faac4ed326ab48ccfcab\n- 关系 e_d918a53a95217c558de2：n_908a9ebdfe439a9ac71e → n_82deed5b7a533e2bbd32（建议资源）；依据 p_87f8e02c3b943860a741\n- 关系 e_d332a76f1e2711b9ccae：n_908a9ebdfe439a9ac71e → n_03cd88f95e99099867e9（建议资源）；依据 p_5b7c05dbc51029797613\n- 关系 e_51217c6a867dfc0e52fb：n_908a9ebdfe439a9ac71e → n_7237b55fd5bc4cc165e2（建议资源）；依据 p_e52797d4265705f93d75\n- 关系 e_1610ab775bb5f80c71f8：n_908a9ebdfe439a9ac71e → n_00b0d1efdf9baa07728b（建议资源）；依据 p_743ae2d5ea13c6ac588d\n- 关系 e_1c293906116c3fa1c969：n_908a9ebdfe439a9ac71e → n_62c3f07e6f85bcded1f0（建议资源）；依据 p_68c510abc31f929d9f92\n- 关系 e_cbe28151dc7f549a9bea：n_908a9ebdfe439a9ac71e → n_627f6e8cab8cc3beca39（建议资源）；依据 p_eae9b8702df8ac575428\n- 关系 e_c72d8844092930e3cc07：n_908a9ebdfe439a9ac71e → n_7d6892b2856f0e0d09e7（建议资源）；依据 p_f477d1e04e9dce2800e1\n- 关系 e_439615dd6bdcf6bedbf8：n_908a9ebdfe439a9ac71e → n_04e4d14807275e261e09（建议行动）；依据 p_4ff192291a0c390bd67a\n- 关系 e_7b6ee0348c965b060a94：n_908a9ebdfe439a9ac71e → n_bd9547c6a4668a0f0864（建议行动）；依据 p_32184ffe77af854976a2\n- 关系 e_0ff6063f5ab16cee4ea5：n_908a9ebdfe439a9ac71e → n_436778bae65f46ee21af（建议行动）；依据 p_282fb14e817f9d5dc225\n- 关系 e_bf6c925ac5f9fd986bc5：n_908a9ebdfe439a9ac71e → n_dc63ef04be289167b92a（建议行动）；依据 p_aa23de04feed255c6ae5\n- 关系 e_7c00187c8e096141cdff：n_908a9ebdfe439a9ac71e → n_05d6e8908286b17db261（建议行动）；依据 p_414b06ba4cc11f362870\n- 关系 e_bb0545e0d84419524063：n_908a9ebdfe439a9ac71e → n_d3061b11f995e9f50de1（风险提示）；依据 p_0c66dbd68e3a75ec2ce2\n- 关系 e_22fb2c30c21342e3eef1：n_908a9ebdfe439a9ac71e → n_f1d2a7bd80ca96afd71e（风险提示）；依据 p_7bbdbcfac03e2e3a3156\n- 关系 e_ff6c6d8df420069f3470：n_908a9ebdfe439a9ac71e → n_1cb3546ba80d09d83070（风险提示）；依据 p_64812c86d9d6f3a75565\n- 关系 e_2b7b2247b76a07ed2e8a：n_908a9ebdfe439a9ac71e → n_978de1be968b9aa7a4f4（风险提示）；依据 p_337910be2acb8bca9338\n- 关系 e_77029618c5d8334c585f：n_908a9ebdfe439a9ac71e → n_82151cd23d4eba51bb71（风险提示）；依据 p_2c1856353e76c1b4e868\n- 关系 e_e7e1f9ba9676ab3d329d：n_908a9ebdfe439a9ac71e → n_b7d345cbfa795a65e326（待确认）；依据 p_b7e8de80b1ecf800918a\n- 关系 e_18c738b3a4d3245c38b1：n_908a9ebdfe439a9ac71e → n_526f9a037e661f72b4de（待确认）；依据 p_11581d12271b87c37c18\n- 关系 e_a677de205e91d5b7f6a0：n_908a9ebdfe439a9ac71e → n_f720e74b492ea3c0a95d（待确认）；依据 p_22f5fff724573a5c3424\n- 关系 e_165c1aa20872951ab5fc：n_908a9ebdfe439a9ac71e → n_bf246e5a809e4a7aa4c3（待确认）；依据 p_0f3467323c99694b7a17\n- 关系 e_fa6d292b22180582e89a：n_908a9ebdfe439a9ac71e → n_96be874f9b27b7862c31（待确认）；依据 p_28221c399b546834e556\n- 关系 e_33fa2addcec0060a3189：n_908a9ebdfe439a9ac71e → n_470509c0163371e9ea17（建议阶段）；依据 p_40ac2b365bb53ab50e54\n- 关系 e_2501284025dad314f4d8：n_470509c0163371e9ea17 → n_a0b91f33c543deb39822（建议交付物）；依据 p_04a263b86c5332af1646\n- 关系 e_0905d296f7263aacf114：n_470509c0163371e9ea17 → n_6bf2ef85d6cc8302c7e5（建议交付物）；依据 p_2a4ed275a0c78f0fc6d2\n- 关系 e_ff56d651f7054e1ff3ee：n_470509c0163371e9ea17 → n_ba88fd59549e49a3aed1（建议交付物）；依据 p_cced6e5bd5bb20027923\n- 关系 e_66dcbe1f247de582fe76：n_470509c0163371e9ea17 → n_375d460940d8fd6c473e（建议交付物）；依据 p_85e040bcd93f05a8122d\n- 关系 e_07b1af659efdcbb69a89：n_470509c0163371e9ea17 → n_24f531351e454b18ce5e（检查指标）；依据 p_15e67bda57bc8e8db3fa\n- 关系 e_a414c632a12cd5f9921e：n_470509c0163371e9ea17 → n_b49c301ce4c20cfac289（检查指标）；依据 p_b7d5feb69dafdf441211\n- 关系 e_80b9e4fb34c1dc16a640：n_470509c0163371e9ea17 → n_fde564a9d49da43ba9a5（检查指标）；依据 p_9ecff4828d6475917e57\n- 关系 e_4140085ae32bae7d7447：n_470509c0163371e9ea17 → n_ca29ac7f75ca99723d17（检查指标）；依据 p_e2947834005885fa5ca2\n- 关系 e_1190c9f1470e840629b7：n_908a9ebdfe439a9ac71e → n_4256b0a227dae1301823（建议阶段）；依据 p_bdaabae9ad1f726a66b1\n- 关系 e_e1af2862312e30c781e4：n_4256b0a227dae1301823 → n_79b6d2fbf759c3025d44（建议交付物）；依据 p_261860d511ec26a23562\n- 关系 e_3ffb1d38cf0e7395fa92：n_4256b0a227dae1301823 → n_5bd4f55bcb9e031e6700（建议交付物）；依据 p_27c81ee61fe71a9cebea\n- 关系 e_af26c14513e63f6b0ac6：n_4256b0a227dae1301823 → n_003cd9a4eb2a16f6dff8（建议交付物）；依据 p_eff9a50d4ba936e4f790\n- 关系 e_a8f3d9c76fbc2f3ae7e3：n_4256b0a227dae1301823 → n_084ee3ba16c48a05fc0b（建议交付物）；依据 p_f32b04b31f2971e637a2\n- 关系 e_39cd1b274a5f75101d12：n_4256b0a227dae1301823 → n_b615be6c6660c1d5fa53（检查指标）；依据 p_6fe0e552c96c06661647\n- 关系 e_465d05889390f08e1c0b：n_4256b0a227dae1301823 → n_dfa9c863f506db7d4e15（检查指标）；依据 p_3a140bb98f9d963cffd8\n- 关系 e_44be25de39116a398790：n_4256b0a227dae1301823 → n_fa67e1f0b81672417c04（检查指标）；依据 p_b6388fb6139c1c65c2de\n- 关系 e_6f6320d6a470426fff83：n_4256b0a227dae1301823 → n_c2a6e85f85ca59f72a11（检查指标）；依据 p_6274db8ae752e3d16707\n- 关系 e_918a12b7b8eaed1c3814：n_908a9ebdfe439a9ac71e → n_f617c4a2932a8b29a08e（建议阶段）；依据 p_1aade88e45925aa73382\n- 关系 e_079fde88cbe1f6b8ada7：n_f617c4a2932a8b29a08e → n_eef9b8dbc40146226f4e（建议交付物）；依据 p_55dac6afee19beb08e71\n- 关系 e_b1a990afcaf94f3459a8：n_f617c4a2932a8b29a08e → n_11dd37d6328702a02d2b（建议交付物）；依据 p_44f8a0fc216f7afca2f9\n- 关系 e_151d6ced3379311b4987：n_f617c4a2932a8b29a08e → n_f16d49542b2f05bc1764（建议交付物）；依据 p_a9fb4789d0071bfff402\n- 关系 e_4e058b6f1233b0b875b6：n_f617c4a2932a8b29a08e → n_a4fd2c5f5d00a569e958（建议交付物）；依据 p_d57bece85e9ceefcbe9d\n- 关系 e_e689a1007a16bde9db56：n_f617c4a2932a8b29a08e → n_5f009437188024fe36a9（检查指标）；依据 p_31f204b1c116a6f5f6f4\n- 关系 e_2864dc3e5a410b0a7dee：n_f617c4a2932a8b29a08e → n_744c8cc3631a7a58578e（检查指标）；依据 p_12c93967dc39509b6ef7\n- 关系 e_5d69d4457adbe947013d：n_f617c4a2932a8b29a08e → n_f64d5670f9e332daab13（检查指标）；依据 p_f0f05054ce2bed9a02fc\n- 关系 e_3135207a924913a626e7：n_f617c4a2932a8b29a08e → n_0e80bcfd8037287aac9e（检查指标）；依据 p_5bac5ccd976ff8114e7a\n- 关系 e_a50c1e4af5094eefdb3f：n_908a9ebdfe439a9ac71e → n_0f0a55c94d14a73bb78b（检索命中（未逐项核实））；依据 p_6347056023bf2f2d4293\n- 关系 e_5ea59356a4e481bd39a8：n_0f0a55c94d14a73bb78b → n_ac025e3685de3610746c（条目所列技能）；依据 p_6347056023bf2f2d4293\n- 关系 e_ef60b9f26318a072fb74：n_0f0a55c94d14a73bb78b → n_ec8ff879d05b8c327752（条目所列技能）；依据 p_6347056023bf2f2d4293\n- 关系 e_d1bcdb2ed5d3469bc0c4：n_0f0a55c94d14a73bb78b → n_a45ac728229cf829973d（条目所列技能）；依据 p_6347056023bf2f2d4293\n- 关系 e_aad73e2f6e6ec607c07d：n_0f0a55c94d14a73bb78b → n_2cdcb07d471ccc9b381b（条目所列技能）；依据 p_6347056023bf2f2d4293\n- 关系 e_79354237ea9282954228：n_0f0a55c94d14a73bb78b → n_6e84d5b5b232409cf2e6（条目所列技能）；依据 p_6347056023bf2f2d4293\n- 关系 e_bc2f97dbe31546faafb8：n_0f0a55c94d14a73bb78b → n_bac29d6c00e039cfec10（条目所列技能）；依据 p_6347056023bf2f2d4293\n- 关系 e_201352cb61e14fff76eb：n_0f0a55c94d14a73bb78b → n_33bc85bc0a994da129c1（条目所列技能）；依据 p_6347056023bf2f2d4293\n- 关系 e_3bb0d5cb3430af7e8a7b：n_0f0a55c94d14a73bb78b → n_e1d3a01f38d183973620（条目所列技能）；依据 p_6347056023bf2f2d4293\n- 关系 e_5ab7a1ac37498e55dc92：n_0f0a55c94d14a73bb78b → n_bf3789156af94316d90f（条目所列资源）；依据 p_6347056023bf2f2d4293\n- 关系 e_141d3af1f24f80108e02：n_0f0a55c94d14a73bb78b → n_b2f8270004d1119831a5（条目所列资源）；依据 p_6347056023bf2f2d4293\n- 关系 e_a22f4bc24549262159ac：n_0f0a55c94d14a73bb78b → n_7e55325623b68baca8fa（条目所列资源）；依据 p_6347056023bf2f2d4293\n- 关系 e_15973dabb487ec17e21b：n_0f0a55c94d14a73bb78b → n_882c529347a06cc43b16（条目所列资源）；依据 p_6347056023bf2f2d4293\n- 关系 e_48f93cd611afdb2336af：n_0f0a55c94d14a73bb78b → n_e4cb4f212de9cb354e35（条目所列发展路径）；依据 p_6347056023bf2f2d4293\n- 关系 e_f09a9dd91af82775c84f：n_0f0a55c94d14a73bb78b → n_8c5a2e7f40e3fc246712（条目所列发展路径）；依据 p_6347056023bf2f2d4293\n- 关系 e_53b408989ff06848f9c6：n_0f0a55c94d14a73bb78b → n_491a7f21697d009a3f8c（条目薪资参考）；依据 p_6347056023bf2f2d4293\n- 关系 e_17776c1ea77e438dcb17：n_908a9ebdfe439a9ac71e → n_99f1311efdb3551d45c4（检索命中（未逐项核实））；依据 p_92b0810742e5c79e4660\n- 关系 e_d9c8afdb21804084eef9：n_99f1311efdb3551d45c4 → n_95830b96c45372c0b2d8（条目所列技能）；依据 p_92b0810742e5c79e4660\n- 关系 e_25b3552165facca02920：n_99f1311efdb3551d45c4 → n_90613116bad5230c3ffa（条目所列技能）；依据 p_92b0810742e5c79e4660\n- 关系 e_3d9f0c5942190046255f：n_99f1311efdb3551d45c4 → n_78bd2419b575bc521ecd（条目所列技能）；依据 p_92b0810742e5c79e4660\n- 关系 e_6bebf90f5677a1156376：n_99f1311efdb3551d45c4 → n_25eab3f4aec618cc7e8d（条目所列技能）；依据 p_92b0810742e5c79e4660\n- 关系 e_bd167e16d046c4912063：n_99f1311efdb3551d45c4 → n_f5f0b70a57c725d33dff（条目所列技能）；依据 p_92b0810742e5c79e4660\n- 关系 e_68e29d754d8bc8dd11cc：n_99f1311efdb3551d45c4 → n_e01fc1429211d92b9c6e（条目所列资源）；依据 p_92b0810742e5c79e4660\n- 关系 e_410bdd1b93dcfd2ce461：n_99f1311efdb3551d45c4 → n_297baedd35e8d86aa86b（条目所列资源）；依据 p_92b0810742e5c79e4660\n- 关系 e_dac68f24e2bd6c48e685：n_99f1311efdb3551d45c4 → n_10a808476665d67e9a2b（条目所列资源）；依据 p_92b0810742e5c79e4660\n- 关系 e_1a6964b60538d0f83618：n_99f1311efdb3551d45c4 → n_0be8cbc0e9487edca25f（条目所列发展路径）；依据 p_92b0810742e5c79e4660\n- 关系 e_515a1560cb091db942eb：n_99f1311efdb3551d45c4 → n_ef0b0534e7e568cbbe55（条目所列发展路径）；依据 p_92b0810742e5c79e4660\n- 关系 e_8cec6fa121e36c41bf92：n_99f1311efdb3551d45c4 → n_675b5081ed1e7a6f57e8（条目薪资参考）；依据 p_92b0810742e5c79e4660\n- 关系 e_4cd4f5b4b9ea6226b910：n_908a9ebdfe439a9ac71e → n_bbae3abe3616852d8c69（检索命中（未逐项核实））；依据 p_2f9eea233ea652375040\n- 关系 e_79d525356f3d5378ac82：n_bbae3abe3616852d8c69 → n_ac025e3685de3610746c（条目所列技能）；依据 p_2f9eea233ea652375040\n- 关系 e_ab4e8409c51046bb913e：n_bbae3abe3616852d8c69 → n_fad7883ea722c83fc096（条目所列技能）；依据 p_2f9eea233ea652375040\n- 关系 e_b710e359b4bc783730de：n_bbae3abe3616852d8c69 → n_cfa7e3ca7a2c11a90973（条目所列技能）；依据 p_2f9eea233ea652375040\n- 关系 e_828322bf49fbbed52e94：n_bbae3abe3616852d8c69 → n_6c7e1f026926f2256fa0（条目所列技能）；依据 p_2f9eea233ea652375040\n- 关系 e_ff1663aabeff62eb1ad4：n_bbae3abe3616852d8c69 → n_b9d81398f3d810ebb2fe（条目所列技能）；依据 p_2f9eea233ea652375040\n- 关系 e_325c89d5b30cbff7ec93：n_bbae3abe3616852d8c69 → n_498d12018d15075ee7d9（条目所列资源）；依据 p_2f9eea233ea652375040\n- 关系 e_f11088e0ec558ea39926：n_bbae3abe3616852d8c69 → n_26f9b30d37aeed4bb3af（条目所列资源）；依据 p_2f9eea233ea652375040\n- 关系 e_5d8cf1f2fa1d5da9ab26：n_bbae3abe3616852d8c69 → n_96257d4ce472d38e3828（条目所列资源）；依据 p_2f9eea233ea652375040\n- 关系 e_2cb1f29557275a01eef4：n_bbae3abe3616852d8c69 → n_df64b22e15f63942ef1c（条目所列发展路径）；依据 p_2f9eea233ea652375040\n- 关系 e_e015cc45c158af229c58：n_bbae3abe3616852d8c69 → n_0f6a132690bff22059b1（条目所列发展路径）；依据 p_2f9eea233ea652375040\n- 关系 e_2603eafbcb0f89042380：n_bbae3abe3616852d8c69 → n_5a2239e09c61f35e1a38（条目薪资参考）；依据 p_2f9eea233ea652375040\n- 关系 e_36b8f0f5649784fe3c94：n_908a9ebdfe439a9ac71e → n_586e4691d919e5e62847（检索命中（未逐项核实））；依据 p_c5f43430a8b35101a038\n- 关系 e_a2d01cbf7daef23ee1aa：n_586e4691d919e5e62847 → n_cfa7e3ca7a2c11a90973（条目所列技能）；依据 p_c5f43430a8b35101a038\n- 关系 e_b4d1a901d328d74a0c32：n_586e4691d919e5e62847 → n_ac025e3685de3610746c（条目所列技能）；依据 p_c5f43430a8b35101a038\n- 关系 e_5eddf38831e4ea8f67f9：n_586e4691d919e5e62847 → n_ddc11f58da60795bd3b8（条目所列技能）；依据 p_c5f43430a8b35101a038\n- 关系 e_5a966e1183256e647821：n_586e4691d919e5e62847 → n_36d98ab186b0957210e9（条目所列技能）；依据 p_c5f43430a8b35101a038\n- 关系 e_cd23eeb28fde65c6ae8c：n_586e4691d919e5e62847 → n_d6761765d8e2c713954b（条目所列技能）；依据 p_c5f43430a8b35101a038\n- 关系 e_db7c7dbde01bf6c62388：n_586e4691d919e5e62847 → n_15b8c529dff7d5950602（条目所列技能）；依据 p_c5f43430a8b35101a038\n- 关系 e_c03dedd22520a552a28d：n_586e4691d919e5e62847 → n_33a6ea975645049954d2（条目所列技能）；依据 p_c5f43430a8b35101a038\n- 关系 e_6015dad29442cfd63a72：n_586e4691d919e5e62847 → n_9af640323cd4f39720bd（条目所列技能）；依据 p_c5f43430a8b35101a038\n- 关系 e_1c8b01e5137b1ebc033d：n_586e4691d919e5e62847 → n_2acfd2c4fc7f66d811f0（条目所列技能）；依据 p_c5f43430a8b35101a038\n- 关系 e_991cf8184f75942ce9fc：n_586e4691d919e5e62847 → n_06f0b0c51359168f2b99（条目所列资源）；依据 p_c5f43430a8b35101a038\n- 关系 e_7746812645b17caf8177：n_586e4691d919e5e62847 → n_b8b5ec34d9e4cde9fcfd（条目所列资源）；依据 p_c5f43430a8b35101a038\n- 关系 e_b13974f34a6e40aa34a5：n_586e4691d919e5e62847 → n_ad48970739a36f0a0095（条目所列资源）；依据 p_c5f43430a8b35101a038\n- 关系 e_58a83390d8a0cb03da21：n_586e4691d919e5e62847 → n_c52f1a8393c0b0ade4db（条目所列专业）；依据 p_c5f43430a8b35101a038\n- 关系 e_b540b7e0d6187b560106：n_586e4691d919e5e62847 → n_4c51e8e5f3e69348b0bd（条目所列专业）；依据 p_c5f43430a8b35101a038\n- 关系 e_ab74c44b80f474fc38b9：n_586e4691d919e5e62847 → n_043b2ee9ccbd8e8eeca5（条目所列专业）；依据 p_c5f43430a8b35101a038\n- 关系 e_c9bb325044722d3a49e0：n_586e4691d919e5e62847 → n_35a205143b58d7f2bf9b（条目所列专业）；依据 p_c5f43430a8b35101a038\n- 关系 e_65fe1fd94862e114c902：n_586e4691d919e5e62847 → n_59303414e5dd4e09b8af（条目所列专业）；依据 p_c5f43430a8b35101a038\n- 关系 e_044e95f1a94e0bd7054e：n_586e4691d919e5e62847 → n_7c42838a412c2e96040c（条目所列发展路径）；依据 p_c5f43430a8b35101a038\n- 关系 e_aab602b4673130dde90a：n_586e4691d919e5e62847 → n_3322a1d214474a951899（条目所列发展路径）；依据 p_c5f43430a8b35101a038\n- 关系 e_14bc6debe748b3e4e22b：n_586e4691d919e5e62847 → n_97c29984cfcf9c255aae（条目所列发展路径）；依据 p_c5f43430a8b35101a038\n- 关系 e_9c57a9721350a3c2e2c3：n_586e4691d919e5e62847 → n_a5f6699587f93298c913（条目薪资参考）；依据 p_c5f43430a8b35101a038\n\n- 图谱按现有材料、知识条目和规划字段投影生成，不包含额外事实推断。\n- 知识库来源链接仅为核验线索，不代表技能、资源、路径或薪资已经逐项核实。\n- 模型建议与知识库条目分别标记；相同岗位名称不表示建议已被外部证据验证。\n",
+    "retry_count": 0,
+    "risk_flags": [
+      "每周仅8小时，项目与基础补强并行可能导致进度偏慢，需严格按优先级执行",
+      "无实习经验且项目未完成前投递回复率可能较低，需用项目产出弥补",
+      "城市、行业偏好、资金预算未确认，投递范围与资源选择存在不确定性",
+      "材料中的岗位卡片与知识库条目均未核验，不能作为真实招聘要求或薪资依据",
+      "计算机基础掌握程度未确认，面试八股可能成为短板"
+    ],
+    "roadmap_30_90_180": [
+      {
+        "deliverables": [
+          "完成FastAPI或Flask官方教程，能独立写出带路由、参数校验、错误处理的API",
+          "完成数据库设计练习：为项目设计3-5张表，使用SQLAlchemy或原生SQL实现CRUD",
+          "项目仓库初始化：Git提交规范、README骨架、API文档草稿",
+          "整理一份后端实习岗位JD样本（10条），标注高频要求"
+        ],
+        "metrics": [
+          "每周投入≥8小时，累计≥32小时",
+          "项目完成≥3个API端点并通过本地测试",
+          "Git提交≥8次，README包含运行说明",
+          "JD样本≥10条并完成关键词统计"
+        ],
+        "objective": "补齐后端最小技能栈并启动第一个可展示项目",
+        "period": "30d"
+      },
+      {
+        "deliverables": [
+          "项目MVP：用户注册登录（JWT或Session）、核心业务CRUD、分页、基础错误处理",
+          "项目部署到可访问环境（如Render/Railway/云服务器），提供在线Demo或录屏",
+          "简历初版：突出项目、技能、课程，量化项目产出",
+          "投递记录表：公司、岗位、渠道、反馈状态"
+        ],
+        "metrics": [
+          "项目累计≥15个API端点，核心流程可演示",
+          "完成≥20次投递，获得≥3次面试或笔试机会",
+          "每周复盘1次，记录面试问题并归类",
+          "项目README包含架构说明与API文档"
+        ],
+        "objective": "完成可展示的后端项目并开始小批量投递",
+        "period": "90d"
+      },
+      {
+        "deliverables": [
+          "项目迭代：加入缓存（Redis）、简单鉴权优化、单元测试",
+          "计算机基础补强笔记：HTTP、数据库索引、事务、操作系统基础",
+          "面试题库整理：≥50道后端高频题及自己的答案",
+          "实习offer或明确的下一步补强计划"
+        ],
+        "metrics": [
+          "累计投递≥60次，面试/笔试≥8次",
+          "项目单元测试覆盖率≥50%（核心模块）",
+          "高频题整理≥50道并能口述",
+          "获得≥1个实习offer或进入≥2家公司终面"
+        ],
+        "objective": "拿到后端开发实习offer并形成持续迭代能力",
+        "period": "180d"
+      }
+    ],
+    "served_by": "cloud_brain",
+    "session_id": "b03ace4fbbd44478832fb96d78e922e8",
+    "target_roles": [
+      "后端开发实习生（Python方向）",
+      "Python开发实习生"
+    ],
+    "user_facing_advice": "目标明确：后端开发实习。你已会Python和SQL，每周可投入8小时，但暂无实习经验，且未提供城市、行业偏好、资金预算等约束，规划需保留这些限制。\n\n核心策略：用8周左右补齐后端最小可用技能栈（Web框架、数据库设计、REST API、Git），并完成1个可展示的后端项目；随后用项目+基础八股投递实习。\n\n注意：材料中的岗位卡片（Python/SQL、8小时/周、0预算）为未核验的合成信息，不能当作真实招聘要求；知识库中的后端技能与资源条目也未核验，仅作参考。\n\n行动要点：\n1) 先确认城市/远程偏好与可实习时间段，再锁定投递范围。\n2) 每周8小时拆成：4小时项目开发、2小时基础补强、2小时投递与复盘。\n3) 项目优先选FastAPI或Flask + PostgreSQL/MySQL，实现用户注册登录、CRUD、分页、简单缓存，并写清README与API文档。\n4) 第4周起开始小批量投递，用面试反馈驱动补强。"
+  },
+  "question": null,
+  "source_claims": [
+    {
+      "claim_id": "fb72f1cd245d73500bcd50cf",
+      "evidence_ids": [
+        "065441021131d4939be1"
+      ],
+      "field": "major",
+      "origin": "profile",
+      "quote": "",
+      "source_id": "",
+      "status": "known",
+      "subject": "student",
+      "value": "计算机科学",
+      "verification": "user_confirmed",
+      "verification_reference": "",
+      "verified_by": ""
+    },
+    {
+      "claim_id": "d3519ca7bd34c5781eb472e0",
+      "evidence_ids": [
+        "d8beaafeda94c187131b"
+      ],
+      "field": "skills",
+      "origin": "profile",
+      "quote": "",
+      "source_id": "",
+      "status": "known",
+      "subject": "student",
+      "value": "Python、SQL",
+      "verification": "user_confirmed",
+      "verification_reference": "",
+      "verified_by": ""
+    },
+    {
+      "claim_id": "7f67c40ed848ca50c42485e7",
+      "evidence_ids": [
+        "d3a4670fed50d7534024"
+      ],
+      "field": "target_role",
+      "origin": "profile",
+      "quote": "",
+      "source_id": "",
+      "status": "known",
+      "subject": "student",
+      "value": "后端开发实习",
+      "verification": "user_confirmed",
+      "verification_reference": "",
+      "verified_by": ""
+    },
+    {
+      "claim_id": "fd39a27080663cc80e3b37f5",
+      "evidence_ids": [
+        "065441021131d4939be1"
+      ],
+      "field": "time_budget",
+      "origin": "profile",
+      "quote": "",
+      "source_id": "",
+      "status": "known",
+      "subject": "student",
+      "value": "8",
+      "verification": "user_confirmed",
+      "verification_reference": "",
+      "verified_by": ""
+    },
+    {
+      "claim_id": "e98e46558fe6d86da21827ab",
+      "evidence_ids": [],
+      "field": "material",
+      "origin": "document",
+      "quote": "",
+      "source_id": "12ae2f145db54f5bb2c0b9906cca5694",
+      "subject": "job",
+      "value": "Parsed 12ae2f145db54f5bb2c0b9906cca5694.pdf",
+      "verification": "unverified",
+      "verification_reference": "",
+      "verified_by": ""
+    },
+    {
+      "claim_id": "8082f7df0c01a4eb6ebf380b",
+      "evidence_ids": [],
+      "field": "material",
+      "origin": "video",
+      "quote": "",
+      "source_id": "358b0277e08d4fb1b8865f6dac961b3a",
+      "subject": "job",
+      "value": "Analyzed 358b0277e08d4fb1b8865f6dac961b3a.mp4 (1/1 frames)",
+      "verification": "unverified",
+      "verification_reference": "",
+      "verified_by": ""
+    }
+  ],
+  "state_version": 8,
+  "status": "planned",
+  "text_input": "本科大三，计算机科学专业。我会Python和SQL，每周8小时，暂无实习经验。",
+  "text_subject": "student",
+  "title": "获得后端开发实习",
+  "updated_at": "2026-11-06T05:25:08.617688+00:00",
+  "uploads": [
+    {
+      "created_at": "2026-11-06T05:18:22.068975+00:00",
+      "deleted_at": "2026-11-06T05:18:52.138206+00:00",
+      "id": "12ae2f145db54f5bb2c0b9906cca5694",
+      "name": "backend_job_card_scan.pdf",
+      "size": 55372,
+      "subject": "job"
+    },
+    {
+      "created_at": "2026-11-06T05:18:22.100669+00:00",
+      "deleted_at": "2026-11-06T05:18:52.138206+00:00",
+      "id": "358b0277e08d4fb1b8865f6dac961b3a",
+      "name": "backend_job_card_1s.mp4",
+      "size": 71438,
+      "subject": "job"
+    }
+  ],
+  "user_goal": "获得后端开发实习",
+  "versions": [
+    {
+      "created_at": "2026-11-06T05:24:00.000426+00:00",
+      "display_text": "目标岗位\n- 后端开发实习生（Python方向）\n- Python开发实习生\n\n行动路线\n- 30天目标：补齐后端最小技能栈并启动第一个可展示项目\n- 90天目标：完成可展示的后端项目并开始小批量投递\n- 180天目标：拿到后端开发实习offer并形成持续迭代能力\n\n下一行动\n- 确认可实习城市/远程偏好与可实习起止时间，回复后缩小投递范围\n- 本周内选定FastAPI或Flask其一，完成官方教程前3章\n- 创建项目仓库，写README骨架并完成第一次Git提交\n- 收集10条后端实习JD，统计高频技能关键词\n- 制定每周8小时时间表（建议4h项目+2h基础+2h投递复盘）\n\n当前约束\n- 每周时间：8小时\n- 限制：未提供\n- 学历：未提供\n- 兴趣：未提供\n- 偏好：未提供\n\n注意事项\n- 每周仅8小时，项目与基础补强并行可能导致进度偏慢，需严格按优先级执行\n- 无实习经验且项目未完成前投递回复率可能较低，需用项目产出弥补\n- 城市、行业偏好、资金预算未确认，投递范围与资源选择存在不确定性\n- 材料中的岗位卡片与知识库条目均未核验，不能作为真实招聘要求或薪资依据\n- 计算机基础掌握程度未确认，面试八股可能成为短板\n\n待确认信息\n- 你希望在哪个城市实习，或是否接受远程实习？\n- 你最早可开始实习的时间与每周可实习天数（与学习8小时不同）是多少？\n- 你是否有资金预算用于课程/云服务器/域名等？\n- 你更倾向哪个行业（如互联网、金融、企业服务）或暂无偏好？\n- 你的计算机基础课程（网络、操作系统、数据库）掌握程度如何？",
+      "facts_sha256": "22ba80af6e479f02b79d0a3e78725593ad6a0b284175fecd8b3f1e007805d237",
+      "item_ids": [
+        "target_roles:0",
+        "target_roles:1",
+        "roadmap:30d:objective",
+        "roadmap:90d:objective",
+        "roadmap:180d:objective",
+        "next_actions:0",
+        "next_actions:1",
+        "next_actions:2",
+        "next_actions:3",
+        "next_actions:4",
+        "constraints:time_budget_hours_per_week",
+        "unresolved:constraints",
+        "unresolved:education",
+        "unresolved:interests",
+        "unresolved:preference",
+        "risk_flags:0",
+        "risk_flags:1",
+        "risk_flags:2",
+        "risk_flags:3",
+        "risk_flags:4",
+        "follow_up_questions:0",
+        "follow_up_questions:1",
+        "follow_up_questions:2",
+        "follow_up_questions:3",
+        "follow_up_questions:4"
+      ],
+      "parent_version": null,
+      "plan_id": "5782e9d66c8e42b196403c4dcca0b3f1",
+      "source_text_sha256": "415c0b6d15208d451762c946983fd9e96c0809e44d515d77918921a97733bb4d",
+      "version": 1
+    },
+    {
+      "created_at": "2026-11-06T05:24:37.888205+00:00",
+      "display_text": "规划建议\n目标明确：后端开发实习。你已会Python和SQL，每周可投入8小时，但暂无实习经验，且未提供城市、行业偏好、资金预算等约束，规划需保留这些限制。\n\n核心策略：用8周左右补齐后端最小可用技能栈（Web框架、数据库设计、REST API、Git），并完成1个可展示的后端项目；随后用项目+基础八股投递实习。\n\n注意：材料中的岗位卡片（Python/SQL、8小时/周、0预算）为未核验的合成信息，不能当作真实招聘要求；知识库中的后端技能与资源条目也未核验，仅作参考。\n\n行动要点：\n1) 先确认城市/远程偏好与可实习时间段，再锁定投递范围。\n2) 每周8小时拆成：4小时项目开发、2小时基础补强、2小时投递与复盘。\n3) 项目优先选FastAPI或Flask + PostgreSQL/MySQL，实现用户注册登录、CRUD、分页、简单缓存，并写清README与API文档。\n4) 第4周起开始小批量投递，用面试反馈驱动补强。\n\n目标岗位\n- 后端开发实习生（Python方向）\n- Python开发实习生\n\n能力差距\n- 缺少Web后端框架实战经验（如FastAPI/Flask/Django），仅有Python语言基础\n- 缺少数据库设计与ORM使用经验，SQL仅停留在会写查询的层面\n- 缺少REST API设计、鉴权、错误处理等工程化实践\n- 无实习/项目经历，简历缺少可验证的后端产出\n- 未确认城市、可实习时长、行业偏好与资金预算，投递范围不明确\n- Git/协作流程、Linux基础、简单部署等工程习惯未确认\n- 计算机基础（网络、操作系统、数据库原理）掌握程度未确认，面试八股需补\n\n行动路线\n- 30天目标：补齐后端最小技能栈并启动第一个可展示项目\n- 30天交付物：完成FastAPI或Flask官方教程，能独立写出带路由、参数校验、错误处理的API\n- 30天交付物：完成数据库设计练习：为项目设计3-5张表，使用SQLAlchemy或原生SQL实现CRUD\n- 30天交付物：项目仓库初始化：Git提交规范、README骨架、API文档草稿\n- 30天交付物：整理一份后端实习岗位JD样本（10条），标注高频要求\n- 30天指标：每周投入≥8小时，累计≥32小时\n- 30天指标：项目完成≥3个API端点并通过本地测试\n- 30天指标：Git提交≥8次，README包含运行说明\n- 30天指标：JD样本≥10条并完成关键词统计\n- 90天目标：完成可展示的后端项目并开始小批量投递\n- 90天交付物：项目MVP：用户注册登录（JWT或Session）、核心业务CRUD、分页、基础错误处理\n- 90天交付物：项目部署到可访问环境（如Render/Railway/云服务器），提供在线Demo或录屏\n- 90天交付物：简历初版：突出项目、技能、课程，量化项目产出\n- 90天交付物：投递记录表：公司、岗位、渠道、反馈状态\n- 90天指标：项目累计≥15个API端点，核心流程可演示\n- 90天指标：完成≥20次投递，获得≥3次面试或笔试机会\n- 90天指标：每周复盘1次，记录面试问题并归类\n- 90天指标：项目README包含架构说明与API文档\n- 180天目标：拿到后端开发实习offer并形成持续迭代能力\n- 180天交付物：项目迭代：加入缓存（Redis）、简单鉴权优化、单元测试\n- 180天交付物：计算机基础补强笔记：HTTP、数据库索引、事务、操作系统基础\n- 180天交付物：面试题库整理：≥50道后端高频题及自己的答案\n- 180天交付物：实习offer或明确的下一步补强计划\n- 180天指标：累计投递≥60次，面试/笔试≥8次\n- 180天指标：项目单元测试覆盖率≥50%（核心模块）\n- 180天指标：高频题整理≥50道并能口述\n- 180天指标：获得≥1个实习offer或进入≥2家公司终面\n\n下一行动\n- 确认可实习城市/远程偏好与可实习起止时间，回复后缩小投递范围\n- 本周内选定FastAPI或Flask其一，完成官方教程前3章\n- 创建项目仓库，写README骨架并完成第一次Git提交\n- 收集10条后端实习JD，统计高频技能关键词\n- 制定每周8小时时间表（建议4h项目+2h基础+2h投递复盘）\n\n学习资源\n- FastAPI官方文档（教程与高级用户指南）\n- Flask官方教程\n- SQLBolt（SQL练习）\n- MDN HTTP文档（REST与状态码）\n- 《Designing Data-Intensive Applications》（选读，建立系统设计意识）\n- Git官方文档与Pro Git\n- LeetCode（SQL与简单算法题，每周2-3题）\n- 知识库条目career-022后端开发工程师、career-026 Python开发工程师（未核验，仅作参考）\n\n当前约束\n- 每周时间：8小时\n- 限制：未提供\n- 学历：未提供\n- 兴趣：未提供\n- 偏好：未提供\n\n注意事项\n- 每周仅8小时，项目与基础补强并行可能导致进度偏慢，需严格按优先级执行\n- 无实习经验且项目未完成前投递回复率可能较低，需用项目产出弥补\n- 城市、行业偏好、资金预算未确认，投递范围与资源选择存在不确定性\n- 材料中的岗位卡片与知识库条目均未核验，不能作为真实招聘要求或薪资依据\n- 计算机基础掌握程度未确认，面试八股可能成为短板\n\n待确认信息\n- 你希望在哪个城市实习，或是否接受远程实习？\n- 你最早可开始实习的时间与每周可实习天数（与学习8小时不同）是多少？\n- 你是否有资金预算用于课程/云服务器/域名等？\n- 你更倾向哪个行业（如互联网、金融、企业服务）或暂无偏好？\n- 你的计算机基础课程（网络、操作系统、数据库）掌握程度如何？",
+      "facts_sha256": "22ba80af6e479f02b79d0a3e78725593ad6a0b284175fecd8b3f1e007805d237",
+      "item_ids": [
+        "advice",
+        "target_roles:0",
+        "target_roles:1",
+        "gap_analysis:0",
+        "gap_analysis:1",
+        "gap_analysis:2",
+        "gap_analysis:3",
+        "gap_analysis:4",
+        "gap_analysis:5",
+        "gap_analysis:6",
+        "roadmap:30d:objective",
+        "roadmap:30d:deliverables:0",
+        "roadmap:30d:deliverables:1",
+        "roadmap:30d:deliverables:2",
+        "roadmap:30d:deliverables:3",
+        "roadmap:30d:metrics:0",
+        "roadmap:30d:metrics:1",
+        "roadmap:30d:metrics:2",
+        "roadmap:30d:metrics:3",
+        "roadmap:90d:objective",
+        "roadmap:90d:deliverables:0",
+        "roadmap:90d:deliverables:1",
+        "roadmap:90d:deliverables:2",
+        "roadmap:90d:deliverables:3",
+        "roadmap:90d:metrics:0",
+        "roadmap:90d:metrics:1",
+        "roadmap:90d:metrics:2",
+        "roadmap:90d:metrics:3",
+        "roadmap:180d:objective",
+        "roadmap:180d:deliverables:0",
+        "roadmap:180d:deliverables:1",
+        "roadmap:180d:deliverables:2",
+        "roadmap:180d:deliverables:3",
+        "roadmap:180d:metrics:0",
+        "roadmap:180d:metrics:1",
+        "roadmap:180d:metrics:2",
+        "roadmap:180d:metrics:3",
+        "next_actions:0",
+        "next_actions:1",
+        "next_actions:2",
+        "next_actions:3",
+        "next_actions:4",
+        "learning_resources:0",
+        "learning_resources:1",
+        "learning_resources:2",
+        "learning_resources:3",
+        "learning_resources:4",
+        "learning_resources:5",
+        "learning_resources:6",
+        "learning_resources:7",
+        "constraints:time_budget_hours_per_week",
+        "unresolved:constraints",
+        "unresolved:education",
+        "unresolved:interests",
+        "unresolved:preference",
+        "risk_flags:0",
+        "risk_flags:1",
+        "risk_flags:2",
+        "risk_flags:3",
+        "risk_flags:4",
+        "follow_up_questions:0",
+        "follow_up_questions:1",
+        "follow_up_questions:2",
+        "follow_up_questions:3",
+        "follow_up_questions:4"
+      ],
+      "parent_version": 1,
+      "plan_id": "5782e9d66c8e42b196403c4dcca0b3f1",
+      "source_text_sha256": "415c0b6d15208d451762c946983fd9e96c0809e44d515d77918921a97733bb4d",
+      "version": 2
+    },
+    {
+      "created_at": "2026-11-06T05:25:08.566367+00:00",
+      "display_text": "目标岗位\n- 后端开发实习生（Python方向）\n- Python开发实习生\n\n能力差距\n- 缺少Web后端框架实战经验（如FastAPI/Flask/Django），仅有Python语言基础\n- 缺少数据库设计与ORM使用经验，SQL仅停留在会写查询的层面\n- 缺少REST API设计、鉴权、错误处理等工程化实践\n- 无实习/项目经历，简历缺少可验证的后端产出\n- 未确认城市、可实习时长、行业偏好与资金预算，投递范围不明确\n- Git/协作流程、Linux基础、简单部署等工程习惯未确认\n- 计算机基础（网络、操作系统、数据库原理）掌握程度未确认，面试八股需补\n\n行动路线\n30天目标：补齐后端最小技能栈并启动第一个可展示项目\n\n30天交付物：完成FastAPI或Flask官方教程，能独立写出带路由、参数校验、错误处理的API\n\n30天交付物：完成数据库设计练习：为项目设计3-5张表，使用SQLAlchemy或原生SQL实现CRUD\n\n30天交付物：项目仓库初始化：Git提交规范、README骨架、API文档草稿\n\n30天交付物：整理一份后端实习岗位JD样本（10条），标注高频要求\n\n30天指标：每周投入≥8小时，累计≥32小时\n\n30天指标：项目完成≥3个API端点并通过本地测试\n\n30天指标：Git提交≥8次，README包含运行说明\n\n30天指标：JD样本≥10条并完成关键词统计\n\n90天目标：完成可展示的后端项目并开始小批量投递\n\n90天交付物：项目MVP：用户注册登录（JWT或Session）、核心业务CRUD、分页、基础错误处理\n\n90天交付物：项目部署到可访问环境（如Render/Railway/云服务器），提供在线Demo或录屏\n\n90天交付物：简历初版：突出项目、技能、课程，量化项目产出\n\n90天交付物：投递记录表：公司、岗位、渠道、反馈状态\n\n90天指标：项目累计≥15个API端点，核心流程可演示\n\n90天指标：完成≥20次投递，获得≥3次面试或笔试机会\n\n90天指标：每周复盘1次，记录面试问题并归类\n\n90天指标：项目README包含架构说明与API文档\n\n180天目标：拿到后端开发实习offer并形成持续迭代能力\n\n180天交付物：项目迭代：加入缓存（Redis）、简单鉴权优化、单元测试\n\n180天交付物：计算机基础补强笔记：HTTP、数据库索引、事务、操作系统基础\n\n180天交付物：面试题库整理：≥50道后端高频题及自己的答案\n\n180天交付物：实习offer或明确的下一步补强计划\n\n180天指标：累计投递≥60次，面试/笔试≥8次\n\n180天指标：项目单元测试覆盖率≥50%（核心模块）\n\n180天指标：高频题整理≥50道并能口述\n\n180天指标：获得≥1个实习offer或进入≥2家公司终面\n\n下一行动\n- 确认可实习城市/远程偏好与可实习起止时间，回复后缩小投递范围\n- 本周内选定FastAPI或Flask其一，完成官方教程前3章\n- 创建项目仓库，写README骨架并完成第一次Git提交\n- 收集10条后端实习JD，统计高频技能关键词\n- 制定每周8小时时间表（建议4h项目+2h基础+2h投递复盘）\n\n当前约束\n每周时间：8小时\n\n限制：未提供\n\n学历：未提供\n\n兴趣：未提供\n\n偏好：未提供\n\n注意事项\n- 每周仅8小时，项目与基础补强并行可能导致进度偏慢，需严格按优先级执行\n- 无实习经验且项目未完成前投递回复率可能较低，需用项目产出弥补\n- 城市、行业偏好、资金预算未确认，投递范围与资源选择存在不确定性\n- 材料中的岗位卡片与知识库条目均未核验，不能作为真实招聘要求或薪资依据\n- 计算机基础掌握程度未确认，面试八股可能成为短板\n\n待确认信息\n- 你希望在哪个城市实习，或是否接受远程实习？\n- 你最早可开始实习的时间与每周可实习天数（与学习8小时不同）是多少？\n- 你是否有资金预算用于课程/云服务器/域名等？\n- 你更倾向哪个行业（如互联网、金融、企业服务）或暂无偏好？\n- 你的计算机基础课程（网络、操作系统、数据库）掌握程度如何？",
+      "facts_sha256": "22ba80af6e479f02b79d0a3e78725593ad6a0b284175fecd8b3f1e007805d237",
+      "item_ids": [
+        "target_roles:0",
+        "target_roles:1",
+        "gap_analysis:0",
+        "gap_analysis:1",
+        "gap_analysis:2",
+        "gap_analysis:3",
+        "gap_analysis:4",
+        "gap_analysis:5",
+        "gap_analysis:6",
+        "roadmap:30d:objective",
+        "roadmap:30d:deliverables:0",
+        "roadmap:30d:deliverables:1",
+        "roadmap:30d:deliverables:2",
+        "roadmap:30d:deliverables:3",
+        "roadmap:30d:metrics:0",
+        "roadmap:30d:metrics:1",
+        "roadmap:30d:metrics:2",
+        "roadmap:30d:metrics:3",
+        "roadmap:90d:objective",
+        "roadmap:90d:deliverables:0",
+        "roadmap:90d:deliverables:1",
+        "roadmap:90d:deliverables:2",
+        "roadmap:90d:deliverables:3",
+        "roadmap:90d:metrics:0",
+        "roadmap:90d:metrics:1",
+        "roadmap:90d:metrics:2",
+        "roadmap:90d:metrics:3",
+        "roadmap:180d:objective",
+        "roadmap:180d:deliverables:0",
+        "roadmap:180d:deliverables:1",
+        "roadmap:180d:deliverables:2",
+        "roadmap:180d:deliverables:3",
+        "roadmap:180d:metrics:0",
+        "roadmap:180d:metrics:1",
+        "roadmap:180d:metrics:2",
+        "roadmap:180d:metrics:3",
+        "next_actions:0",
+        "next_actions:1",
+        "next_actions:2",
+        "next_actions:3",
+        "next_actions:4",
+        "constraints:time_budget_hours_per_week",
+        "unresolved:constraints",
+        "unresolved:education",
+        "unresolved:interests",
+        "unresolved:preference",
+        "risk_flags:0",
+        "risk_flags:1",
+        "risk_flags:2",
+        "risk_flags:3",
+        "risk_flags:4",
+        "follow_up_questions:0",
+        "follow_up_questions:1",
+        "follow_up_questions:2",
+        "follow_up_questions:3",
+        "follow_up_questions:4"
+      ],
+      "parent_version": 2,
+      "plan_id": "5782e9d66c8e42b196403c4dcca0b3f1",
+      "source_text_sha256": "415c0b6d15208d451762c946983fd9e96c0809e44d515d77918921a97733bb4d",
+      "version": 3
+    }
+  ],
+  "warning": "本地引导失败，已保存材料解析和回答。可依据当前信息生成规划。"
+}
