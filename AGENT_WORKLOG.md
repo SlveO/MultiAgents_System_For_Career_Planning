@@ -1,6 +1,6 @@
 # Demo 执行记录
 
-本文件记录 `DEMO_PLAN.md` 的实际工作与当前状态。编号 1、2、3 仍按顺序推进；主 Agent 汇总已完成事项和必要检查。
+本文件记录 `DEMO_PLAN.md` 的实际工作与当前状态，包括历史计划和当前 GitHub / 本机 Sites 交接状态。
 
 ## 阶段状态
 
@@ -8,14 +8,14 @@
 |---|---|---|
 | 计划编制 | 已审阅 | 无 |
 | 1. 功能收尾 | 完成 | 复用前序文件精简成果；两路只读定向核对无确定主链路阻断缺陷，真实运行验证留在第 3 项 |
-| 2. GitHub 源码交付 / 本机 Sites 交接 | 准备中 | 当前分支提交推送待主 Agent 实际执行；Sites 由本机桌面工作流后续创建和发布，服务器不直接发布 |
+| 2. GitHub 源码交付 / 本机 Sites 交接 | GitHub 源码已提交并推送 | 本机桌面 Sites 创建、配置、同步和发布仍待执行；服务器不直接发布 |
 | 3. Demo 验证 | 已完成（据用户最新确认） | 本次交接不重做功能试跑或项目模型调用 |
 
 ## 当前交付状态（2026-11-10）
 
-用户最新明确授权服务器将当前已验证工作区提交并推送到现有 GitHub 仓库的 `codex/proposal-expansion-20261105` 分支；不得强推、合并或推送 `main`，也不得更改仓库可见性。当前 GitHub 交付仍在准备中，实际提交和推送结果由主 Agent 完成后补记。本机 Sites 创建、同步和发布是后续步骤；服务器不直接发布 Sites。
+用户最新明确授权服务器将当前已验证工作区提交并推送到现有 GitHub 仓库的 `codex/proposal-expansion-20261105` 分支。源码提交 `fba0be6af9183de71d738980b5d36fecd0098e89`（`feat: prepare career planning demo for Sites handoff`）已成功推送，远端新建该分支并设置 upstream。未强推、合并或推送 `main`，未更改仓库可见性。本机 Sites 创建、配置、同步和发布仍待后续桌面工作流执行；服务器不直接发布 Sites。此工作记录将在源码提交之后再以文档提交同步，文档提交 SHA 不预写，最终分支 HEAD 以 Git 实际查询为准。
 
-此前删除的旧运行材料和兼容别名属于前序清理成果，不影响当前源码功能。本轮只同步已验证工作区；主 Agent 已完成干净暂存 web 源码副本构建，提交和推送仍待执行，不将其记为完成。功能验证已由用户确认完成，本轮不重跑，也不调用 GPU、DeepSeek 或项目 API。
+此前删除的旧运行材料和兼容别名属于前序清理成果，不影响当前源码功能。本次上传包括用户此前完成且已验证的源码及有意清理结果，不将旧文件删除重新记为本轮实现；本轮兼容性工作仅补充忽略规则和交接文档，没有重写业务代码。用户确认 Demo 功能验证完成，本次未重复真实功能试跑，也未调用 GPU、DeepSeek、训练、服务器 API 或临时隧道。
 
 ## 计划与资料准备（历史）
 
@@ -77,5 +77,6 @@
 | 时间 / 工作 | Agent / 模型 | 文件与结果 |
 |---|---|---|
 | 只读源码边界与构建可移植性扫描 | `/root/github_source_inventory`、`/root/sites_build_portability_read`，均为 `gpt-6-luna max` | 确认现有 `web/` 的 React、Vite/Vinext 与 Cloudflare Worker 架构符合当前 Sites Worker 部署形态，Worker 构建输出为 `dist/server/index.js` 默认 fetch handler，保留该入口才能继续使用 `/api` 代理。干净克隆缺少 `.sites-runtime` 时 `readExecutionProfile` 回退到 portable profile；构建无需服务器 Python/CUDA/权重或本地 profile，也不依赖 `bash`/`timeout`。该扫描只读，未构建、测试、启动 API、调用模型或部署；没有声称 Windows/macOS 安装已实测成功。 |
-| 干净 web 源码构建 | 主 Agent `/root` | 对已暂存的 82 个 web 源文件制作干净副本，不带 `.env`、`.sites-runtime`、`next-env`、`.next` 或 `dist`；复用服务器已有 `node_modules`，没有重新安装或下载依赖。在 `/tmp/career-sites-handoff-h43j3q1g/web` 使用 Node 22 执行 `npm run build`，退出码 0；`/` 与 `/api/:path+` 路由编译成功，生成 `dist/server/index.js`（198,266 B）、`dist/client` 和 `dist/.openai/hosting.json`。这是 Linux 本服务器上的干净源码构建验证，不是新装依赖验证或 Windows/macOS 实测；0 模型调用、0 浏览器试跑、未部署。临时构建目录留给主 Agent 后续清理。 |
+| 干净 web 源码构建 | 主 Agent `/root` | 对已暂存的 82 个 web 源文件制作干净副本，不带 `.env`、`.sites-runtime`、`next-env`、`.next` 或 `dist`；复用服务器已有 `node_modules`，没有重新安装或下载依赖。在 `/tmp/career-sites-handoff-h43j3q1g/web` 使用 Node 22 执行 `npm run build`，退出码 0；`/` 与 `/api/:path+` 路由编译成功，生成 `dist/server/index.js`（198,266 B）、`dist/client` 和 `dist/.openai/hosting.json`。这是 Linux 本服务器上的干净源码构建验证，不是新装依赖验证或 Windows/macOS 实测；0 模型调用、0 浏览器试跑、未部署。按本次清理授权已删除该临时目录，未触碰真实 `web/node_modules` 或其他临时/用户目录。 |
 | 文档与忽略规则更新 | `/root/write_github_sites_handoff`，`gpt-6-luna max` | 修改根 `.gitignore`，补充 SQLite 旁路文件和常见私钥扩展名规则；更新 `AGENTS.md`、`README.md`，新增 `SITES_HANDOFF.md`，记录 GitHub 克隆/构建、本机 Sites 项目目录 `web/`、Worker 输出、服务端运行变量及部署边界。当前 `web/.openai/hosting.json` 尚未登记 `project_id`，`d1` 和 `r2` 保持 `null`；桌面注册后使用实际 ID。文档代理未运行测试、构建、安装或生成额外文件；未改业务源码、真实 `.env`、用户数据或 `web/.gitignore`。提交/推送等待主 Agent 实际执行和记录。 |
+| GitHub 源码提交与推送 | 主 Agent `/root` | 当前已验证工作区共 169 个变更文件（含此前完成的源码、配置、锁文件、有意删除和本次交接文档）提交为 `fba0be6af9183de71d738980b5d36fecd0098e89`，提交说明为 `feat: prepare career planning demo for Sites handoff`。首次提交因服务器未配置作者身份失败；随后仅在本次进程沿用仓库既有 SlveO 身份完成提交，未改全局 Git 配置。执行 `git push --set-upstream origin HEAD:refs/heads/codex/proposal-expansion-20261105` 返回 exit 0 并创建远端分支；复用现有 `SlveO/MultiAgents_System_For_Career_Planning` 仓库，未改 `main`、可见性或执行强推。暂存边界复核覆盖 149 个新增/修改路径，无真实 `.env`、运行数据、`node_modules`、`dist` 或私钥；必要锁文件/hosting 配置存在，`.env.example` 敏感字段为空或占位。未做全量安全审计。后续文档提交的 SHA 不预写，最终分支 HEAD 以 Git 实际查询为准。 |
